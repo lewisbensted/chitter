@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form action='/message', method='post'>
+        <input id='tweet-text' type='text' name='tweet' placeholder='Type your tweet here!'>
+        <input type='submit' value='Save' id='save'>
+    </form>
+    <% messages.forEach( (message, tweetIndex) => { %>
+      <span id='tweet-<%=tweetIndex%>'><%= message.text %></span>
+      <form action='/message/<%=message.id%>?_method=DELETE' method='post'>
+        <input type='submit' value='Delete' id='tweet-<%=tweetIndex%>-delete' >
+      </form>
+      <a href='/message/<%=message.id%>/edit' id='tweet-<%=tweetIndex%>-edit'>Edit</a>
+    <%})%>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+      <h2>Edit <%= tweet.text %></h2>
+      <form method='post' action='/message/<%=tweet.id%>?_method=PUT'>
+          <input type='text' name='text' id='edit-text'>
+          <input type='submit' value='Save' id='save'>
+      </form>
+  </body>
+</html>
