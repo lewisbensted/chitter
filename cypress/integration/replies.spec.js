@@ -1,7 +1,7 @@
-describe("Messages", function() {
+describe("Replies", function() {
     beforeEach(function() {
        cy.task("resetDb")
-       cy.task("seedDb")
+       cy.task("createTweet")
        cy.visit('/tweet')
     })
     it('check replies displayed', function(){

@@ -1,7 +1,7 @@
 const db = require('../models')
 
 const createTweet = async () => {
-  console.log('seeding database')
+  console.log('creating tweet')
     await db.Reply.create({
       text: 'seeded test reply',
       createdAt: new Date(1995, 9, 12, 10, 40),

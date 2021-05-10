@@ -10,6 +10,11 @@ app.set('view engine', 'ejs')
 
 const tweetController=require('./controllers/tweet.js')
 const replyController=require('./controllers/reply.js')
+const homepageController=require('./controllers/home.js')
+const registerController=require('./controllers/register.js')
+
+app.use('/', homepageController)
+app.use('/register', registerController)
 app.use('/tweet', tweetController)
 app.use('/tweet/:tweetId/reply', replyController)
 
