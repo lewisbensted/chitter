@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div id='text'>
+      <form action='/tweet', method='post'>
+          <input id='tweet-text' type='text' name='tweet' placeholder='Type your tweet here!'>
+          <input type='submit' value='Save' id='save'>
+      </form>
+    <div id='tweets'>
+    <% messages.forEach( (message, tweetIndex) => { %>
+      
+      <div id='tweet-<%=tweetIndex%>-div'>
+      <span id='tweet-<%=tweetIndex%>'><%= message.text %></span>
+      <form action='/tweet/<%=message.id%>?_method=DELETE' method='post'>
+        <input type='submit' value='Delete' id='tweet-<%=tweetIndex%>-delete' >
+      </form>
+      <a href='/tweet/<%=message.id%>/edit' id='tweet-<%=tweetIndex%>-edit'>Edit</a>
+      <span id='tweet-<%=tweetIndex%>-timestamp'><%= message.date() %></span>
+      <a href='/tweet/<%=message.id%>/reply' id='tweet-<%=tweetIndex%>-reply'>Add Reply</a>
+
+      
+      <ul id='tweet-<%=tweetIndex%>-reply'>
+      <div id='tweet-<%=tweetIndex%>-replies'>
+      <% message.Replies.forEach( (reply, replyIndex) => { %>
+        <li>
+        <span id='tweet-<%= tweetIndex%>-reply-<%=replyIndex%>'><%=reply.text%> </span>
+        <span id='tweet-<%= tweetIndex%>-reply-<%=replyIndex%>-timestamp'><%=reply.date()%><span>
+        </li>
+      <% }) %>
+      </div>
+
+      </ul>
+
+      </div>
+
+      
+    <% }) %>
+    </div>
+  </body>
+</html>

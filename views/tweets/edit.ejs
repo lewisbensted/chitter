@@ -6,7 +6,7 @@
   </head>
   <body>
       <h2>Edit <%= tweet.text %></h2>
-      <form method='post' action='/message/<%=tweet.id%>?_method=PUT'>
+      <form method='post' action='/tweet/<%=tweet.id%>?_method=PUT'>
           <input type='text' name='text' id='edit-text'>
           <input type='submit' value='Save' id='save'>
       </form>

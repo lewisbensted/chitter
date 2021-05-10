@@ -3,21 +3,25 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Message extends Model {
+  class Reply extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.Tweet=this.belongsTo(models.Tweet)
+    }
+    date() {
+      const date = new Date(this.createdAt)
+      return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
     }
   };
-  Message.init({
+  Reply.init({
     text: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'Message',
+    modelName: 'Reply',
   });
-  return Message;
+  return Reply;
 };

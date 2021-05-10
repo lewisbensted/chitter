@@ -1,0 +1,37 @@
+describe("Messages", function() {
+    beforeEach(function() {
+      cy.task("resetDb")
+      cy.task("seedDb")
+      cy.visit('/tweet')
+    })
+    it('check date and layout', function(){
+        cy.get('#tweet-0').contains('seeded test tweet')
+        cy.get('#tweet-0-delete')
+        cy.get('#tweet-0-edit')
+        cy.get('#tweet-0-reply')
+        cy.get('#tweet-0-timestamp').contains('10:30 12-10-1995')
+    })
+    it('Check new tweet correctly displayed', function(){
+        cy.get('#tweet-text').type('test tweet 1')
+        cy.get('#save').click()
+        cy.url().should('contain', '/tweet')
+        cy.get('#tweet-1').contains('test tweet 1')
+    })
+    it('check tweet correctly deleted', function(){
+        cy.get('#tweet-text').type('test tweet 2')
+        cy.get('#save').click()
+        cy.get('#tweet-1').contains('test tweet 2')
+        cy.get('#tweet-1-delete').click()
+        cy.get('#tweet-1').should('not.exist')
+        cy.url().should('contain', '/tweet')
+    })
+    it('check edit works correctly', function(){
+        cy.get('#tweet-text').type('test tweet 3')
+        cy.get('#save').click()
+        cy.get('#tweet-1').contains('test tweet 3')
+        cy.get('#tweet-1-edit').click()
+        cy.get('#edit-text').type('edited text')
+        cy.get('#save').click()
+        cy.get('#tweet-1').contains('edited text')
+    })
+})
