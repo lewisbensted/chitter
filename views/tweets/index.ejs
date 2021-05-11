@@ -6,21 +6,27 @@
   </head>
   <body>
     <div id='text'>
+      <% if (currentUser) {%>
       <form action='/tweet', method='post'>
           <input id='tweet-text' type='text' name='tweet' placeholder='Type your tweet here!'>
           <input type='submit' value='Save' id='save'>
       </form>
+      <%}%>
     <div id='tweets'>
     <% messages.forEach( (message, tweetIndex) => { %>
       
       <div id='tweet-<%=tweetIndex%>-div'>
       <span id='tweet-<%=tweetIndex%>'><%= message.text %></span>
-      <form action='/tweet/<%=message.id%>?_method=DELETE' method='post'>
-        <input type='submit' value='Delete' id='tweet-<%=tweetIndex%>-delete' >
-      </form>
-      <a href='/tweet/<%=message.id%>/edit' id='tweet-<%=tweetIndex%>-edit'>Edit</a>
-      <span id='tweet-<%=tweetIndex%>-timestamp'><%= message.date() %></span>
-      <a href='/tweet/<%=message.id%>/reply' id='tweet-<%=tweetIndex%>-reply'>Add Reply</a>
+      <% if (currentUser) {%>
+      <div>
+        <form action='/tweet/<%=message.id%>?_method=DELETE' method='post'>
+          <input type='submit' value='Delete' id='tweet-<%=tweetIndex%>-delete' >
+        </form>
+        <a href='/tweet/<%=message.id%>/edit' id='tweet-<%=tweetIndex%>-edit'>Edit</a>
+        <span id='tweet-<%=tweetIndex%>-timestamp'><%= message.date() %></span>
+        <a href='/tweet/<%=message.id%>/reply' id='tweet-<%=tweetIndex%>-reply'>Add Reply</a>
+      </div>
+      <%}%>
 
       
       <ul id='tweet-<%=tweetIndex%>-reply'>
@@ -40,5 +46,10 @@
       
     <% }) %>
     </div>
+    <% if (currentUser) {%>
+    <form action='/login?_method=DELETE' method='post'>
+      <input id='logout' type='submit' value='sign out'>
+    </form> 
+    <%}%>
   </body>
 </html>

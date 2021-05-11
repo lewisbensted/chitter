@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
         this.Replies=this.hasMany(models.Reply, {onDelete:'cascade'})
+        this.User=this.belongsTo(models.User)
     }
     date() {
       const date = new Date(this.createdAt)
@@ -18,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Tweet.init({
-    text: DataTypes.STRING
+    text: DataTypes.STRING, 
+    username: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Tweet',

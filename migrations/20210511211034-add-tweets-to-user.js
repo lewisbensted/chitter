@@ -2,21 +2,21 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-     await queryInterface.addColumn('Replies', 'TweetId', {
+     await queryInterface.addColumn('Tweets', 'UserId', {
         type:Sequelize.INTEGER,
         references:{
           model:{
-            tableName:'Tweets'
+            tableName:'Users'
           },
           key:'id'
         },
         onDelete:'cascade',
-        allowNull:false
+        allowNull:true
      })
   },
   
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Replies', 'TweetId')
+    await queryInterface.removeColumn('Tweets', 'UserId')
   }
 };

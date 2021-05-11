@@ -9,7 +9,10 @@ router.get('/', async function(req,res){
 })
 
 router.post('/', async function(req,res){
-    await Tweet.create({text:req.body.tweet})
+    
+    await Tweet.create(
+        {text:req.body.tweet,
+        UserId: res.locals.currentUser.dataValues.id})
     res.redirect('/tweet')
 })
 
