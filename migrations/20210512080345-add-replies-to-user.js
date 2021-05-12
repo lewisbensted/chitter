@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-     await queryInterface.addColumn('Tweets', 'UserId', {
+     await queryInterface.addColumn('Replies', 'UserId', {
         type:Sequelize.INTEGER,
         references:{
           model:{
@@ -12,11 +12,10 @@ module.exports = {
         },
         onDelete:'cascade',
         allowNull:false
-     })
   },
   
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Tweets', 'UserId')
+    await queryInterface.removeColumn('Replies', 'UserId')
   }
-};
+}

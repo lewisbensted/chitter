@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.Tweets=this.hasMany(models.Tweet, {onDelete:'cascade'})
+      this.Replies=this.hasMany(models.Reply, {onDelete: 'cascade'})
     }
   };
   User.init({

@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
   };
   Tweet.init({
     text: DataTypes.STRING, 
-    username: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Tweet',
