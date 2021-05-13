@@ -13,7 +13,9 @@ router.post('/', async function(req,res){
     await Reply.create(
         {text:req.body.text,
         TweetId:req.params.tweetId,
-        UserId:req.session.userId})
+        UserId:req.session.userId,
+        username:req.session.username
+    })
     res.redirect('/tweet')
 })
 
