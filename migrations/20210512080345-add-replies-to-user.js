@@ -12,7 +12,7 @@ module.exports = {
         },
         onDelete:'cascade',
         allowNull:false
-  },
+     })},
   
 
   down: async (queryInterface, Sequelize) => {

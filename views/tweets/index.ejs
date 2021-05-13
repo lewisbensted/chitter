@@ -36,7 +36,7 @@
           <ul id='tweet-<%=tweetIndex%>-reply'>
           <% tweet.Replies.forEach( (reply, replyIndex) => { %>
               <li>
-              <span id='tweet-<%= tweetIndex%>-reply-<%=replyIndex%>-'><%=reply.text%> </span>
+              <span id='tweet-<%= tweetIndex%>-reply-<%=replyIndex%>'><%=reply.text%> </span>
               <span id='tweet-<%= tweetIndex%>-reply-<%=replyIndex%>-timestamp'><%=reply.date()%><span>
               <% if (reply.UserId===currentUser.dataValues.id) {%>
               <form action='tweet/<%=tweet.id%>/reply/<%=reply.id%>?_method=DELETE' method='post'>
