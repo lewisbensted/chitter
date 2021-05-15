@@ -3,8 +3,9 @@ const app = express()
 const port = 3000
 const methodOverride = require('method-override')
 const session=require('express-session')
+const expressLayouts=require('express-ejs-layouts')
 
-
+app.use(expressLayouts)
 app.use(methodOverride('_method'))
 app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
@@ -25,6 +26,7 @@ app.use(async (req, res, next) => {
     next()
   })
 
+
 const tweetController=require('./controllers/tweet.js')
 const replyController=require('./controllers/reply.js')
 const homepageController=require('./controllers/home.js')
@@ -36,6 +38,7 @@ app.use('/register', registerController)
 app.use('/login', loginController)
 app.use('/tweet', tweetController)
 app.use('/tweet/:tweetId/reply', replyController)
+
 
 
 

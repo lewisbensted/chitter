@@ -16,7 +16,7 @@ router.post('/', async function(req,res){
         console.log(req.session.username)
         res.redirect('tweet')
     } else {
-        res.render('login/index.ejs', {error:'Invalid username or password'})
+        res.render('login/index.ejs', {error:'Invalid email or password'})
     }
 })
 

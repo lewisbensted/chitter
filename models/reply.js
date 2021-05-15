@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.Tweet=this.belongsTo(models.Tweet)
       this.User=this.belongsTo(models.User)
-      
     }
     date() {
       const date = new Date(this.createdAt)

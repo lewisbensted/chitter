@@ -3,12 +3,12 @@ const bcrypt=require('bcrypt')
 
 const createUser = async () => {
     console.log('creating user')
-    const hash=bcrypt.hashSync('testpassword2', 5)
+    const hash=bcrypt.hashSync('testpassword1', 5)
     await db.User.create({
-        email: 'testuser2@test.com',
+        email: 'testuser1@test.com',
         passwordHash: hash,
-        name:'test user two',
-        username:'testuser2'
+        name:'test user one',
+        username:'testuser1'
       })
     }
 

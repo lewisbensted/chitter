@@ -19,8 +19,8 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           allowNull:false,
           validate: {
-             is:{
-               args: /[a-z]+$/i, 
+             not:{
+               args: /[^a-z ]/i, 
                msg:'Name can only contain letters'},
              notEmpty:{
                msg:'Please enter a name'}
@@ -30,8 +30,7 @@ module.exports = (sequelize, DataTypes) => {
           unique:true,
           allowNull:false,
           validate:{
-              notEmpty:{msg:'Please enter a username'},
-              len:{args:[5], msg:'Username must be five charachters'},
+              len:{args:[5], msg:'Username must be five charachters long'},
               isUnique:  (value, next) => {
                 User.findOne({where: {username: value}})
                    .then( (user) => {

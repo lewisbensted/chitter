@@ -13,10 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         this.Replies=this.hasMany(models.Reply, {onDelete:'cascade'})
         this.User=this.belongsTo(models.User)
     }
-    date() {
-      const date = new Date(this.createdAt)
-      return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`
-    }
+    
   };
   Tweet.init({
     text: DataTypes.STRING, 

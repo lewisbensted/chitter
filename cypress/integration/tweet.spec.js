@@ -1,4 +1,4 @@
-describe("Check tweet page as testuser1", function() {
+describe("check tweet page", function() {
     beforeEach(function() {
       cy.task('resetDb')
       cy.task('createTweet')
@@ -6,46 +6,48 @@ describe("Check tweet page as testuser1", function() {
       cy.get('#email').type('testuser1@test.com')
       cy.get('#password').type('testpassword1')
       cy.get('#submit').click()
-
     })
-    it('Check date and layout', function(){
-        cy.get('#tweet-0').contains('test tweet 1')
-        cy.get('#tweet-0-delete')
-        cy.get('#tweet-0-edit')
+    it('check order, info and layout', function(){
+        cy.get('#title').contains('Peep Timeline')
+        cy.get('#tweet-0').contains('test tweet 2')
+        cy.get('#tweet-0-delete').should('not.exist')
         cy.get('#tweet-0-reply')
-        cy.get('#tweet-0-timestamp').contains('10:30 12-10-1995')
+        cy.get('#tweet-0-edit').should('not.exist')
+        cy.get('#tweet-0-timestamp').contains('11:0 12-10-1995')
+        cy.get('#tweet-0-username').contains('testuser2')
+        cy.get('#tweet-1-delete')
+        cy.get('#tweet-1-edit')
+        cy.get('#tweet-1-reply')
+        cy.get('#tweet-1-timestamp').contains('10:0 12-10-1995')
+        cy.get('#tweet-1-username').contains('testuser1')
     })
-    it('Check new tweet correctly displayed', function(){
-        cy.get('#tweet-text').type('test tweet 2')
+    it('check new tweet button', function(){
+        cy.get('#tweet-text').type('test tweet 3')
         cy.get('#save').click()
-        cy.url().should('contain', '/tweet')
+        cy.get('#tweet-0').contains('test tweet 3')
+        cy.get('#tweet-0-username').contains('testuser1')
         cy.get('#tweet-1').contains('test tweet 2')
+        cy.get('#tweet-1-username').contains('testuser2')
+        cy.get('#tweet-2').contains('test tweet 1')
+        cy.get('#tweet-2-username').contains('testuser1')
+        
     })
-    it('check tweet correctly deleted', function(){
-        cy.get('#tweet-0').contains('test tweet 1')
-        cy.get('#tweet-0-delete').click()
-        cy.get('#tweet-0').should('not.exist')
-        cy.url().should('contain', '/tweet')
+    it('check delete button', function(){
+        cy.get('#tweet-1').contains('test tweet 1')
+        cy.get('#tweet-1-delete').click()
+        cy.get('#title').contains('Peep Timeline')
+        cy.get('#tweet-1').should('not.exist')
+        cy.get('#tweet-0').contains('test tweet 2')
+        cy.get('#tweet-0-username').contains('testuser2')
     })
-    it('check edit works correctly', function(){
-        cy.get('#tweet-0').contains('test tweet 1')
-        cy.get('#tweet-0-edit').click()
+    it('check edit button', function(){
+        cy.get('#tweet-1').contains('test tweet 1')
+        cy.get('#tweet-1-edit').click()
         cy.get('#edit-text').type('edited test tweet')
         cy.get('#save').click()
-        cy.get('#tweet-0').contains('edited test tweet')
-    })
-})
-describe('check tweet page as testuser2', function(){
-    it('check edit and delete buttons are not present to a user who did not write the tweet', function(){
-      cy.task('resetDb')
-      cy.task('createUser')
-      cy.task('createTweet')
-      cy.visit('/login')
-      cy.get('#email').type('testuser2@test.com')
-      cy.get('#password').type('testpassword2')
-      cy.get('#submit').click()
-      cy.url().should('contain', '/tweet')
-      cy.get('#tweet-0-edit').should('not.exist') 
-      cy.get('#tweet-0-delete').should('not.exist') 
+        cy.get('#tweet-1').contains('edited test tweet')
+        cy.get('#tweet-1-username').contains('testuser1')
+        cy.get('#tweet-0').contains('test tweet 2')
+        cy.get('#tweet-0-username').contains('testuser2')
     })
 })

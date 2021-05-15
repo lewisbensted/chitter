@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+     <%-body%>
+
+     <% if (currentUser) {%>
+        <form action='/login?_method=DELETE' method='post'>
+          <input id='logout' type='submit' value='sign out'>
+        </form> 
+     <%}else{%>
+        <a id="login" href="/login">Login</a>
+        <a id="register" href="/register">Register</a>
+     <% }%>
+  </body>
+</html>
