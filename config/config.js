@@ -14,5 +14,12 @@ module.exports = {
     "database": "chitter_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
+  },
+  "production": {
+    "username": process.env.DATABASE_USERNAME,
+    "password": process.env.DATABASE_PASSWORD,
+    "database": "chitter_prod",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   }
 }
