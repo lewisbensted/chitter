@@ -1,0 +1,47 @@
+-- CreateTable
+CREATE TABLE `Users` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `firstName` VARCHAR(191) NOT NULL,
+    `lastName` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `username` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `Users_email_key`(`email`),
+    UNIQUE INDEX `Users_username_key`(`username`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Cheets` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME NULL DEFAULT CURRENT_TIMESTAMP(),
+    `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `text` VARCHAR(191) NOT NULL,
+    `userId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Replies` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `text` VARCHAR(191) NOT NULL,
+    `username` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP(),
+    `updatedAt` DATETIME NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+    `userId` INTEGER NOT NULL,
+    `cheetId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Cheets` ADD CONSTRAINT `Cheets_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Replies` ADD CONSTRAINT `Replies_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Replies` ADD CONSTRAINT `Replies_cheetId_fkey` FOREIGN KEY (`cheetId`) REFERENCES `Cheets`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  firstName   String 
+  lastName    String
+  email       String    @unique
+  username    String    @unique
+  password    String
+  cheets      Cheet[]
+  replies     Reply[]
+
+  @@map("Users")
+}
+
+model Cheet {
+  id          Int       @id @default(autoincrement())
+  username    String
+  createdAt   DateTime?  @default(dbgenerated("CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "created_at")
+  updatedAt   DateTime?  @default(dbgenerated("CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()")) @db.DateTime()
+  text        String  
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  replies     Reply[]
+
+  @@map("Cheets")
+}
+
+model Reply {
+  id          Int       @id @default(autoincrement())
+  text        String  
+  username    String
+  createdAt   DateTime?  @default(dbgenerated("CURRENT_TIMESTAMP()")) @db.DateTime()
+  updatedAt   DateTime?  @default(dbgenerated("CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()")) @db.DateTime()
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  cheet       Cheet      @relation(fields: [cheetId], references: [id])
+  cheetId     Int
+
+  @@map("Replies")
+}
+
+
+
