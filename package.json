@@ -1,0 +1,16 @@
+{
+  "name": "chitter",
+  "version": "1.0.0",
+  "description": "A mock Twitter app built with Express and React.",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lewisbensted/chitter.git"
+  },
+  "author": "Lewis Bensted",
+  "license": "ISC",
+  "homepage": "https://github.com/lewisbensted/chitter#readme",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
