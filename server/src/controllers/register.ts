@@ -1,10 +1,11 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { UserSchema } from "../schema/user.schema.js";
-import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
+import { UserSchema } from "../schemas/user.schema.js";
+import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 import bcrypt from "bcrypt";
 
+const router = express.Router();
 const prisma = new PrismaClient().$extends({
 	query: {
 		user: {
@@ -16,11 +17,9 @@ const prisma = new PrismaClient().$extends({
 	}
 });
 
-const router = express.Router();
-
 router.post("/", async (req: Request, res: Response) => {
 	try {
-		const user = req.body
+		const user = req.body;
 		user.password = bcrypt.hashSync(user.password, 5)
 		await prisma.user.create({ data: user });
 		res.status(200).send("OK");

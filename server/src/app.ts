@@ -7,6 +7,9 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaClientInitializationError } from "@prisma/client/runtime/library";
 import users from "./controllers/users.js";
 import login from "./controllers/login.js";
+import validateLoggedIn from "./controllers/validateLoggedIn.js";
+import cheets from "./controllers/cheets.js";
+import replies from "./controllers/replies.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -27,12 +30,12 @@ prisma.$connect().then(() => {
 
 	app.use("/register", express.json(), register);
 	app.use("/login", express.json(), login);
-	// app.use("/validate", validateLoggedIn);
+	app.use("/validate", validateLoggedIn);
 	// app.use("/logout", logout);
 	app.use("/users/:userId", users);
-	// app.use("/cheets", express.json(), cheets);
-	// app.use("/users/:userId/cheets", express.json(), cheets);
-	// app.use("/cheets/:cheetId/replies", replies);
+	app.use("/cheets", express.json(), cheets);
+	app.use("/users/:userId/cheets", express.json(), cheets);
+	app.use("/cheets/:cheetId/replies", replies);
 
 	app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
 

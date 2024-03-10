@@ -11,14 +11,14 @@ export const UserSchema = z.object({
 		.email()
 		.refine(
 			async (email) => {
-				const user = await prisma.user.findFirst({ where: { username: email } });
+				const user = await prisma.user.findUnique({ where: { username: email } });
 				return user ? false : true;
 			},
 			{ message: "email taken" }
 		),
 	username: z.string().refine(
 		async (username) => {
-			const user = await prisma.user.findFirst({ where: { username: username } });
+			const user = await prisma.user.findUnique({ where: { username: username } });
 			return user ? false : true;
 		},
 		{ message: "username taken" }
