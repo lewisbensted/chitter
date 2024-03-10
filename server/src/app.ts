@@ -10,6 +10,7 @@ import login from "./controllers/login.js";
 import validateLoggedIn from "./controllers/validateLoggedIn.js";
 import cheets from "./controllers/cheets.js";
 import replies from "./controllers/replies.js";
+import logout from "./controllers/logout.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -31,7 +32,7 @@ prisma.$connect().then(() => {
 	app.use("/register", express.json(), register);
 	app.use("/login", express.json(), login);
 	app.use("/validate", validateLoggedIn);
-	// app.use("/logout", logout);
+	app.use("/logout", logout);
 	app.use("/users/:userId", users);
 	app.use("/cheets", express.json(), cheets);
 	app.use("/users/:userId/cheets", express.json(), cheets);

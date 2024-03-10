@@ -32,7 +32,7 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 			return cheetB.createdAt.valueOf() - cheetA.createdAt.valueOf();
 		});
 		res.status(200).send(cheets);
-	} catch (error) {
+	} catch (error: unknown) {
 		console.error(
 			error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
 				? "Error retrieving cheets from the database. Have all migrations been executed successfully?" +
@@ -57,7 +57,7 @@ router.post("/", validateCredentials, async (req: Request, res: Response) => {
 			return cheetB.createdAt.valueOf() - cheetA.createdAt.valueOf();
 		});
 		res.status(200).send(cheets);
-	} catch (error) {
+	} catch (error: unknown) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else {
