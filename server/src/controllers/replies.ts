@@ -4,6 +4,7 @@ import { ReplySchema } from "../schemas/reply.schema.js";
 import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { validateCredentials } from "../middleware/validateCredentials.js";
 import { ZodError } from "zod";
+import { logErrors } from "../utils/logErrors.js";
 
 const router = express.Router({ mergeParams: true });
 const prisma = new PrismaClient().$extends({
@@ -33,12 +34,7 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 		});
 		res.status(200).send(replies);
 	} catch (error) {
-		console.error(
-			error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-				? "Error retrieving replies from the database. Have all migrations been executed successfully?" +
-						error.message.replace(/\n\n/g, " ")
-				: "An unknown error has occured."
-		);
+		console.error("Error retrieving replies from the database:\n" + logErrors(error));
 		res.status(500).send();
 	}
 });
@@ -62,16 +58,11 @@ router.post("/", validateCredentials, async (req: Request, res: Response) => {
 			return replyB.createdAt.valueOf() - replyA.createdAt.valueOf();
 		});
 		res.status(200).send(replies);
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error updating reply in the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
+			console.error("Error adding reply to the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}
@@ -106,18 +97,13 @@ router.put("/:replyId", validateCredentials, async (req: Request, res: Response)
 		} else {
 			res.status(403).send("Cannot update someone else's Reply");
 		}
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
 			res.status(404).send("Reply not found.");
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error updating reply in the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
+			console.error("Error updating reply in the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}
@@ -146,18 +132,13 @@ router.delete("/:replyId", validateCredentials, async (req: Request, res: Respon
 		} else {
 			res.status(403).send("Cannot delete someone else's Reply.");
 		}
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
 			res.status(404).send("Reply not found.");
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error deleting reply from the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
+			console.error("Error deleting reply from the database" + logErrors(error));
 			res.status(500).send();
 		}
 	}

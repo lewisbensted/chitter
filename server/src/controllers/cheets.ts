@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
-import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { validateCredentials } from "../middleware/validateCredentials.js";
 import { PrismaClient } from "@prisma/client";
 import { CheetSchema } from "../schemas/cheet.schema.js";
 import { ZodError } from "zod";
+import { logErrors } from "../utils/logErrors.js";
 
 const router = express.Router({ mergeParams: true });
 const prisma = new PrismaClient().$extends({
@@ -32,12 +33,9 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 			return cheetB.createdAt.valueOf() - cheetA.createdAt.valueOf();
 		});
 		res.status(200).send(cheets);
-	} catch (error: unknown) {
+	} catch (error) {
 		console.error(
-			error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-				? "Error retrieving cheets from the database. Have all migrations been executed successfully?" +
-						error.message.replace(/\n\n/g, " ")
-				: "An unknown error has occured."
+			"Error retrieving cheets from the database:\n" + logErrors(error)
 		);
 		res.status(500).send();
 	}
@@ -57,16 +55,11 @@ router.post("/", validateCredentials, async (req: Request, res: Response) => {
 			return cheetB.createdAt.valueOf() - cheetA.createdAt.valueOf();
 		});
 		res.status(200).send(cheets);
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error adding cheet to the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
+			console.error("Error adding cheets to the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}
@@ -94,20 +87,15 @@ router.put("/:cheetId", validateCredentials, async (req: Request, res: Response)
 			});
 			res.status(200).send(cheets);
 		} else {
-			res.status(403).send("Cannot update someone else's Cheet");
+			res.status(403).send("Cannot update someone else's cheet");
 		}
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
 			res.status(404).send("Cheet not found.");
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error updating cheet in the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
+			console.error("Error updating cheet in the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}
@@ -134,18 +122,13 @@ router.delete("/:cheetId", validateCredentials, async (req: Request, res: Respon
 			});
 			res.status(200).send(cheets);
 		} else {
-			res.status(403).send("Cannot delete someone else's Cheet");
+			res.status(403).send("Cannot delete someone else's cheet");
 		}
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
 			res.status(404).send("Cheet not found.");
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error deleting cheet from the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
+			console.error("Error deleting cheet from the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}

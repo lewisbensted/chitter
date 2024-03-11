@@ -5,6 +5,7 @@
 	"main": "app.ts",
 	"type": "module",
 	"scripts": {
+		
 		"start": "set NODE_ENV=development&& nodemon src/app.ts",
 		"migrate": "dotenv -e .env.development -- npx prisma migrate dev --name inititalise",
 		"seed": "set NODE_ENV=development&& node --loader ts-node/esm prisma/seed.ts"

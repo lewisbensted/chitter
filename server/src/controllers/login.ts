@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { logErrors } from "../utils/logErrors.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -26,13 +26,8 @@ router.post("/", async (req: Request, res: Response) => {
 				res.status(401).send("Username not found");
 			}
 		}
-	} catch (error: unknown) {
-		console.error(
-			error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-				? "Error retrieving user from the database. Have all migrations been executed successfully?" +
-						error.message.replace(/\n\n/g, " ")
-				: "An unknown error has occured."
-		);
+	} catch (error) {
+		console.error("Error retrieving user from the database:\n" + logErrors(error));
 		res.status(500).send();
 	}
 });

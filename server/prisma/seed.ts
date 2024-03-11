@@ -1,17 +1,18 @@
 import { Cheet, PrismaClient, Reply, User } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { config } from "dotenv";
+import { logErrors } from "../src/utils/logErrors.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function seed() {
 	if (!process.env.NODE_ENV || !["development", "test"].includes(process.env.NODE_ENV)) {
-		throw new Error("Unable to seed database. Must be in the development or test environment.");
+		throw new Error("This action is only permissable in the development or test environments.");
 	}
 
-	await prisma.reply.deleteMany()
+	await prisma.reply.deleteMany();
 	await prisma.cheet.deleteMany();
 	await prisma.user.deleteMany();
 
@@ -36,7 +37,7 @@ async function main() {
 			email: faker.internet.email({ firstName: firstName, lastName: lastName }),
 			username: username,
 			password: faker.internet.password()
-		})
+		});
 
 		for (let userCheet = 1; userCheet < Math.ceil(Math.random() * 10) + 1; userCheet++) {
 			cheets.push({
@@ -63,19 +64,20 @@ async function main() {
 			cheetId++;
 		}
 	}
-	
+
 	await prisma.user.createMany({ data: users });
 	await prisma.cheet.createMany({ data: cheets });
 	await prisma.reply.createMany({ data: replies });
 }
 
-main()
-	.then(() => {
+prisma
+	.$connect()
+	.then(async () => {
+		await seed();
 		console.log("Test data successfully seeded to database.");
 	})
 	.catch((error) => {
-		console.error(error);
-		console.error("Error:", error.message);
+		console.error("Error seeding test data to database:\n" + logErrors(error));
 		process.exit(1);
 	})
 	.finally(async () => {

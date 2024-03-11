@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { UserSchema } from "../schemas/user.schema.js";
-import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 import bcrypt from "bcrypt";
+import { logErrors } from "../utils/logErrors.js";
 
 const router = express.Router();
 const prisma = new PrismaClient().$extends({
@@ -20,20 +20,14 @@ const prisma = new PrismaClient().$extends({
 router.post("/", async (req: Request, res: Response) => {
 	try {
 		const user = req.body;
-		user.password = bcrypt.hashSync(user.password, 5)
+		user.password = bcrypt.hashSync(user.password, 5);
 		await prisma.user.create({ data: user });
 		res.status(200).send("OK");
 	} catch (error: unknown) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else {
-			console.error(
-				error instanceof PrismaClientInitializationError || error instanceof PrismaClientKnownRequestError
-					? "Error saving user to the database. Have all migrations been executed successfully?" +
-							error.message.replace(/\n\n/g, " ")
-					: "An unknown error has occured."
-			);
-
+			console.error("Error saving user to the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}
