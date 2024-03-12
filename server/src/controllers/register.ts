@@ -11,6 +11,7 @@ const prisma = new PrismaClient().$extends({
 		user: {
 			async create({ args, query }) {
 				args.data = await UserSchema.parseAsync(args.data);
+				args.data.password = bcrypt.hashSync(args.data.password, 5);
 				return query(args);
 			}
 		}
@@ -20,10 +21,9 @@ const prisma = new PrismaClient().$extends({
 router.post("/", async (req: Request, res: Response) => {
 	try {
 		const user = req.body;
-		user.password = bcrypt.hashSync(user.password, 5);
 		await prisma.user.create({ data: user });
 		res.status(200).send("OK");
-	} catch (error: unknown) {
+	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
 		} else {

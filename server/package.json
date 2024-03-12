@@ -5,15 +5,17 @@
 	"main": "app.ts",
 	"type": "module",
 	"scripts": {
-		
-		"start": "set NODE_ENV=development&& nodemon src/app.ts",
-		"migrate": "dotenv -e .env.development -- npx prisma migrate dev --name inititalise",
-		"seed": "set NODE_ENV=development&& node --loader ts-node/esm prisma/seed.ts"
+		"migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev --name inititalise",
+		"seed:dev": "set NODE_ENV=development&& node --loader ts-node/esm prisma/seed.ts",
+		"start:dev": "set NODE_ENV=development&& nodemon src/app.ts",
+		"migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --name inititalise",
+		"seed:test": "set NODE_ENV=test&& node --loader ts-node/esm prisma/seed.ts",
+		"start:test": "set NODE_ENV=test&& nodemon src/app.ts"
 	},
 	"license": "ISC",
 	"devDependencies": {
 		"@faker-js/faker": "^8.4.1",
-		"@prisma/client": "^5.10.2",
+		"@prisma/client": "^5.11.0",
 		"@types/cookie-parser": "^1.4.7",
 		"@types/express": "^4.17.21",
 		"@types/express-session": "^1.18.0",
@@ -23,7 +25,7 @@
 		"eslint": "^8.57.0",
 		"eslint-plugin-only-warn": "^1.1.0",
 		"nodemon": "^3.1.0",
-		"prisma": "^5.10.2",
+		"prisma": "^5.11.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.4.2"
 	},

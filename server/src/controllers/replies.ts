@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import { ReplySchema } from "../schemas/reply.schema.js";
-import { PrismaClientInitializationError, PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { validateCredentials } from "../middleware/validateCredentials.js";
 import { ZodError } from "zod";
 import { logErrors } from "../utils/logErrors.js";
@@ -138,7 +138,7 @@ router.delete("/:replyId", validateCredentials, async (req: Request, res: Respon
 		} else if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
 			res.status(404).send("Reply not found.");
 		} else {
-			console.error("Error deleting reply from the database" + logErrors(error));
+			console.error("Error deleting reply from the database:\n" + logErrors(error));
 			res.status(500).send();
 		}
 	}
