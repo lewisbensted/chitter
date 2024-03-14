@@ -21,9 +21,8 @@ const registerExtension = Prisma.defineExtension({
 
 router.post("/", async (req: Request, res: Response) => {
 	try {
-		const user = req.body;
-		await prisma.$extends(registerExtension).user.create({ data: user });
-		res.status(200).send("OK");
+		const newUser = await prisma.$extends(registerExtension).user.create({ data: req.body });
+		res.status(201).send(newUser);
 	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
