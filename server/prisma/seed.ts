@@ -2,10 +2,9 @@ import { Cheet, PrismaClient, Reply, User } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { config } from "dotenv";
 import { logErrors } from "../src/utils/logErrors.js";
+import prisma from "../src/client.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
-
-const prisma = new PrismaClient();
 
 async function seed() {
 	if (!process.env.NODE_ENV || !["development", "test"].includes(process.env.NODE_ENV)) {

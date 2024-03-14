@@ -1,13 +1,14 @@
 import express, { Request, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { validateCredentials } from "../middleware/validateCredentials.js";
-import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { CheetSchema } from "../schemas/cheet.schema.js";
 import { ZodError } from "zod";
 import { logErrors } from "../utils/logErrors.js";
+import prisma from "../client.js";
 
 const router = express.Router({ mergeParams: true });
-const prisma = new PrismaClient().$extends({
+const cheetExtension = Prisma.defineExtension({
 	query: {
 		cheet: {
 			async create({ args, query }) {
@@ -15,7 +16,7 @@ const prisma = new PrismaClient().$extends({
 				return query(args);
 			},
 			async update({ args, query }) {
-				args.data = await CheetSchema.parseAsync(args.data);
+				args.data = await CheetSchema.partial().parseAsync(args.data);
 				return query(args);
 			}
 		}
@@ -34,16 +35,14 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 		});
 		res.status(200).send(cheets);
 	} catch (error) {
-		console.error(
-			"Error retrieving cheets from the database:\n" + logErrors(error)
-		);
+		console.error("Error retrieving cheets from the database:\n" + logErrors(error));
 		res.status(500).send();
 	}
 });
 
 router.post("/", validateCredentials, async (req: Request, res: Response) => {
 	try {
-		await prisma.cheet.create({
+		await prisma.$extends(cheetExtension).cheet.create({
 			data: { userId: req.session.user!.id, username: req.session.user!.username, text: req.body.text }
 		});
 		const cheets = await prisma.cheet.findMany({
@@ -71,11 +70,11 @@ router.put("/:cheetId", validateCredentials, async (req: Request, res: Response)
 			where: { id: Number(req.params.cheetId) }
 		});
 		if (targetCheet.userId === req.session.user!.id) {
-			await prisma.cheet.update({
+			await prisma.$extends(cheetExtension).cheet.update({
 				where: {
 					id: Number(req.params.cheetId)
 				},
-				data: { userId: req.session.user!.id, username: req.session.user!.username, text: req.body.text }
+				data: req.body
 			});
 			const cheets = await prisma.cheet.findMany({
 				where: {

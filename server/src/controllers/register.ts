@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { UserSchema } from "../schemas/user.schema.js";
 import { ZodError } from "zod";
 import bcrypt from "bcrypt";
 import { logErrors } from "../utils/logErrors.js";
+import prisma from "../client.js";
 
 const router = express.Router();
-const prisma = new PrismaClient().$extends({
+const registerExtension = Prisma.defineExtension({
 	query: {
 		user: {
 			async create({ args, query }) {
@@ -21,7 +22,7 @@ const prisma = new PrismaClient().$extends({
 router.post("/", async (req: Request, res: Response) => {
 	try {
 		const user = req.body;
-		await prisma.user.create({ data: user });
+		await prisma.$extends(registerExtension).user.create({ data: user });
 		res.status(200).send("OK");
 	} catch (error) {
 		if (error instanceof ZodError) {

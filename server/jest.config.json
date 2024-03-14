@@ -1,0 +1,7 @@
+{
+	"preset": "ts-jest",
+	"testEnvironment": "node",
+	"clearMocks": true,
+	"setupFilesAfterEnv": ["./src/tests/mockClient.ts"]
+
+}

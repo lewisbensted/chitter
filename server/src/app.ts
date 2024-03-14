@@ -3,7 +3,6 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import register from "./controllers/register.js";
 import { config } from "dotenv";
-import { PrismaClient } from "@prisma/client";
 import users from "./controllers/users.js";
 import login from "./controllers/login.js";
 import validateLoggedIn from "./controllers/validateLoggedIn.js";
@@ -11,10 +10,9 @@ import cheets from "./controllers/cheets.js";
 import replies from "./controllers/replies.js";
 import logout from "./controllers/logout.js";
 import { logErrors } from "./utils/logErrors.js";
+import prisma from "./client.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
-
-const prisma = new PrismaClient();
 
 prisma
 	.$connect()

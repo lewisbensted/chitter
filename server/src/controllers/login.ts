@@ -1,10 +1,9 @@
 import express, { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { logErrors } from "../utils/logErrors.js";
+import prisma from "../client.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 router.post("/", async (req: Request, res: Response) => {
 	const { username, password } = req.body;

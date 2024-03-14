@@ -1,13 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import express, { Request, Response } from "express";
 import { ReplySchema } from "../schemas/reply.schema.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { validateCredentials } from "../middleware/validateCredentials.js";
 import { ZodError } from "zod";
 import { logErrors } from "../utils/logErrors.js";
+import prisma from "../client.js";
 
 const router = express.Router({ mergeParams: true });
-const prisma = new PrismaClient().$extends({
+const replyExtension = Prisma.defineExtension({
 	query: {
 		reply: {
 			async create({ args, query }) {
@@ -15,7 +16,7 @@ const prisma = new PrismaClient().$extends({
 				return query(args);
 			},
 			async update({ args, query }) {
-				args.data = await ReplySchema.parseAsync(args.data);
+				args.data = await ReplySchema.partial().parseAsync(args.data);
 				return query(args);
 			}
 		}
@@ -41,7 +42,7 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 
 router.post("/", validateCredentials, async (req: Request, res: Response) => {
 	try {
-		await prisma.reply.create({
+		await prisma.$extends(replyExtension).reply.create({
 			data: {
 				userId: req.session.user!.id,
 				username: req.session.user!.username,
@@ -74,16 +75,11 @@ router.put("/:replyId", validateCredentials, async (req: Request, res: Response)
 			where: { id: Number(req.params.replyId) }
 		});
 		if (targetReply.userId === req.session.user!.id) {
-			await prisma.reply.update({
+			await prisma.$extends(replyExtension).reply.update({
 				where: {
 					id: Number(req.params.replyId)
 				},
-				data: {
-					userId: req.session.user!.id,
-					username: req.session.user!.username,
-					text: req.body.text,
-					cheetId: Number(req.params.cheetId)
-				}
+				data: req.body
 			});
 			const replies = await prisma.reply.findMany({
 				where: {

@@ -1,9 +1,8 @@
 import express, { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { logErrors } from "../utils/logErrors.js";
+import prisma from "../client.js";
 
 const router = express.Router({ mergeParams: true });
-const prisma = new PrismaClient();
 
 router.post("/", async (req: Request, res: Response) => {
 	try {
