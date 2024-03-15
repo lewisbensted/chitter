@@ -2,13 +2,16 @@ import { beforeEach, expect, test, describe } from "vitest";
 import prisma from "../client";
 import { resetDb } from "./reset-db";
 import request from "supertest";
-import app from "../app";
+import express from "express";
+import register from "../routes/register";
 
 beforeEach(async () => {
 	await resetDb();
 });
 
 describe("Register a new user at route: [POST] /register.", async () => {
+	const app = express();
+	app.use("/register", express.json(), register);
 	test("Should respond with a 201 code and new user information when a user is succesfully created.", async () => {
 		const testUser = {
 			email: "testuser1@gmail.com",
