@@ -17,12 +17,12 @@ router.post("/", async (req: Request, res: Response) => {
 					req.session.user = { id: user.id, username: username };
 					res.cookie("session_id", req.sessionID);
 					res.cookie("user_id", req.session.user.id);
-					res.status(200).send("OK");
+					res.status(200).send();
 				} else {
 					res.status(401).send("Incorrect password");
 				}
 			} else {
-				res.status(401).send("Username not found");
+				res.status(404).send("User not found");
 			}
 		}
 	} catch (error) {

@@ -1,4 +1,4 @@
-import { Cheet, PrismaClient, Reply, User } from "@prisma/client";
+import { Cheet, Reply, User } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { config } from "dotenv";
 import { logErrors } from "../src/utils/logErrors.js";
@@ -19,7 +19,7 @@ async function seed() {
 	const cheets: Cheet[] = [];
 	const replies: Reply[] = [];
 
-	const numUsers = 30;
+	const numUsers = 20;
 
 	let cheetId = 1;
 	let replyId = 1;
@@ -38,7 +38,7 @@ async function seed() {
 			password: faker.internet.password()
 		});
 
-		for (let userCheet = 1; userCheet < Math.ceil(Math.random() * 10) + 1; userCheet++) {
+		for (let cheet = 0; cheet < Math.ceil(Math.random() * 10); cheet++) {
 			cheets.push({
 				id: cheetId,
 				userId: userId,
@@ -47,22 +47,25 @@ async function seed() {
 				createdAt: new Date(),
 				updatedAt: new Date()
 			});
-			for (let cheetReply = 1; cheetReply < Math.ceil(Math.random() * 10) + 1; cheetReply++) {
-				replies.push({
-					id: replyId,
-					userId: Math.ceil(Math.random() * numUsers),
-					text: faker.lorem.sentence(),
-					cheetId: cheetId,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-					username: username
-				});
-
-				replyId++;
-			}
 			cheetId++;
 		}
 	}
+
+	for (const user of users) {
+		for (let reply = 0; reply < Math.ceil(Math.random() * 20); reply++) {
+			replies.push({
+				id: replyId,
+				userId: user.id,
+				text: faker.lorem.sentence(),
+				cheetId: Math.ceil(Math.random() * (cheetId - 1)),
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				username: user.username
+			});
+			replyId++;
+		}
+	}
+	
 
 	await prisma.user.createMany({ data: users });
 	await prisma.cheet.createMany({ data: cheets });

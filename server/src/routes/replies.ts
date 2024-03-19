@@ -129,9 +129,7 @@ router.delete("/:replyId", validateCredentials, async (req: Request, res: Respon
 			res.status(403).send("Cannot delete someone else's Reply.");
 		}
 	} catch (error) {
-		if (error instanceof ZodError) {
-			res.status(400).send(error.errors.map((err) => err.message));
-		} else if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
+		if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
 			res.status(404).send("Reply not found.");
 		} else {
 			console.error("Error deleting reply from the database:\n" + logErrors(error));

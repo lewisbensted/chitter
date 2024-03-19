@@ -8,7 +8,7 @@ router.delete("/", (req: Request, res: Response) => {
 			console.error("Error logging out:\n" + (error instanceof Error ? `${error.message}` : "An unknown error has occured."));
 			res.status(500).send();
 		} else {
-			res.status(200).send("OK");
+			res.status(200).send();
 		}
 	});
 });
