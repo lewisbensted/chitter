@@ -124,7 +124,7 @@ router.delete("/:replyId", validateCredentials, async (req: Request, res: Respon
 			replies.sort((replyA, replyB) => {
 				return replyB.createdAt.valueOf() - replyA.createdAt.valueOf();
 			});
-			res.status(200).send(replies);
+			res.status(201).send(replies);
 		} else {
 			res.status(403).send("Cannot delete someone else's Reply.");
 		}

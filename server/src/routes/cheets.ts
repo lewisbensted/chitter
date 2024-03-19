@@ -53,7 +53,7 @@ router.post("/", validateCredentials, async (req: Request, res: Response) => {
 		cheets.sort((cheetA, cheetB) => {
 			return cheetB.createdAt.valueOf() - cheetA.createdAt.valueOf();
 		});
-		res.status(200).send(cheets);
+		res.status(201).send(cheets);
 	} catch (error) {
 		if (error instanceof ZodError) {
 			res.status(400).send(error.errors.map((err) => err.message));
