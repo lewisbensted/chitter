@@ -14,11 +14,7 @@ describe("Return information about the session's user at route: [GET] /validate.
 	}));
 
 	const app = express();
-	app.use(
-		session({
-			secret: "secret-key"
-		})
-	);
+	app.use(session({ secret: "secret-key" }));
 	app.use("/validate", express.json(), validate);
 
 	test("Successful request returns session's user information.", async () => {

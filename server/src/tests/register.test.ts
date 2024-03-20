@@ -5,11 +5,11 @@ import request from "supertest";
 import express from "express";
 import register from "../routes/register";
 
-beforeEach(async () => {
-	await resetDb();
-});
 
 describe("Register a new user at route: [POST] /register.", async () => {
+	beforeEach(async () => {
+		await resetDb();
+	});
 	const app = express();
 	app.use("/register", express.json(), register);
 	test("Should respond with a 201 code and new user information when a user is succesfully created.", async () => {
@@ -38,7 +38,7 @@ describe("Register a new user at route: [POST] /register.", async () => {
 			email: "testuser2@gmail.com",
 			firstName: "test",
 			lastName: "user",
-			password: "password1!",
+			password: "password2!",
 			username: "testuser1"
 		};
 		await prisma.user.create({ data: testUser1 });
@@ -61,7 +61,7 @@ describe("Register a new user at route: [POST] /register.", async () => {
 			email: "testuser1@gmail.com",
 			firstName: "test",
 			lastName: "user",
-			password: "password1!",
+			password: "password2!",
 			username: "testuser2"
 		};
 		await prisma.user.create({ data: testUser1 });

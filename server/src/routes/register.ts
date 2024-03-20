@@ -7,7 +7,7 @@ import { logErrors } from "../utils/logErrors.js";
 import prisma from "../client.js";
 
 const router = express.Router();
-const registerExtension = Prisma.defineExtension({
+export const registerExtension = Prisma.defineExtension({
 	query: {
 		user: {
 			async create({ args, query }) {

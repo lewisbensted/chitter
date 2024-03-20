@@ -17,7 +17,7 @@ router.post("/", async (req: Request, res: Response) => {
 					req.session.user = { id: user.id, username: username };
 					res.cookie("session_id", req.sessionID);
 					res.cookie("user_id", req.session.user.id);
-					res.status(200).send();
+					res.status(200).send(user);
 				} else {
 					res.status(401).send("Incorrect password");
 				}
@@ -26,7 +26,7 @@ router.post("/", async (req: Request, res: Response) => {
 			}
 		}
 	} catch (error) {
-		console.error("Error retrieving user from the database:\n" + logErrors(error));
+		console.error("Error loggin in:\n" + logErrors(error));
 		res.status(500).send();
 	}
 });
