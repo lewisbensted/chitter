@@ -64,15 +64,15 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 			next();
 		});
 		sessionApp.use(testApp);
-		const {status, body, headers} = await request(sessionApp)
+		const { status, body, headers } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser1", password: "password1!" });
 		expect(status).toEqual(200);
 		const dbUser = await prisma.user.findFirst();
 		expect(body).toStrictEqual(dbUser);
-		let cookies = headers["set-cookie"] as unknown as string[]
+		let cookies = headers["set-cookie"] as unknown as string[];
 		cookies = cookies.map((cookie) => cookie.split("=")[0]);
-		expect(cookies).toContain("user_id")
+		expect(cookies).toContain("user_id");
 		expect(cookies).toContain("session_id");
 	});
 });
