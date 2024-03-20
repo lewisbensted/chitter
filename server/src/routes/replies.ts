@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import express, { Request, Response } from "express";
 import { ReplySchema } from "../schemas/reply.schema.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { validateCredentials } from "../middleware/validateCredentials.js";
+import { authenticate } from "../middleware/authenticate.js";
 import { ZodError } from "zod";
 import { logErrors } from "../utils/logErrors.js";
 import prisma from "../client.js";
@@ -23,7 +23,7 @@ const replyExtension = Prisma.defineExtension({
 	}
 });
 
-router.get("/", validateCredentials, async (req: Request, res: Response) => {
+router.get("/", authenticate, async (req: Request, res: Response) => {
 	try {
 		const replies = await prisma.reply.findMany({
 			where: {
@@ -40,7 +40,7 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 	}
 });
 
-router.post("/", validateCredentials, async (req: Request, res: Response) => {
+router.post("/", authenticate, async (req: Request, res: Response) => {
 	try {
 		await prisma.$extends(replyExtension).reply.create({
 			data: {
@@ -69,7 +69,7 @@ router.post("/", validateCredentials, async (req: Request, res: Response) => {
 	}
 });
 
-router.put("/:replyId", validateCredentials, async (req: Request, res: Response) => {
+router.put("/:replyId", authenticate, async (req: Request, res: Response) => {
 	try {
 		const targetReply = await prisma.reply.findUniqueOrThrow({
 			where: { id: Number(req.params.replyId) }
@@ -105,7 +105,7 @@ router.put("/:replyId", validateCredentials, async (req: Request, res: Response)
 	}
 });
 
-router.delete("/:replyId", validateCredentials, async (req: Request, res: Response) => {
+router.delete("/:replyId", authenticate, async (req: Request, res: Response) => {
 	try {
 		const targetReply = await prisma.reply.findUniqueOrThrow({
 			where: { id: Number(req.params.replyId) }

@@ -5,7 +5,7 @@ import register from "./routes/register.js";
 import { config } from "dotenv";
 import users from "./routes/users.js";
 import login from "./routes/login.js";
-import validateLoggedIn from "./routes/validateLoggedIn.js";
+import validate from "./routes/validate.js";
 import cheets from "./routes/cheets.js";
 import replies from "./routes/replies.js";
 import logout from "./routes/logout.js";
@@ -31,7 +31,7 @@ prisma
 
 		app.use("/register", express.json(), register);
 		app.use("/login", express.json(), login);
-		app.use("/validate", validateLoggedIn);
+		app.use("/validate", validate);
 		app.use("/logout", logout);
 		app.use("/users/:userId", users);
 		app.use("/cheets", express.json(), cheets);

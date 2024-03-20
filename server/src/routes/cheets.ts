@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { validateCredentials } from "../middleware/validateCredentials.js";
+import { authenticate } from "../middleware/authenticate.js";
 import { Prisma } from "@prisma/client";
 import { CheetSchema } from "../schemas/cheet.schema.js";
 import { ZodError } from "zod";
@@ -23,7 +23,7 @@ const cheetExtension = Prisma.defineExtension({
 	}
 });
 
-router.get("/", validateCredentials, async (req: Request, res: Response) => {
+router.get("/", authenticate, async (req: Request, res: Response) => {
 	try {
 		const cheets = await prisma.cheet.findMany({
 			where: {
@@ -40,7 +40,7 @@ router.get("/", validateCredentials, async (req: Request, res: Response) => {
 	}
 });
 
-router.post("/", validateCredentials, async (req: Request, res: Response) => {
+router.post("/", authenticate, async (req: Request, res: Response) => {
 	try {
 		await prisma.$extends(cheetExtension).cheet.create({
 			data: { userId: req.session.user!.id, username: req.session.user!.username, text: req.body.text }
@@ -64,7 +64,7 @@ router.post("/", validateCredentials, async (req: Request, res: Response) => {
 	}
 });
 
-router.put("/:cheetId", validateCredentials, async (req: Request, res: Response) => {
+router.put("/:cheetId", authenticate, async (req: Request, res: Response) => {
 	try {
 		const targetCheet = await prisma.cheet.findUniqueOrThrow({
 			where: { id: Number(req.params.cheetId) }
@@ -100,7 +100,7 @@ router.put("/:cheetId", validateCredentials, async (req: Request, res: Response)
 	}
 });
 
-router.delete("/:cheetId", validateCredentials, async (req: Request, res: Response) => {
+router.delete("/:cheetId", authenticate, async (req: Request, res: Response) => {
 	try {
 		const targetCheet = await prisma.cheet.findUniqueOrThrow({
 			where: { id: Number(req.params.cheetId) }

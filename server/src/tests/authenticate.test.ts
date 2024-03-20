@@ -1,9 +1,9 @@
 import { test, describe, vi, expect } from "vitest";
-import { validateCredentials } from "../middleware/validateCredentials";
+import { authenticate } from "../middleware/authenticate";
 import { Request, Response, NextFunction } from "express";
 
-describe("Tests validateCredentials function which compares information stored on the session and in cookies to validate the user.", async () => {
-	test("Successful validation where the sessionIDs and userIDs match, respectively.", async () => {
+describe("Authenticates the user by comparing information stored on the request's sessions and cookies.", async () => {
+	test("Successful validation where the respective sessionIDs and userIDs match.", async () => {
 		const req = {
 			sessionID: "testID",
 			session: { user: { id: 1234 } },
@@ -12,7 +12,7 @@ describe("Tests validateCredentials function which compares information stored o
 		const res = { status: vi.fn(), send: vi.fn(() => res) } as unknown as Response;
 		const next = vi.fn() as unknown as NextFunction;
 
-		validateCredentials(req, res, next);
+		authenticate(req, res, next);
 		expect(next).toHaveBeenCalledTimes(1);
 	});
 	test("Session IDs match but user does not exist on either the session or cookies.", async () => {
@@ -24,7 +24,7 @@ describe("Tests validateCredentials function which compares information stored o
 		const res = { status: vi.fn(() => res), send: vi.fn() } as unknown as Response;
 		const next = vi.fn() as unknown as NextFunction;
 
-		validateCredentials(req, res, next);
+		authenticate(req, res, next);
 		expect(next).toHaveBeenCalledTimes(0);
 	});
 	test("Session IDs match but userID does not exist in either the session or cookies.", async () => {
@@ -36,7 +36,7 @@ describe("Tests validateCredentials function which compares information stored o
 		const res = { status: vi.fn(() => res), send: vi.fn() } as unknown as Response;
 		const next = vi.fn() as unknown as NextFunction;
 
-		validateCredentials(req, res, next);
+		authenticate(req, res, next);
 		expect(next).toHaveBeenCalledTimes(0);
 	});
 	test("Session IDs match but userID's do not.", async () => {
@@ -48,7 +48,7 @@ describe("Tests validateCredentials function which compares information stored o
 		const res = { status: vi.fn(() => res), send: vi.fn() } as unknown as Response;
 		const next = vi.fn() as unknown as NextFunction;
 
-		validateCredentials(req, res, next);
+		authenticate(req, res, next);
 		expect(next).toHaveBeenCalledTimes(0);
 	});
 	test("User IDs match but sessionID's do not.", async () => {
@@ -60,7 +60,7 @@ describe("Tests validateCredentials function which compares information stored o
 		const res = { status: vi.fn(() => res), send: vi.fn() } as unknown as Response;
 		const next = vi.fn() as unknown as NextFunction;
 
-		validateCredentials(req, res, next);
+		authenticate(req, res, next);
 		expect(next).toHaveBeenCalledTimes(0);
 	});
 
@@ -73,7 +73,7 @@ describe("Tests validateCredentials function which compares information stored o
 		const res = { status: vi.fn(() => res), send: vi.fn() } as unknown as Response;
 		const next = vi.fn() as unknown as NextFunction;
 
-		validateCredentials(req, res, next);
+		authenticate(req, res, next);
 		expect(next).toHaveBeenCalledTimes(0);
 	});
 });

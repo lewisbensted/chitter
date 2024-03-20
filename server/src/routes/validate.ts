@@ -1,10 +1,9 @@
 import express, { Request, Response } from "express";
-import { validateCredentials } from "../middleware/validateCredentials.js";
-import { logErrors } from "../utils/logErrors.js";
+import { authenticate } from "../middleware/authenticate.js";
 
 const router = express.Router();
 
-router.get("/", validateCredentials, (req: Request, res: Response) => {
+router.get("/", authenticate, (req: Request, res: Response) => {
 	try {
 		res.status(200).send(req.session.user);
 	} catch (error) {
