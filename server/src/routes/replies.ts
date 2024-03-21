@@ -5,7 +5,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { authenticate } from "../middleware/authenticate.js";
 import { ZodError } from "zod";
 import { logErrors } from "../utils/logErrors.js";
-import prisma from "../client.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router({ mergeParams: true });
 const replyExtension = Prisma.defineExtension({

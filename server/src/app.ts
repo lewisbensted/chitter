@@ -10,7 +10,7 @@ import cheets from "./routes/cheets.js";
 import replies from "./routes/replies.js";
 import logout from "./routes/logout.js";
 import { logErrors } from "./utils/logErrors.js";
-import prisma from "./client.js";
+import prisma from "./prismaClient.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -40,9 +40,5 @@ prisma
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
 	})
 	.catch((error) => {
-		console.error(
-			"Error initialising database connection:\n" +
-				logErrors(error)
-		);
+		console.error("Error initialising database connection:\n" + logErrors(error));
 	});
-

@@ -2,7 +2,7 @@ import { Cheet, Reply, User } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { config } from "dotenv";
 import { logErrors } from "../src/utils/logErrors.js";
-import prisma from "../src/client.js";
+import prisma from "../src/prismaClient.js";
 
 config({ path: `.env.${process.env.NODE_ENV}` });
 

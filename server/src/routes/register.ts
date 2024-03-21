@@ -4,7 +4,7 @@ import { UserSchema } from "../schemas/user.schema.js";
 import { ZodError } from "zod";
 import bcrypt from "bcrypt";
 import { logErrors } from "../utils/logErrors.js";
-import prisma from "../client.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router();
 export const registerExtension = Prisma.defineExtension({

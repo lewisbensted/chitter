@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { logErrors } from "../utils/logErrors.js";
-import prisma from "../client.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.post("/", async (req: Request, res: Response) => {
 	const { username, password } = req.body;
 	try {
 		if (req.session.user?.id) {
-			res.status(403).send("Already logged in");
+			res.status(403).send(["Already logged in"]);
 		} else {
 			const user = await prisma.user.findUnique({ where: { username: username } });
 			if (user) {
@@ -19,10 +19,10 @@ router.post("/", async (req: Request, res: Response) => {
 					res.cookie("user_id", req.session.user.id);
 					res.status(200).send(user);
 				} else {
-					res.status(401).send("Incorrect password");
+					res.status(401).send(["Incorrect password"]);
 				}
 			} else {
-				res.status(404).send("User not found");
+				res.status(404).send(["User not found"]);
 			}
 		}
 	} catch (error) {

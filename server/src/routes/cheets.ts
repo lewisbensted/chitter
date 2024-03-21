@@ -5,10 +5,10 @@ import { Prisma } from "@prisma/client";
 import { CheetSchema } from "../schemas/cheet.schema.js";
 import { ZodError } from "zod";
 import { logErrors } from "../utils/logErrors.js";
-import prisma from "../client.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router({ mergeParams: true });
-const cheetExtension = Prisma.defineExtension({
+export const cheetExtension = Prisma.defineExtension({
 	query: {
 		cheet: {
 			async create({ args, query }) {

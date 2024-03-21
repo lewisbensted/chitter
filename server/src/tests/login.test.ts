@@ -1,11 +1,11 @@
 import { test, describe, beforeEach, expect } from "vitest";
 import { resetDb } from "./reset-db";
-import prisma from "../client";
+import prisma from "../prismaClient";
 import login from "../routes/login";
 import express from "express";
 import request from "supertest";
 import session from "express-session";
-import { testUser1 } from "./fixtures";
+import { testUser1 } from "./fixtures/users.fixtures";
 import { registerExtension } from "../routes/register";
 
 describe("Login with an existing user at route: [POST] /login.", async () => {
@@ -25,11 +25,12 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 			next();
 		});
 		sessionApp.use(testApp);
-		const { status, text } = await request(sessionApp)
+		const { status, body } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser1", password: "password1!" });
 		expect(status).toEqual(403);
-		expect(text).toEqual("Already logged in");
+		expect(body).length(1);
+		expect(body).toContain("Already logged in");
 	});
 	test("Responds with HTTP status 404 if a user does not exist in the database.", async () => {
 		const sessionApp = express();
@@ -38,11 +39,12 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 			next();
 		});
 		sessionApp.use(testApp);
-		const { status, text } = await request(sessionApp)
+		const { status, body } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser", password: "password1!" });
 		expect(status).toEqual(404);
-		expect(text).toEqual("User not found");
+		expect(body).length(1);
+		expect(body).toContain("User not found");
 	});
 	test("Responds with HTTP status 401 if the password provided in the params does not match the decrypted value from the database.", async () => {
 		const sessionApp = express();
@@ -51,11 +53,12 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 			next();
 		});
 		sessionApp.use(testApp);
-		const { status, text } = await request(sessionApp)
+		const { status, body } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser1", password: "password1" });
 		expect(status).toEqual(401);
-		expect(text).toEqual("Incorrect password");
+		expect(body).length(1);
+		expect(body).toContain("Incorrect password");
 	});
 	test("Responds with HTTP status 200 if the password and username provided match their respective values in the database.", async () => {
 		const sessionApp = express();

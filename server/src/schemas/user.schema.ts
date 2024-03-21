@@ -1,7 +1,8 @@
 import { z } from "zod";
-import prisma from "../client.js";
+import prisma from "../prismaClient.js";
 
 export const UserSchema = z.object({
+	id: z.number().optional(),
 	firstName: z
 		.string()
 		.min(2, "First name too short. Must be at least 2 characters.")
@@ -14,7 +15,7 @@ export const UserSchema = z.object({
 		.regex(/^[a-zA-Z]+$/, "Last name cannot contain spaces, numbers or special characters."),
 	email: z
 		.string()
-		.email()
+		.email("Invalid email address.")
 		.refine(async (email) => {
 			const user = await prisma.user.findUnique({ where: { email: email } });
 			return user ? false : true;
