@@ -6,5 +6,8 @@ export const CheetSchema = z.object({
 		.min(5, "Cheet too short. Must be between 5 and 50 characters.")
 		.max(50, "Cheet too long. Must be between 5 and 50 characters."),
 	username: z.string(),
-	userId: z.number()
+	userId: z.number(),
+	id: z.number().optional(),
+	createdAt: z.date().optional(),
+	updatedAt: z.date().optional()
 });
