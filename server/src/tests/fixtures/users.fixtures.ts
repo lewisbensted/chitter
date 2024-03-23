@@ -1,6 +1,4 @@
-import { User } from "@prisma/client";
-
-export const testUser1: User = {
+export const testUser1 = {
 	id: 1,
 	email: "testuser1@test.com",
 	firstName: "test",
@@ -9,7 +7,7 @@ export const testUser1: User = {
 	username: "testuser1"
 };
 
-export const testUser2: User = {
+export const testUser2 = {
 	id: 2,
 	email: "testuser2@test.com",
 	firstName: "test",

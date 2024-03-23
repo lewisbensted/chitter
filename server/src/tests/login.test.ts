@@ -17,11 +17,12 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 	const testApp = express();
 	testApp.use("/login", express.json(), login);
 
+
 	test("Responds with HTTP status 403 if a user already exist on the session object (is already logged in).", async () => {
 		const sessionApp = express();
 		sessionApp.use(session({ secret: "secret-key" }));
 		sessionApp.all("/login", (req, res, next) => {
-			req.session.user = { id: 1, username: "testuser" };
+			req.session.user = { id: 1, username: "testuser1" };
 			next();
 		});
 		sessionApp.use(testApp);
@@ -32,13 +33,13 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 		expect(body).length(1);
 		expect(body).toContain("Already logged in");
 	});
+
+	const sessionApp = express();
+	sessionApp.use(session({ secret: "secret-key" }));
+	sessionApp.use(testApp);
+
+
 	test("Responds with HTTP status 404 if a user does not exist in the database.", async () => {
-		const sessionApp = express();
-		sessionApp.use(session({ secret: "secret-key" }));
-		sessionApp.all("/login", (req, res, next) => {
-			next();
-		});
-		sessionApp.use(testApp);
 		const { status, body } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser", password: "password1!" });
@@ -47,12 +48,6 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 		expect(body).toContain("User not found");
 	});
 	test("Responds with HTTP status 401 if the password provided in the params does not match the decrypted value from the database.", async () => {
-		const sessionApp = express();
-		sessionApp.use(session({ secret: "secret-key" }));
-		sessionApp.all("/login", (req, res, next) => {
-			next();
-		});
-		sessionApp.use(testApp);
 		const { status, body } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser1", password: "password1" });
@@ -61,12 +56,6 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
 		expect(body).toContain("Incorrect password");
 	});
 	test("Responds with HTTP status 200 if the password and username provided match their respective values in the database.", async () => {
-		const sessionApp = express();
-		sessionApp.use(session({ secret: "secret-key" }));
-		sessionApp.all("/login", (req, res, next) => {
-			next();
-		});
-		sessionApp.use(testApp);
 		const { status, body, headers } = await request(sessionApp)
 			.post("/login")
 			.send({ username: "testuser1", password: "password1!" });

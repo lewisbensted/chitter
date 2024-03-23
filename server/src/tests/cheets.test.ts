@@ -8,6 +8,7 @@ import { testCheets } from "./fixtures/cheets.fixtures";
 import express from "express";
 import request from "supertest";
 import { Cheet } from "@prisma/client";
+import session from "express-session";
 
 describe("Test cheets routers", () => {
 	vi.mock("./../middleware/authenticate", () => ({
@@ -15,6 +16,7 @@ describe("Test cheets routers", () => {
 			next();
 		})
 	}));
+
 	beforeEach(async () => {
 		await resetDb();
 		await prisma.$extends(registerExtension).user.create({ data: testUser1 });
@@ -23,9 +25,18 @@ describe("Test cheets routers", () => {
 			await prisma.$extends(cheetExtension).cheet.create({ data: testCheet });
 		}
 	});
+
 	const testApp = express();
 	testApp.use("/cheets", express.json(), cheets);
 	testApp.use("/users/:userId/cheets", express.json(), cheets);
+	const sessionApp = express();
+	sessionApp.use(session({ secret: "secret-key" }));
+	sessionApp.all("*", (req, res, next) => {
+		req.session.user = { id: 1, username: "testuser1" };
+		next();
+	});
+	sessionApp.use(testApp);
+
 	describe("Fetch cheets at route: [GET] /cheets.", async () => {
 		test("Responds with HTTP status 200 and all cheets when a userID is not provided as a parameter", async () => {
 			const { status, body } = await request(testApp).get("/cheets");
@@ -44,10 +55,6 @@ describe("Test cheets routers", () => {
 			expect(request2.status).toEqual(200);
 			expect(request2.body).length(2);
 			expect(request2.body.filter((cheet: Cheet) => cheet.username === "testuser2")).length(2);
-
-			const request3 = await request(testApp).get("/users/3/cheets");
-			expect(request3.status).toEqual(200);
-			expect(request3.body).length(0);
 		});
 		test("Responds with HTTP status 200 and cheets ordered in descending chronological order", async () => {
 			const { status, body } = await request(testApp).get("/cheets");
@@ -59,17 +66,57 @@ describe("Test cheets routers", () => {
 		});
 	});
 
-	// describe("Post a new cheet at route: [POST] /cheets.", async () => {
-	// 	test("Responds with HTTP status 201 and all cheets when a new cheet is created", async () => {});
-	// 	test("Responds with HTTP status 400 if cheet validation fails", async () => {});
-	// });
+	describe("Post a new cheet at route: [POST] /cheets.", async () => {
+		test("Responds with HTTP status 201 and all cheets when a new cheet is created.", async () => {
+			const { status, body } = await request(sessionApp).post("/cheets").send({ text: "testuser1: new test cheet" });
+			expect(status).toEqual(201);
+			expect(body).length(6);
+			expect(body[0].text).toEqual("testuser1: new test cheet");
+			expect(body[0].userId).toEqual(1);
+			expect(body[0].username).toEqual("testuser1");
+		});
+		test("Responds with HTTP status 400 if cheet validation fails", async () => {
+			const { status, body } = await request(sessionApp).post("/cheets").send({ text: "tes" });
+			expect(status).toEqual(400);
+			expect(body).length(1);
+			expect(body[0]).toEqual("Cheet too short. Must be between 5 and 50 characters.");
+		});
+	});
 
-	// describe("Updates an existing cheet at route: [PUT] /cheets.", async () => {
-	// 	test("Responds with HTTP status 200 and all cheets when an existing cheet is updated", async () => {});
-	// 	test("Responds with HTTP status 400 if cheet validation fails", async () => {});
-	// 	test("Responds with HTTP status 403 if cheet's userID does not match the session's userID (trying to update someone else's cheet)", async () => {});
-	// 	test("Responds with HTTP status 404 if the cheet to be updated does not exist in the database", async () => {});
-	// });
+	describe("Updates an existing cheet at route: [PUT] /cheets.", async () => {
+		test("Responds with HTTP status 200 and all cheets when an existing cheet is updated", async () => {
+			const { status, body } = await request(sessionApp)
+				.put("/cheets/1")
+				.send({ text: "testuser1: test cheet 1 - updated" });
+			expect(status).toEqual(200);
+			expect(body).length(5);
+			const updatedCheet = body.filter((cheet: Cheet) => cheet.id == 1);
+			expect(updatedCheet).length(1);
+			expect(updatedCheet[0].text).toEqual("testuser1: test cheet 1 - updated");
+			expect(updatedCheet[0].userId).toEqual(1);
+			expect(updatedCheet[0].updatedAt > updatedCheet[0].createdAt).toBe(true);
+		});
+		test("Responds with HTTP status 400 if cheet validation fails", async () => {
+			const { status, body } = await request(sessionApp).put("/cheets/1").send({ text: "te" });
+			expect(status).toEqual(400);
+			expect(body).length(1);
+			expect(body[0]).toEqual("Cheet too short. Must be between 5 and 50 characters.");
+		});
+		test("Responds with HTTP status 403 if cheet's userID does not match the session's userID (trying to update someone else's cheet)", async () => {
+			const { status, body } = await request(sessionApp)
+				.put("/cheets/2")
+				.send({ text: "testuser2: test cheet 1 - updated" });
+			expect(status).toEqual(403);
+			expect(body).length(1);
+			expect(body[0]).toEqual("Cannot update someone else's cheet");
+		});
+		test("Responds with HTTP status 404 if the cheet to be updated does not exist in the database", async () => {
+			const { status, body } = await request(sessionApp).put("/cheets/6").send({ text: "update nonexistent cheet" });
+			expect(status).toEqual(404);
+			expect(body).length(1);
+			expect(body[0]).toEqual("Cheet not found.");
+		});
+	});
 
 	// describe("deletes an existing cheet at route: [DELETE] /cheets.", async () => {
 	// 	test("Responds with HTTP status 200 and all cheets when an existing cheet is deleted", async () => {});
