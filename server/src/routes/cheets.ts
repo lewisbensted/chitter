@@ -121,11 +121,11 @@ router.delete("/:cheetId", authenticate, async (req: Request, res: Response) => 
 			});
 			res.status(200).send(cheets);
 		} else {
-			res.status(403).send("Cannot delete someone else's cheet");
+			res.status(403).send(["Cannot delete someone else's cheet"]);
 		}
 	} catch (error) {
 		if (error instanceof PrismaClientKnownRequestError && error.code == "P2025") {
-			res.status(404).send("Cheet not found.");
+			res.status(404).send(["Cheet not found."]);
 		} else {
 			console.error("Error deleting cheet from the database:\n" + logErrors(error));
 			res.status(500).send();

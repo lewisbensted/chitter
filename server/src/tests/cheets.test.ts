@@ -118,9 +118,22 @@ describe("Test cheets routers", () => {
 		});
 	});
 
-	// describe("deletes an existing cheet at route: [DELETE] /cheets.", async () => {
-	// 	test("Responds with HTTP status 200 and all cheets when an existing cheet is deleted", async () => {});
-	// 	test("Responds with HTTP status 403 if cheet's userID does not match the session's userID (trying to delete someone else's cheet)", async () => {});
-	// 	test("Responds with HTTP status 404 if the cheet to be delete does not exist in the database", async () => {});
-	// });
+	describe("deletes an existing cheet at route: [DELETE] /cheets.", async () => {
+		test("Responds with HTTP status 200 and all cheets when an existing cheet is deleted", async () => {
+			const { status, body } = await request(sessionApp).delete("/cheets/1");
+			expect(status).toEqual(200);
+			expect(body).length(4);
+			expect(body.map((cheet: Cheet) => cheet.id)).not.toContain(1);
+		});
+		test("Responds with HTTP status 403 if cheet's userID does not match the session's userID (trying to delete someone else's cheet)", async () => {
+			const { status, body } = await request(sessionApp).delete("/cheets/2");
+			expect(status).toEqual(403);
+			expect(body[0]).toEqual("Cannot delete someone else's cheet");
+		});
+		test("Responds with HTTP status 404 if the cheet to be delete does not exist in the database", async () => {
+			const { status, body } = await request(sessionApp).delete("/cheets/6");
+			expect(status).toEqual(404);
+			expect(body[0]).toEqual("Cheet not found.");
+		});
+	});
 });

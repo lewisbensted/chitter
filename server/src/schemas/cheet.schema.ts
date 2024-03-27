@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const CheetSchema = z.object({
+	id: z.number().optional(),
+	userId: z.number({ required_error: "User ID not provided." }),
+	username: z.string({ required_error: "Username not provided." }),
 	text: z
-		.string()
+		.string({ required_error: "Text not provided." })
 		.min(5, "Cheet too short. Must be between 5 and 50 characters.")
 		.max(50, "Cheet too long. Must be between 5 and 50 characters."),
-	username: z.string(),
-	userId: z.number(),
-	id: z.number().optional(),
 	createdAt: z.date().optional(),
 	updatedAt: z.date().optional()
 });
