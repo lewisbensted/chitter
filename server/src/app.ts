@@ -19,44 +19,55 @@ dotenvExpand.expand(dotenv.config({ path: `../.env.${process.env.NODE_ENV}` }));
 const SessionStore = MySQLStore(expressSession);
 
 const sessionStoreOptions: MySQLStore.Options = {
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_NAME,
-	port: Number(process.env.DB_PORT),
-	host: process.env.DB_HOST,
-	expiration: 86400,
-	schema: { tableName: "session_store" },
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT),
+  host: process.env.DB_HOST,
+  expiration: 86400,
+  schema: { tableName: "session_store" },
 };
 
 prisma
-	.$connect()
-	.then(() => {
-		const app = express();
-		const PORT = process.env.SERVER_PORT || 4000;
+  .$connect()
+  .then(() => {
+    const app = express();
+    const PORT = Number(process.env.SERVER_PORT);
 
-		app.use(cookieParser());
-		app.use(
-			session({
-				secret: "secret-key",
-				saveUninitialized: false,
-				resave: false,
-				store: new SessionStore(sessionStoreOptions),
-			})
-		);
+    app.use(cookieParser());
+    app.use(
+      session({
+        secret: "secret-key",
+        saveUninitialized: false,
+        resave: false,
+        store: new SessionStore(sessionStoreOptions),
+      })
+    );
 
-		app.use("/register", express.json(), register);
-		app.use("/login", express.json(), login);
-		app.use("/validate", validate);
-		app.use("/logout", logout);
-		app.use("/users/:userId", user);
-		app.use("/cheets", express.json(), cheets);
-		app.use("/users/:userId/cheets", express.json(), cheets);
-		app.use("/cheets/:cheetId/replies", replies);
-		app.use("/messages/:recipientId", express.json(), messages);
-		app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
-	})
-	.catch((error) => {
-		console.error(
-			"Error initialising database connection:\n" + logError(error)
-		);
-	});
+    app.use("/register", express.json(), register);
+    app.use("/login", express.json(), login);
+    app.use("/validate", validate);
+    app.use("/logout", logout);
+    app.use("/users/:userId", user);
+    app.use("/cheets", express.json(), cheets);
+    app.use("/users/:userId/cheets", express.json(), cheets);
+    app.use("/cheets/:cheetId/replies", replies);
+    app.use("/messages/:recipientId", express.json(), messages);
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
+  })
+  .catch((error: unknown) => {
+    console.error(
+      error instanceof RangeError
+        ? `Invalid server port provided - must be a number between 0 and 65536. \nRecieved: ${
+            process.env.SERVER_PORT
+          }, 
+			type: ${
+        process.env.SERVER_PORT === undefined
+          ? undefined
+          : Number.isNaN(Number(process.env.SERVER_PORT))
+          ? "string"
+          : "number"
+      }.`
+        : "Error initialising database connection:\n" + logError(error)
+    );
+  });
