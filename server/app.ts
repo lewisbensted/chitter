@@ -1,22 +1,24 @@
 import express from "express";
 import session, * as expressSession from "express-session";
 import cookieParser from "cookie-parser";
-import register from "./routes/register.js";
-import user from "./routes/user.js";
-import login from "./routes/login.js";
-import validate from "./routes/validate.js";
-import cheets from "./routes/cheets.js";
-import replies from "./routes/replies.js";
-import logout from "./routes/logout.js";
-import { logError } from "./utils/logError.js";
-import prisma from "../prisma/prismaClient.js";
-import messages from "./routes/messages.js";
+import register from "./src/routes/register.js";
+import user from "./src/routes/user.js";
+import login from "./src/routes/login.js";
+import validate from "./src/routes/validate.js";
+import cheets from "./src/routes/cheets.js";
+import replies from "./src/routes/replies.js";
+import logout from "./src/routes/logout.js";
+import { logError } from "./src/utils/logError.js";
+import prisma from "./prisma/prismaClient.js";
+import messages from "./src/routes/messages.js";
 import dotenv from "dotenv";
 import dotenvExpand from "dotenv-expand";
 import MySQLStore from "express-mysql-session";
+import path from "path";
 
 dotenvExpand.expand(dotenv.config({ path: `../.env.${process.env.NODE_ENV}` }));
 const SessionStore = MySQLStore(expressSession);
+const __dirname = import.meta.dirname
 
 const sessionStoreOptions: MySQLStore.Options = {
   user: process.env.DB_USER,
@@ -33,6 +35,12 @@ prisma
   .then(() => {
     const app = express();
     const PORT = Number(process.env.SERVER_PORT);
+
+    app.use(express.static(path.join(__dirname, '../frontend/build')));
+    app.use((req, res) => {
+          res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+      }
+  );
 
     app.use(cookieParser());
     app.use(
