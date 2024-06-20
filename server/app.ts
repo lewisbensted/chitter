@@ -15,10 +15,11 @@ import dotenv from "dotenv";
 import dotenvExpand from "dotenv-expand";
 import MySQLStore from "express-mysql-session";
 import path from "path";
+import cors from "cors";
 
 dotenvExpand.expand(dotenv.config({ path: `../.env.${process.env.NODE_ENV}` }));
 const SessionStore = MySQLStore(expressSession);
-const __dirname = import.meta.dirname
+const __dirname = import.meta.dirname;
 
 const sessionStoreOptions: MySQLStore.Options = {
   user: process.env.DB_USER,
@@ -36,11 +37,19 @@ prisma
     const app = express();
     const PORT = Number(process.env.SERVER_PORT);
 
-    app.use(express.static(path.join(__dirname, '../frontend/build')));
-    app.use((req, res) => {
-          res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-      }
-  );
+    app.use(
+      cors({
+        origin: `*`,
+        credentials: true,
+      })
+    );
+
+    if (process.env.NODE_ENV === "production") {
+      app.use(express.static(path.join(__dirname, "../frontend/build")));
+      app.use((req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+      });
+    }
 
     app.use(cookieParser());
     app.use(

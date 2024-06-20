@@ -17,7 +17,7 @@ const Homepage: React.FC = () => {
 
 	useEffect(() => {
 		axios
-			.get("/validate")
+			.get(`http://127.0.0.1:${process.env.REACT_APP_SERVER_PORT}/validate`)
 			.then((res: { data: IUser }) => {
 				setUserId(res.data.id);
 			})
