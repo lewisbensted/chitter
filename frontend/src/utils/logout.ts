@@ -7,7 +7,7 @@ const logout = (
 ) => {
 	setLoading(true);
 	axios
-		.delete("/logout")
+		.delete(`${process.env.REACT_APP_SERVER_URL}/logout`)
 		.then(() => {
 			setUserId(undefined);
 			setCheets([]);

@@ -20,7 +20,7 @@ const SubmitCheet: React.FC<Props> = ({ isLoading, isDisabled, setLoading, setCh
 		setLoading(true);
 		reset();
 		axios
-			.post(`${id ? "/users/" + id : ""}/cheets`, data)
+			.post(`${process.env.REACT_APP_SERVER_URL}/${id ? "/users/" + id : ""}/cheets`, data)
 			.then((res) => {
 				setLoading(false);
 				setCheets(res.data);

@@ -5,7 +5,7 @@
 	"scripts": {
 		"install": "concurrently \"cd frontend && npm install\" \"cd server && npm install\"",
 		"migrate:dev": "cd server && npm run migrate:dev",
-		"start:dev": "set NODE_ENV=development&& concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\""
+		"start:dev": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\""
 	},
 	"repository": {
 		"type": "git",

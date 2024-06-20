@@ -35,7 +35,7 @@ const User: React.FC = () => {
 	useEffect(() => {
 		if (userId) {
 			axios
-				.post(`/users/${id}`)
+				.post(`${process.env.REACT_APP_SERVER_URL}/users/${id}`)
 				.then((res: { data: string }) => {
 					setUsername(res.data);
 				})
@@ -48,7 +48,7 @@ const User: React.FC = () => {
 	useEffect(() => {
 		if (userId && username) {
 			axios
-				.get(`/users/${id}/cheets`)
+				.get(`${process.env.REACT_APP_SERVER_URL}/users/${id}/cheets`)
 				.then((res: { data: ICheet[] }) => {
 					setCheets(res.data);
 					setPageLoading(false);

@@ -29,7 +29,7 @@ const EditReply: React.FC<Props> = ({
 	const onSubmit: SubmitHandler<{ text: string }> = (data) => {
 		setRepliesLoading(true);
 		axios
-			.put(`/cheets/${cheetId}/replies/${reply.id}`, data)
+			.put(`${process.env.REACT_APP_SERVER_URL}/cheets/${cheetId}/replies/${reply.id}`, data)
 			.then((res) => {
 				setRepliesLoading(false);
 				setReplies(res.data);

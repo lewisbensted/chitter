@@ -50,7 +50,7 @@ const Reply: React.FC<Props> = ({
 					onClick={() => {
 						setRepliesLoading(true);
 						axios
-							.delete(`/cheets/${reply.cheetId}/replies/${reply.id}`)
+							.delete(`${process.env.REACT_APP_SERVER_URL}/cheets/${reply.cheetId}/replies/${reply.id}`)
 							.then((res) => {
 								setReplies(res.data);
 								setRepliesLoading(false);

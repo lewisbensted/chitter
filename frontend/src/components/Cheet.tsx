@@ -39,7 +39,7 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setErro
 					onClick={() => {
 						setLoading(true);
 						axios
-							.delete(`${id ? "/users/" + id : ""}/cheets/${cheet.id}`)
+							.delete(`${process.env.REACT_APP_SERVER_URL}/${id ? "/users/" + id : ""}/cheets/${cheet.id}`)
 							.then((res) => {
 								setCheets(res.data);
 								setLoading(false);

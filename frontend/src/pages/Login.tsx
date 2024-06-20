@@ -38,7 +38,7 @@ const Login: React.FC = () => {
 		setFormLoading(true);
 		reset();
 		axios
-			.post("/login", data)
+			.post(`${process.env.REACT_APP_SERVER_URL}/login`, data)
 			.then(() => {
 				navigate("/");
 			})

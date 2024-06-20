@@ -26,7 +26,7 @@ const SubmitReply: React.FC<Props> = ({
 		setRepliesLoading(true);
 		reset();
 		axios
-			.post(`/cheets/${cheetId}/replies`, data)
+			.post(`${process.env.REACT_APP_SERVER_URL}/cheets/${cheetId}/replies`, data)
 			.then((res) => {
 				setRepliesLoading(false);
 				setReplies(res.data);

@@ -39,7 +39,7 @@ prisma
 
     app.use(
       cors({
-        origin: `*`,
+        origin: `http://localhost:${process.env.PORT}`,
         credentials: true,
       })
     );

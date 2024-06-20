@@ -21,7 +21,7 @@ const EditCheet: React.FC<Props> = ({ cheet, isLoading, isDisabled, setLoading, 
 	const onSubmit: SubmitHandler<{ text: string }> = (data) => {
 		setLoading(true);
 		axios
-			.put(`${id ? "/users/" + id : ""}/cheets/${cheet.id}`, data)
+			.put(`${process.env.REACT_APP_SERVER_URL}/${id ? "/users/" + id : ""}/cheets/${cheet.id}`, data)
 			.then((res) => {
 				setLoading(false);
 				setEditing(false);

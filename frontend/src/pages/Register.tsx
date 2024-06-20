@@ -43,7 +43,7 @@ const Register: React.FC = () => {
 		setFormLoading(true);
 		reset();
 		axios
-			.post("/register", data)
+			.post(`${process.env.REACT_APP_SERVER_URL}/register`, data)
 			.then(() => {
 				setFormLoading(false);
 				setSuccess(true);

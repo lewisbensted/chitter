@@ -28,7 +28,7 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
 	useEffect(() => {
 		if (isOpen) {
 			axios
-				.get(`/cheets/${cheet.id}/replies`)
+				.get(`${process.env.REACT_APP_SERVER_URL}/cheets/${cheet.id}/replies`)
 				.then((res) => {
 					setReplies(res.data);
 					setPageLoading(false);
