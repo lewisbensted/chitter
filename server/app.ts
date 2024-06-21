@@ -31,24 +31,39 @@ const sessionStoreOptions: MySQLStore.Options = {
   schema: { tableName: "session_store" },
 };
 
+const checkValidPort = (port: number, side: string) => {
+  if (Number.isNaN(port)) {
+    throw new TypeError(
+      `Invalid ${side} port provided - must be a number between 0 and 65536.`
+    );
+  } else if (port < 0 || port > 65535) {
+    throw new RangeError(
+      `Invalid ${side} port provided - must be a number between 0 and 65536.`
+    );
+  }
+};
+
 prisma
   .$connect()
   .then(() => {
     const app = express();
-    const PORT = Number(process.env.SERVER_PORT);
-
-    app.use(
-      cors({
-        origin: `http://localhost:${process.env.PORT}`,
-        credentials: true,
-      })
-    );
+    const FRONTEND_PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+    const SERVER_PORT = Number(process.env.SERVER_PORT);
+    checkValidPort(Number(SERVER_PORT), "server");
 
     if (process.env.NODE_ENV === "production") {
       app.use(express.static(path.join(__dirname, "../frontend/build")));
-      app.use((req, res) => {
+      app.get("/", (req, res) => {
         res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
       });
+    } else {
+      checkValidPort(Number(FRONTEND_PORT), "frontend");
+      app.use(
+        cors({
+          origin: `http://localhost:${FRONTEND_PORT}`,
+          credentials: true,
+        })
+      );
     }
 
     app.use(cookieParser());
@@ -70,21 +85,14 @@ prisma
     app.use("/users/:userId/cheets", express.json(), cheets);
     app.use("/cheets/:cheetId/replies", replies);
     app.use("/messages/:recipientId", express.json(), messages);
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}.`));
+    app.listen(SERVER_PORT, () =>
+      console.log(`Server running on port ${SERVER_PORT}.`)
+    );
   })
   .catch((error: unknown) => {
     console.error(
-      error instanceof RangeError
-        ? `Invalid server port provided - must be a number between 0 and 65536. \nRecieved: ${
-            process.env.SERVER_PORT
-          }, 
-			type: ${
-        process.env.SERVER_PORT === undefined
-          ? undefined
-          : Number.isNaN(Number(process.env.SERVER_PORT))
-          ? "string"
-          : "number"
-      }.`
+      error instanceof TypeError || error instanceof RangeError
+        ? error.message
         : "Error initialising database connection:\n" + logError(error)
     );
   });

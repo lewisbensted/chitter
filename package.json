@@ -5,7 +5,9 @@
 	"scripts": {
 		"install": "concurrently \"cd frontend && npm install\" \"cd server && npm install\"",
 		"migrate:dev": "cd server && npm run migrate:dev",
-		"start:dev": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\""
+		"start:dev": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\"",
+		"migrate:prod": "cd server && npm run migrate:prod",
+		"start:prod": "cd frontend && npm run build && cd ../server && npm run start:prod"
 	},
 	"repository": {
 		"type": "git",
@@ -15,6 +17,8 @@
 	"license": "ISC",
 	"homepage": "https://github.com/lewisbensted/chitter#readme",
 	"dependencies": {
-		"concurrently": "^8.2.2"
+		"concurrently": "^8.2.2",
+		"dotenv-cli": "^7.4.2",
+		"dotenv-expand": "^11.0.6"
 	}
 }
