@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { IReply } from "../utils/interfaces";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ClipLoader } from "react-spinners";
+import { serverURL } from "../utils/serverURL";
 
 interface Props {
 	isDisabled: boolean;
@@ -29,7 +30,7 @@ const EditReply: React.FC<Props> = ({
 	const onSubmit: SubmitHandler<{ text: string }> = (data) => {
 		setRepliesLoading(true);
 		axios
-			.put(`${process.env.REACT_APP_SERVER_URL}/cheets/${cheetId}/replies/${reply.id}`, data)
+			.put(`${serverURL}/cheets/${cheetId}/replies/${reply.id}`, data)
 			.then((res) => {
 				setRepliesLoading(false);
 				setReplies(res.data);

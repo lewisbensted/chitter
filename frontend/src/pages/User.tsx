@@ -7,6 +7,7 @@ import { ClipLoader } from "react-spinners";
 import ErrorModal from "../components/ErrorModal";
 import Cheet from "../components/Cheet";
 import SubmitCheet from "../components/SubmitCheet";
+import { serverURL } from "../utils/serverURL";
 
 const User: React.FC = () => {
 	const [isPageLoading, setPageLoading] = useState<boolean>(true);
@@ -21,7 +22,7 @@ const User: React.FC = () => {
 
 	useEffect(() => {
 		axios
-			.get("/validate")
+		.get(`${serverURL}/validate`, { withCredentials: true })
 			.then((res: { data: IUser }) => {
 				setUserId(res.data.id);
 			})
@@ -35,7 +36,7 @@ const User: React.FC = () => {
 	useEffect(() => {
 		if (userId) {
 			axios
-				.post(`${process.env.REACT_APP_SERVER_URL}/users/${id}`)
+				.post(`${serverURL}/users/${id}`)
 				.then((res: { data: string }) => {
 					setUsername(res.data);
 				})
@@ -48,7 +49,7 @@ const User: React.FC = () => {
 	useEffect(() => {
 		if (userId && username) {
 			axios
-				.get(`${process.env.REACT_APP_SERVER_URL}/users/${id}/cheets`)
+				.get(`${serverURL}/users/${id}/cheets`)
 				.then((res: { data: ICheet[] }) => {
 					setCheets(res.data);
 					setPageLoading(false);

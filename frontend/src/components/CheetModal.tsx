@@ -8,6 +8,7 @@ import Reply from "./Reply";
 import SubmitReply from "./SubmitReply";
 import EditCheet from "./EditCheet";
 import { Link } from "react-router-dom";
+import { serverURL } from "../utils/serverURL";
 
 interface Props {
 	userId: number | undefined;
@@ -28,7 +29,7 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
 	useEffect(() => {
 		if (isOpen) {
 			axios
-				.get(`${process.env.REACT_APP_SERVER_URL}/cheets/${cheet.id}/replies`)
+				.get(`${serverURL}/cheets/${cheet.id}/replies`)
 				.then((res) => {
 					setReplies(res.data);
 					setPageLoading(false);

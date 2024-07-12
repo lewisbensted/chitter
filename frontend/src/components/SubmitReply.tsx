@@ -3,6 +3,7 @@ import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IReply } from "../utils/interfaces";
 import { ClipLoader } from "react-spinners";
+import { serverURL } from "../utils/serverURL";
 
 interface Props {
 	cheetId: number;
@@ -26,7 +27,7 @@ const SubmitReply: React.FC<Props> = ({
 		setRepliesLoading(true);
 		reset();
 		axios
-			.post(`${process.env.REACT_APP_SERVER_URL}/cheets/${cheetId}/replies`, data)
+			.post(`${serverURL}/cheets/${cheetId}/replies`, data)
 			.then((res) => {
 				setRepliesLoading(false);
 				setReplies(res.data);

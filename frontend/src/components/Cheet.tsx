@@ -4,6 +4,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import CheetModal from "./CheetModal";
 import { Link, useParams } from "react-router-dom";
+import { serverURL } from "../utils/serverURL";
 
 interface Props {
 	userId: number | undefined;
@@ -39,7 +40,7 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setErro
 					onClick={() => {
 						setLoading(true);
 						axios
-							.delete(`${process.env.REACT_APP_SERVER_URL}/${id ? "/users/" + id : ""}/cheets/${cheet.id}`)
+							.delete(`${serverURL}/${id ? "users/" + id : ""}cheets/${cheet.id}`)
 							.then((res) => {
 								setCheets(res.data);
 								setLoading(false);

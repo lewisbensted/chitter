@@ -1,4 +1,5 @@
 import axios from "axios";
+import { serverURL } from "./serverURL";
 
 const logout = (
 	setLoading: (arg: boolean) => void,
@@ -7,7 +8,7 @@ const logout = (
 ) => {
 	setLoading(true);
 	axios
-		.delete(`${process.env.REACT_APP_SERVER_URL}/logout`)
+		.delete(`${serverURL}/logout`, {withCredentials: true})
 		.then(() => {
 			setUserId(undefined);
 			setCheets([]);

@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ICheet } from "../utils/interfaces";
 import { useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import { serverURL } from "../utils/serverURL";
 
 interface Props {
 	isLoading: boolean;
@@ -20,7 +21,7 @@ const SubmitCheet: React.FC<Props> = ({ isLoading, isDisabled, setLoading, setCh
 		setLoading(true);
 		reset();
 		axios
-			.post(`${process.env.REACT_APP_SERVER_URL}/${id ? "/users/" + id : ""}/cheets`, data)
+			.post(`${serverURL}/${id ? "users/" + id : ""}cheets`, data)
 			.then((res) => {
 				setLoading(false);
 				setCheets(res.data);

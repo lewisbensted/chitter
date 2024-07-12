@@ -1,6 +1,6 @@
 import express from "express";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { resetDb } from "./resetDb";
+import { resetDB } from "./resetDB";
 import { testUser1, testUser2 } from "./fixtures/users.fixtures";
 import prisma from "../../prisma/prismaClient";
 import { registerExtension } from "../routes/register";
@@ -19,7 +19,7 @@ describe("Test replies routes.", () => {
   }));
 
   beforeEach(async () => {
-    await resetDb();
+    await resetDB();
     await prisma.$extends(registerExtension).user.create({ data: testUser1 });
     await prisma.$extends(registerExtension).user.create({ data: testUser2 });
     await prisma.cheet.createMany({ data: testCheets });
@@ -183,7 +183,7 @@ describe("Test replies routes.", () => {
         expect(status).toEqual(404);
         expect(text).toEqual("No Cheet found with ID provided.");
       });
-	  test("Responds with HTTP status 500 if the session's user ID and username do not match the composite key in the users table.", async () => {
+      test("Responds with HTTP status 500 if the session's user ID and username do not match the composite key in the users table.", async () => {
         const sessionAppIncorrect = express();
         sessionAppIncorrect.use(session({ secret: "secret-key" }));
         sessionAppIncorrect.all("*", (req, res, next) => {

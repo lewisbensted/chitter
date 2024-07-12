@@ -1,7 +1,7 @@
 import { beforeEach, test, describe, vi, expect } from "vitest";
 import prisma from "../../prisma/prismaClient";
 import { registerExtension } from "../routes/register";
-import { resetDb } from "./resetDb";
+import { resetDB } from "./resetDB";
 import { testUser1, testUser2 } from "./fixtures/users.fixtures";
 import cheets, { fetchCheets } from "../routes/cheets";
 import { testCheets } from "./fixtures/cheets.fixtures";
@@ -18,7 +18,7 @@ describe("Test cheets routes.", () => {
   }));
 
   beforeEach(async () => {
-    await resetDb();
+    await resetDB();
     await prisma.$extends(registerExtension).user.create({ data: testUser1 });
     await prisma.$extends(registerExtension).user.create({ data: testUser2 });
     await prisma.cheet.createMany({ data: testCheets });
