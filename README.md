@@ -38,11 +38,11 @@ A mock Twitter app where users are able to post "cheets" (messages up to 50 char
   REACT_APP_SERVER_URL = http://localhost:${SERVER_PORT}
 
   DB_NAME =             # Name of the database in a particular environment, eg. chitter_dev
-  DB_USERNAME =         # Username of MySQL connection
+  DB_USER =             # Username of MySQL connection
   DB_PASSWORD =         # Password of MySQL connection
   DB_PORT =             # Point of access to the MySQL server - 3306 by default
 
-  DATABASE_URL = mysql://${DB_USERNAME}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
+  DATABASE_URL = mysql://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 
 ```
 
