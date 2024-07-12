@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import logout from "../utils/logout";
+import ErrorModal from "../components/ErrorModal";
 
 interface Props {
 	children: JSX.Element;
@@ -12,15 +13,22 @@ interface Props {
 }
 
 const Layout: React.FC<Props> = ({ children, isLoading, setLoading, setCheets, userId, setUserId }) => {
+
+	const [error, setError] = useState<string>();
+
 	return (
 		<div>
 			{children}
+			<ErrorModal
+                    errors={error ? [error] : []}
+                    closeModal={() => setError(undefined)}
+                  />
 			{isLoading ? null : userId ? (
 				<Link
 					to={"/"}
 					style={{ pointerEvents: isLoading ? "none" : undefined }}
 					onClick={() => {
-						logout(setLoading, setUserId, setCheets);
+						logout(setLoading, setUserId, setCheets, setError);
 					}}>
 					LOGOUT
 				</Link>

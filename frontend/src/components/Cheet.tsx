@@ -7,56 +7,68 @@ import { Link, useParams } from "react-router-dom";
 import { serverURL } from "../utils/serverURL";
 
 interface Props {
-	userId: number | undefined;
-	cheet: ICheet;
-	isDisabled: boolean
-	setErrors: (arg: string[]) => void;
-	setLoading: (arg: boolean) => void;
-	setCheets: (arg: ICheet[]) => void;
+  userId: number | undefined;
+  cheet: ICheet;
+  isDisabled: boolean;
+  setError: (arg: string) => void;
+  setLoading: (arg: boolean) => void;
+  setCheets: (arg: ICheet[]) => void;
 }
 
-const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setErrors, setCheets }) => {
-	const [modalOpen, setModalOpen] = useState<boolean>(false);
-	const { id } = useParams();
+const Cheet: React.FC<Props> = ({
+  userId,
+  cheet,
+  isDisabled,
+  setLoading,
+  setError,
+  setCheets,
+}) => {
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const { id } = useParams();
 
-	return (
-		<div>
-			<CheetModal
-				cheet={cheet}
-				userId={userId}
-				isOpen={modalOpen}
-				closeModal={() => {
-					setModalOpen(false);
-				}}
-				setCheets={setCheets}
-			/>
-			<Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
-			<span>{cheet.text}</span> &nbsp;
-			<span>{format(cheet.createdAt, "hh:mm dd/MM/yy")}</span> &nbsp;
-			<button onClick={() => setModalOpen(true)}>MORE</button> &nbsp;
-			{userId === cheet.userId ? (
-				<button
-					disabled = {isDisabled}
-					onClick={() => {
-						setLoading(true);
-						axios
-							.delete(`${serverURL}/${id ? "users/" + id : ""}cheets/${cheet.id}`)
-							.then((res) => {
-								setCheets(res.data);
-								setLoading(false);
-							})
-							.catch((error: unknown) => {
-								axios.isAxiosError(error) && (error.response?.status == 401 || 403 || 404)
-									? setErrors([error.response?.data])
-									: setErrors(["Could not delete Cheet"]);
-								setLoading(false);
-							});
-					}}>
-					DELETE
-				</button>
-			) : null}
-		</div>
-	);
+  return (
+    <div>
+      <CheetModal
+        cheet={cheet}
+        userId={userId}
+        isOpen={modalOpen}
+        closeModal={() => {
+          setModalOpen(false);
+        }}
+        setCheets={setCheets}
+      />
+      <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
+      <span>{cheet.text}</span> &nbsp;
+      <span>{format(cheet.createdAt, "hh:mm dd/MM/yy")}</span> &nbsp;
+      <button onClick={() => setModalOpen(true)}>MORE</button> &nbsp;
+      {userId === cheet.userId ? (
+        <button
+          disabled={isDisabled}
+          onClick={() => {
+            setLoading(true);
+            axios
+              .delete(
+                `${serverURL + (id ? `/users/${id}/` : "/")}cheets/${cheet.id}`,
+                { withCredentials: true }
+              )
+              .then((res) => {
+                setCheets(res.data);
+                setLoading(false);
+              })
+              .catch((error: unknown) => {
+                axios.isAxiosError(error) &&
+                (error.response?.status == 401 || 403 || 404)
+                  ? setError(error.response?.data)
+                  : setError("Could not delete Cheet");
+                setLoading(false);
+              });
+          }}
+        >
+          DELETE
+        </button>
+      ) : null}
+    </div>
+  );
 };
 
 export default Cheet;

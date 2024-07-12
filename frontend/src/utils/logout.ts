@@ -4,7 +4,8 @@ import { serverURL } from "./serverURL";
 const logout = (
 	setLoading: (arg: boolean) => void,
 	setUserId: (arg: number | undefined) => void,
-	setCheets: (arg: []) => void
+	setCheets: (arg: []) => void,
+	setError: (arg: string) => void
 ) => {
 	setLoading(true);
 	axios
@@ -14,8 +15,9 @@ const logout = (
 			setCheets([]);
 			setLoading(false);
 		})
-		.catch(() => {
+		.catch((error) => {
 			setLoading(false);
+			setError(error.response.data)
 		});
 };
 

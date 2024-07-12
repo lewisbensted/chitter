@@ -13,7 +13,7 @@ const Homepage: React.FC = () => {
   const [isFormLoading, setFormLoading] = useState<boolean>(false);
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const [cheets, setCheets] = useState<ICheet[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [error, setError] = useState<string>();
   const [cheetsError, setCheetsError] = useState<string>("");
 
   useEffect(() => {
@@ -63,8 +63,8 @@ const Homepage: React.FC = () => {
               ) : (
                 <div>
                   <ErrorModal
-                    errors={errors}
-                    closeModal={() => setErrors([])}
+                    errors={error ? [error] : []}
+                    closeModal={() => setError(undefined)}
                   />
                   {cheetsError
                     ? cheetsError
@@ -75,7 +75,7 @@ const Homepage: React.FC = () => {
                           userId={userId}
                           setCheets={setCheets}
                           setLoading={setPageLoading}
-                          setErrors={setErrors}
+                          setError={setError}
                           key={key}
                         />
                       ))}
@@ -86,7 +86,7 @@ const Homepage: React.FC = () => {
                 isDisabled={isPageLoading}
                 setLoading={setFormLoading}
                 setCheets={setCheets}
-                setErrors={setErrors}
+                setError={setError}
               />
             </div>
           ) : null}
