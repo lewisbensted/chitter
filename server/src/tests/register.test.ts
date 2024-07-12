@@ -32,32 +32,32 @@ describe("Register a new user at route: [POST] /register.", async () => {
 	});
 	test("Responds with HTTP status 400 if a user already exists with the provided email address.", async () => {
 		await prisma.user.create({ data: testUser1 });
-		const { status, text } = await request(testApp)
+		const { status, body } = await request(testApp)
 			.post("/register")
 			.send(testUserDuplicateEmail);
 		const count = await prisma.user.count();
 		expect(status).toEqual(400);
 		expect(count).toEqual(1);
-		expect(text).toEqual("Email address already taken.");
+		expect(body).toEqual(["Email address already taken."]);
 	});
 	test("Responds with HTTP status 400 if a user already exists with the provided username.", async () => {
 		await prisma.user.create({ data: testUser1 });
-		const { status, text } = await request(testApp)
+		const { status, body } = await request(testApp)
 			.post("/register")
 			.send(testUserDuplicateUsername);
 		const count = await prisma.user.count();
 		expect(status).toEqual(400);
 		expect(count).toEqual(1);
-		expect(text).toEqual("Username already taken.");
+		expect(body).toEqual(["Username already taken."]);
 	});
 	test("Responds with HTTP status 400 if the request body is missing a field.", async () => {
-		const { status, text } = await request(testApp)
+		const { status, body } = await request(testApp)
 			.post("/register")
 			.send(testUserMissingField);
 		const count = await prisma.user.count();
 		expect(status).toEqual(400);
 		expect(count).toEqual(0);
-		expect(text).toEqual("Last name not provided.");
+		expect(body).toEqual(["Last name not provided."]);
 	});
 	test("Responds with HTTP status 400 if multiple validations fail at the same time.", async () => {
 		await prisma.user.create({ data: testUser1 });
