@@ -21,29 +21,25 @@ const Homepage: React.FC = () => {
             .get(`${serverURL}/validate`, { withCredentials: true })
             .then((res: { data: IUser }) => {
                 setUserId(res.data.id);
+                axios
+                    .get(`${serverURL}/cheets`, { withCredentials: true })
+                    .then((res: { data: ICheet[] }) => {
+                        setCheets(res.data);
+                    })
+                    .catch(() => {
+                        setCheetsError("An unexpected error occured while loading cheets.");
+                    });
+                setPageLoading(false);
             })
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
                     setUserId(undefined);
-                    setPageLoading(false);
+                } else {
+                    setError("An unexpected error occured while authenticating the user.");
                 }
+                setPageLoading(false);
             });
-    }, [userId]);
-
-    useEffect(() => {
-        if (userId) {
-            axios
-                .get(`${serverURL}/cheets`, { withCredentials: true })
-                .then((res: { data: ICheet[] }) => {
-                    setCheets(res.data);
-                    setPageLoading(false);
-                })
-                .catch(() => {
-                    setCheetsError("Could not load Cheets");
-                    setPageLoading(false);
-                });
-        }
-    }, [userId]);
+    }, []);
 
     return (
         <Layout
@@ -54,6 +50,7 @@ const Homepage: React.FC = () => {
             setUserId={setUserId}
         >
             <div>
+                <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
                 <h1>Welcome to Chitter</h1>
                 <div>
                     {userId ? (
@@ -62,7 +59,6 @@ const Homepage: React.FC = () => {
                                 <ClipLoader />
                             ) : (
                                 <div>
-                                    <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
                                     {cheetsError
                                         ? cheetsError
                                         : cheets.map((cheet, key) => (

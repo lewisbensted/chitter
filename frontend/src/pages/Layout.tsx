@@ -18,11 +18,11 @@ const Layout: React.FC<Props> = ({ children, isLoading, setLoading, setCheets, u
 
 	return (
 		<div>
-			{children}
 			<ErrorModal
                     errors={error ? [error] : []}
                     closeModal={() => setError(undefined)}
                   />
+			{children}
 			{isLoading ? null : userId ? (
 				<Link
 					to={"/"}

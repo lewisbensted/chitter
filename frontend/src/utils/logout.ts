@@ -1,24 +1,23 @@
 import axios from "axios";
 import { serverURL } from "./serverURL";
 
-const logout = (
-	setLoading: (arg: boolean) => void,
-	setUserId: (arg: number | undefined) => void,
-	setCheets: (arg: []) => void,
-	setError: (arg: string) => void
+const logout = async (
+    setLoading: (arg: boolean) => void,
+    setUserId: (arg: number | undefined) => void,
+    setCheets: (arg: []) => void,
+    setError: (arg: string) => void
 ) => {
-	setLoading(true);
-	axios
-		.delete(`${serverURL}/logout`, {withCredentials: true})
-		.then(() => {
-			setUserId(undefined);
-			setCheets([]);
-			setLoading(false);
-		})
-		.catch((error) => {
-			setLoading(false);
-			setError(error.response.data)
-		});
+    setLoading(true);
+    await axios
+        .delete(`${serverURL}/logout`, { withCredentials: true })
+        .then(() => {
+            setUserId(undefined);
+            setCheets([]);
+        })
+        .catch(() => {
+            setError("An unexpected error occurred while logging out");
+        });
+    setLoading(false);
 };
 
 export default logout;
