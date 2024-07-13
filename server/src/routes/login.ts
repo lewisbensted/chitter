@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/", async (req: Request, res: Response) => {
 	const { username, password } = req.body;
 	try {
-		if (req.session.user?.id) {
+		if (req.session.user?.id && req.session.user!.id == req.cookies.user_id && req.sessionID == req.cookies.session_id) {
 			res.status(403).send("Already logged in.");
 		} else {
 			const user = await prisma.user.findUnique({

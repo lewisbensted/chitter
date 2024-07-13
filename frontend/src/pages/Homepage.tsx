@@ -9,91 +9,88 @@ import ErrorModal from "../components/ErrorModal";
 import { serverURL } from "../utils/serverURL";
 
 const Homepage: React.FC = () => {
-  const [isPageLoading, setPageLoading] = useState<boolean>(true);
-  const [isFormLoading, setFormLoading] = useState<boolean>(false);
-  const [userId, setUserId] = useState<number | undefined>(undefined);
-  const [cheets, setCheets] = useState<ICheet[]>([]);
-  const [error, setError] = useState<string>();
-  const [cheetsError, setCheetsError] = useState<string>("");
+    const [isPageLoading, setPageLoading] = useState<boolean>(true);
+    const [isFormLoading, setFormLoading] = useState<boolean>(false);
+    const [userId, setUserId] = useState<number | undefined>(undefined);
+    const [cheets, setCheets] = useState<ICheet[]>([]);
+    const [error, setError] = useState<string>();
+    const [cheetsError, setCheetsError] = useState<string>("");
 
-  useEffect(() => {
-    axios
-      .get(`${serverURL}/validate`, { withCredentials: true })
-      .then((res: { data: IUser }) => {
-        setUserId(res.data.id);
-      })
-      .catch((error: unknown) => {
-        if (axios.isAxiosError(error) && error.response?.status == 401) {
-          setUserId(undefined);
-          setPageLoading(false);
+    useEffect(() => {
+        axios
+            .get(`${serverURL}/validate`, { withCredentials: true })
+            .then((res: { data: IUser }) => {
+                setUserId(res.data.id);
+            })
+            .catch((error: unknown) => {
+                if (axios.isAxiosError(error) && error.response?.status == 401) {
+                    setUserId(undefined);
+                    setPageLoading(false);
+                }
+            });
+    }, [userId]);
+
+    useEffect(() => {
+        if (userId) {
+            axios
+                .get(`${serverURL}/cheets`, { withCredentials: true })
+                .then((res: { data: ICheet[] }) => {
+                    setCheets(res.data);
+                    setPageLoading(false);
+                })
+                .catch(() => {
+                    setCheetsError("Could not load Cheets");
+                    setPageLoading(false);
+                });
         }
-      });
-  }, []);
+    }, [userId]);
 
-  useEffect(() => {
-    if (userId) {
-      axios
-        .get(`${serverURL}/cheets`, { withCredentials: true })
-        .then((res: { data: ICheet[] }) => {
-          setCheets(res.data);
-          setPageLoading(false);
-        })
-        .catch(() => {
-          setCheetsError("Could not load Cheets");
-          setPageLoading(false);
-        });
-    }
-  }, [userId]);
-
-  return (
-    <Layout
-      isLoading={isPageLoading || isFormLoading}
-      setLoading={setPageLoading}
-      setCheets={setCheets}
-      userId={userId}
-      setUserId={setUserId}
-    >
-      <div>
-        <h1>Welcome to Chitter</h1>
-        <div>
-          {userId ? (
+    return (
+        <Layout
+            isLoading={isPageLoading || isFormLoading}
+            setLoading={setPageLoading}
+            setCheets={setCheets}
+            userId={userId}
+            setUserId={setUserId}
+        >
             <div>
-              {isPageLoading ? (
-                <ClipLoader />
-              ) : (
+                <h1>Welcome to Chitter</h1>
                 <div>
-                  <ErrorModal
-                    errors={error ? [error] : []}
-                    closeModal={() => setError(undefined)}
-                  />
-                  {cheetsError
-                    ? cheetsError
-                    : cheets.map((cheet, key) => (
-                        <Cheet
-                          isDisabled={isFormLoading}
-                          cheet={cheet}
-                          userId={userId}
-                          setCheets={setCheets}
-                          setLoading={setPageLoading}
-                          setError={setError}
-                          key={key}
-                        />
-                      ))}
+                    {userId ? (
+                        <div>
+                            {isPageLoading ? (
+                                <ClipLoader />
+                            ) : (
+                                <div>
+                                    <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
+                                    {cheetsError
+                                        ? cheetsError
+                                        : cheets.map((cheet, key) => (
+                                              <Cheet
+                                                  isDisabled={isFormLoading}
+                                                  cheet={cheet}
+                                                  userId={userId}
+                                                  setCheets={setCheets}
+                                                  setLoading={setPageLoading}
+                                                  setError={setError}
+                                                  key={key}
+                                              />
+                                          ))}
+                                </div>
+                            )}
+                            <SubmitCheet
+                                isLoading={isFormLoading}
+                                isDisabled={isPageLoading}
+                                setLoading={setFormLoading}
+                                setCheets={setCheets}
+                                setError={setError}
+                            />
+                        </div>
+                    ) : null}
                 </div>
-              )}
-              <SubmitCheet
-                isLoading={isFormLoading}
-                isDisabled={isPageLoading}
-                setLoading={setFormLoading}
-                setCheets={setCheets}
-                setError={setError}
-              />
             </div>
-          ) : null}
-        </div>
-      </div>
-    </Layout>
-  );
+        </Layout>
+    );
 };
 
 export default Homepage;

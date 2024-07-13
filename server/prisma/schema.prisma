@@ -47,7 +47,7 @@ model Reply {
   user        User        @relation(fields: [userId, username], references: [id, username])
   userId      Int         @map(name: "user_id")
   username    String      @db.VarChar(30)
-  cheet       Cheet       @relation(fields: [cheetId], references: [id])
+  cheet       Cheet       @relation(fields: [cheetId], references: [id], onDelete: Cascade)
   cheetId     Int         @map(name: "cheet_id")
   text        String      @db.VarChar(50)
   createdAt   DateTime    @default(dbgenerated("CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "created_at")
