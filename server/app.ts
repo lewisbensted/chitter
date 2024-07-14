@@ -2,7 +2,6 @@ import express from "express";
 import session, * as expressSession from "express-session";
 import cookieParser from "cookie-parser";
 import register from "./src/routes/register.js";
-import user from "./src/routes/user.js";
 import login from "./src/routes/login.js";
 import validate from "./src/routes/validate.js";
 import cheets from "./src/routes/cheets.js";
@@ -80,7 +79,6 @@ prisma
     app.use("/login", express.json(), login);
     app.use("/validate", validate);
     app.use("/logout", logout);
-    app.use("/users/:userId", user);
     app.use("/cheets", express.json(), cheets);
     app.use("/users/:userId/cheets", express.json(), cheets);
     app.use("/cheets/:cheetId/replies", replies);

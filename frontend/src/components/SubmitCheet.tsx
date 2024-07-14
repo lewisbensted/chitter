@@ -26,7 +26,7 @@ const SubmitCheet: React.FC<Props> = ({ isLoading, isDisabled, setLoading, setCh
             })
             .then((res) => {
                 setLoading(false);
-                setCheets(res.data);
+                setCheets(res.data.cheets);
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401].includes(error.response?.status!)

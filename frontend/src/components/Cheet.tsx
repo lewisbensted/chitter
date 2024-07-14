@@ -44,7 +44,7 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setErro
                                 withCredentials: true,
                             })
                             .then((res) => {
-                                setCheets(res.data);
+                                setCheets(res.data.cheets);
                             })
                             .catch((error: unknown) => {
                                 axios.isAxiosError(error) && [401, 403, 404].includes(error.response?.status!)

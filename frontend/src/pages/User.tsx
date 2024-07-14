@@ -25,6 +25,21 @@ const User: React.FC = () => {
             .get(`${serverURL}/validate`, { withCredentials: true })
             .then((res: { data: IUser }) => {
                 setUserId(res.data.id);
+                axios
+                    .get(`${serverURL}/users/${id}/cheets`, { withCredentials: true })
+                    .then((res: { data: { user:IUser, cheets: ICheet[] } }) => {
+                        setUsername(res.data.user.username)
+                        setCheets(res.data.cheets);
+                        setPageLoading(false);
+                    })
+                    .catch((error: unknown) => {
+                        if (axios.isAxiosError(error) && error.response?.status == 404) {
+                            navigate("/");
+                        } else {
+                            setError("An unexpected error occured while fetching cheets.");
+                        }
+                        setPageLoading(false);
+                    });
             })
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
@@ -35,34 +50,6 @@ const User: React.FC = () => {
                 setPageLoading(false);
             });
     }, []);
-
-    useEffect(() => {
-        if (userId) {
-            axios
-                .post(`${serverURL}/users/${id}`)
-                .then((res: { data: string }) => {
-                    setUsername(res.data);
-                })
-                .catch(() => {
-                    navigate("/");
-                });
-        }
-    }, [userId]);
-
-    useEffect(() => {
-        if (userId && username) {
-            axios
-                .get(`${serverURL}/users/${id}/cheets`, { withCredentials: true })
-                .then((res: { data: ICheet[] }) => {
-                    setCheets(res.data);
-                    setPageLoading(false);
-                })
-                .catch(() => {
-                    setCheetsError("Could not load cheets");
-                    setPageLoading(false);
-                });
-        }
-    }, [userId, username]);
 
     return (
         <Layout

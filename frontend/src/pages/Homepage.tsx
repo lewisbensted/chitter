@@ -23,8 +23,8 @@ const Homepage: React.FC = () => {
                 setUserId(res.data.id);
                 axios
                     .get(`${serverURL}/cheets`, { withCredentials: true })
-                    .then((res: { data: ICheet[] }) => {
-                        setCheets(res.data);
+                    .then((res: { data: { cheets: ICheet[] } }) => {
+                        setCheets(res.data.cheets);
                     })
                     .catch(() => {
                         setCheetsError("An unexpected error occured while loading cheets.");

@@ -26,7 +26,7 @@ const EditCheet: React.FC<Props> = ({ cheet, isLoading, isDisabled, setLoading, 
                 withCredentials: true,
             })
             .then((res) => {
-                setCheets(res.data);
+                setCheets(res.data.cheets);
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401, 403, 404].includes(error.response?.status!)

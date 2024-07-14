@@ -31,7 +31,7 @@ model User {
 
 model Cheet {
   id          Int         @id @default(autoincrement())
-  user        User        @relation(fields: [userId, username], references: [id, username])
+  user        User        @relation(fields: [userId, username], references: [id, username], onDelete: Cascade)
   userId      Int         @map(name: "user_id")
   username    String      @db.VarChar(30)
   text        String      @db.VarChar(50)
@@ -44,7 +44,7 @@ model Cheet {
 
 model Reply {
   id          Int         @id @default(autoincrement())
-  user        User        @relation(fields: [userId, username], references: [id, username])
+  user        User        @relation(fields: [userId, username], references: [id, username], onDelete: Cascade)
   userId      Int         @map(name: "user_id")
   username    String      @db.VarChar(30)
   cheet       Cheet       @relation(fields: [cheetId], references: [id], onDelete: Cascade)
