@@ -24,22 +24,18 @@ export const cheetExtension = Prisma.defineExtension({
 });
 
 const checkUser = async (userId?: string) => {
+	let user
 	if (userId) {
 		if (isNaN(Number(userId))) {
 			throw new TypeError("Invalid user ID provided - must be a number.");
 		}
-		await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
+		user = await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
 	}
+	return user
 };
 
 
-export const fetchCheets = async (res: Response, userId?: number) => {
-	let user
-	if (userId) {
-		user = await prisma.user.findUniqueOrThrow({
-			where: { id: userId },
-		});
-	}
+export const fetchCheets = async (userId?: number) => {
 	const cheets = await prisma.cheet.findMany({
 		where: {
 			userId: userId ? userId : undefined,
@@ -48,13 +44,13 @@ export const fetchCheets = async (res: Response, userId?: number) => {
 	cheets.sort((cheetA, cheetB) => {
 		return cheetA.createdAt.valueOf() - cheetB.createdAt.valueOf();
 	});
-	return {user, cheets};
+	return cheets;
 };
 
 router.get("/", authenticate, async (req: Request, res: Response) => {
 	try {
-		await checkUser(req.params.userId);
-		const {user, cheets} = await fetchCheets(res, Number(req.params.userId));
+		const user = await checkUser(req.params.userId);
+		const cheets = await fetchCheets(Number(req.params.userId));
 		res.status(200).send({user, cheets});
 	} catch (error) {
 		console.error(
@@ -74,7 +70,7 @@ router.post("/", authenticate, async (req: Request, res: Response) => {
 				text: req.body.text,
 			},
 		});
-		const cheets = await fetchCheets(res, Number(req.params.userId));
+		const cheets = await fetchCheets(Number(req.params.userId));
 		res.status(201).send(cheets);
 	} catch (error) {
 		console.error("Error adding cheet to the database:\n" + logError(error));
@@ -102,7 +98,7 @@ router.put("/:cheetId", authenticate, async (req: Request, res: Response) => {
 					text: req.body.text,
 				},
 			});
-			const cheets = await fetchCheets(res, Number(req.params.userId));
+			const cheets = await fetchCheets(Number(req.params.userId));
 			res.status(200).send(cheets);
 		} else {
 			res.status(403).send("Cannot update someone else's cheet.");
@@ -131,7 +127,7 @@ router.delete(
 						id: Number(req.params.cheetId),
 					},
 				});
-				const cheets = await fetchCheets(res, Number(req.params.userId));
+				const cheets = await fetchCheets(Number(req.params.userId));
 				res.status(200).send(cheets);
 			} else {
 				res.status(403).send("Cannot delete someone else's cheet.");
