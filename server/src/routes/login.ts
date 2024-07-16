@@ -2,17 +2,15 @@ import express, { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { logError } from "../utils/logError.js";
 import prisma from "../../prisma/prismaClient.js";
+import { authenticate } from "../utils/authenticate.js";
+
 
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response) => {
     const { username, password } = req.body;
     try {
-        if (
-            req.session.user?.id &&
-            req.session.user.id == req.cookies.user_id &&
-            req.sessionID == req.cookies.session_id
-        ) {
+        if (authenticate(req)) {
             res.status(403).send("Already logged in.");
         } else {
             const user = await prisma.user.findUnique({

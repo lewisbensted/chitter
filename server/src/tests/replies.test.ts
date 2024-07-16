@@ -12,8 +12,8 @@ import request from "supertest";
 import { Reply } from "@prisma/client";
 
 describe("Test replies routes.", () => {
-  vi.mock("./../middleware/authenticate", () => ({
-    authenticate: vi.fn((req, _res, next) => {
+  vi.mock("./../middleware/authMiddleware", () => ({
+    authMiddleware: vi.fn((req, _res, next) => {
       next();
     }),
   }));

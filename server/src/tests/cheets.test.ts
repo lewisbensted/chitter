@@ -11,8 +11,8 @@ import { Cheet } from "@prisma/client";
 import session from "express-session";
 
 describe("Test cheets routes.", () => {
-    vi.mock("./../middleware/authenticate", () => ({
-        authenticate: vi.fn((req, _res, next) => {
+    vi.mock("./../middleware/authMiddleware", () => ({
+        authMiddleware: vi.fn((req, _res, next) => {
             next();
         }),
     }));
@@ -22,6 +22,7 @@ describe("Test cheets routes.", () => {
         await prisma.$extends(registerExtension).user.create({ data: testUser1 });
         await prisma.$extends(registerExtension).user.create({ data: testUser2 });
         await prisma.cheet.createMany({ data: testCheets });
+        
     });
 
     const testApp = express();
