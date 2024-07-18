@@ -16,12 +16,13 @@ interface Props {
     isOpen: boolean;
     closeModal: () => void;
     setCheets: (arg: ICheet[]) => void;
+    isCheetsLoading: boolean
 }
 
-const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setCheets }) => {
+const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setCheets, isCheetsLoading }) => {
     const [isPageLoading, setPageLoading] = useState<boolean>(true);
-    const [isEditFormLoading, setEditFormLoading] = useState<boolean>(false);
-    const [isReplyFormLoading, setReplyFormLoading] = useState<boolean>(false);
+    const [isEditLoading, setEditLoading] = useState<boolean>(false);
+    const [isRepliesLoading, setRepliesLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>();
     const [repliesError, setRepliesError] = useState<string>("");
     const [replies, setReplies] = useState<IReply[]>([]);
@@ -51,9 +52,9 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
                 {userId === cheet.userId ? (
                     <EditCheet
                         cheet={cheet}
-                        isDisabled={isPageLoading || isReplyFormLoading}
-                        isLoading={isEditFormLoading}
-                        setLoading={setEditFormLoading}
+                        isDisabled={isPageLoading || isRepliesLoading || isCheetsLoading}
+                        isLoading={isEditLoading}
+                        setLoading={setEditLoading}
                         setCheets={setCheets}
                         setError={setError}
                     />
@@ -69,7 +70,7 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
                 ) : (
                     replies.map((reply, key) => (
                         <Reply
-                            isDisabled={isEditFormLoading || isReplyFormLoading}
+                            isDisabled={isEditLoading || isRepliesLoading || isCheetsLoading}
                             userId={userId}
                             cheetId={cheet.id}
                             reply={reply}
@@ -84,8 +85,8 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
             </div>
 
             <SubmitReply
-                isDisabled={isPageLoading || isEditFormLoading}
-                isLoading={isReplyFormLoading}
+                isDisabled={isPageLoading || isEditLoading|| isCheetsLoading}
+                isLoading={isRepliesLoading}
                 cheetId={cheet.id}
                 setRepliesLoading={setPageLoading}
                 setReplies={setReplies}
@@ -93,7 +94,7 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
             />
 
             <div>
-                <button onClick={closeModal} disabled={isReplyFormLoading}>
+                <button onClick={closeModal} disabled={isRepliesLoading}>
                     Close Modal
                 </button>
             </div>

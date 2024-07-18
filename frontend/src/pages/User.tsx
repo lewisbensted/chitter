@@ -11,7 +11,7 @@ import { serverURL } from "../utils/serverURL";
 
 const User: React.FC = () => {
     const [isPageLoading, setPageLoading] = useState<boolean>(true);
-    const [isFormLoading, setFormLoading] = useState<boolean>(false);
+    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [cheets, setCheets] = useState<ICheet[]>([]);
@@ -27,8 +27,8 @@ const User: React.FC = () => {
                 setUserId(res.data.id);
                 axios
                     .get(`${serverURL}/users/${id}/cheets`, { withCredentials: true })
-                    .then((res: { data: { user:IUser, cheets: ICheet[] } }) => {
-                        setUsername(res.data.user.username)
+                    .then((res: { data: { user: IUser; cheets: ICheet[] } }) => {
+                        setUsername(res.data.user.username);
                         setCheets(res.data.cheets);
                         setPageLoading(false);
                     })
@@ -53,7 +53,7 @@ const User: React.FC = () => {
 
     return (
         <Layout
-            isLoading={isPageLoading || isFormLoading}
+            isLoading={isPageLoading || isCheetsLoading}
             setLoading={setPageLoading}
             setCheets={setCheets}
             userId={userId}
@@ -73,7 +73,7 @@ const User: React.FC = () => {
                                     ? cheetsError
                                     : cheets.map((cheet, key) => (
                                           <Cheet
-                                              isDisabled={isFormLoading}
+                                              isCheetsLoading={isCheetsLoading}
                                               cheet={cheet}
                                               userId={userId}
                                               setCheets={setCheets}
@@ -86,9 +86,9 @@ const User: React.FC = () => {
                         )}
                         {userId === Number(id) ? (
                             <SubmitCheet
-                                isLoading={isFormLoading}
+                                isLoading={isCheetsLoading}
                                 isDisabled={isPageLoading}
-                                setLoading={setFormLoading}
+                                setLoading={setCheetsLoading}
                                 setCheets={setCheets}
                                 setError={setError}
                             />

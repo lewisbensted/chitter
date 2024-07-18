@@ -10,7 +10,7 @@ import { serverURL } from "../utils/serverURL";
 
 const Homepage: React.FC = () => {
     const [isPageLoading, setPageLoading] = useState<boolean>(true);
-    const [isFormLoading, setFormLoading] = useState<boolean>(false);
+    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [cheets, setCheets] = useState<ICheet[]>([]);
     const [error, setError] = useState<string>();
@@ -25,11 +25,13 @@ const Homepage: React.FC = () => {
                     .get(`${serverURL}/cheets`, { withCredentials: true })
                     .then((res: { data: { cheets: ICheet[] } }) => {
                         setCheets(res.data.cheets);
+                        setPageLoading(false);
                     })
                     .catch(() => {
                         setCheetsError("An unexpected error occured while loading cheets.");
+                        setPageLoading(false);
                     });
-                setPageLoading(false);
+  
             })
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
@@ -43,7 +45,7 @@ const Homepage: React.FC = () => {
 
     return (
         <Layout
-            isLoading={isPageLoading || isFormLoading}
+            isLoading={isPageLoading || isCheetsLoading}
             setLoading={setPageLoading}
             setCheets={setCheets}
             userId={userId}
@@ -63,7 +65,7 @@ const Homepage: React.FC = () => {
                                         ? cheetsError
                                         : cheets.map((cheet, key) => (
                                               <Cheet
-                                                  isDisabled={isFormLoading}
+                                                  isCheetsLoading={isCheetsLoading}
                                                   cheet={cheet}
                                                   userId={userId}
                                                   setCheets={setCheets}
@@ -75,9 +77,9 @@ const Homepage: React.FC = () => {
                                 </div>
                             )}
                             <SubmitCheet
-                                isLoading={isFormLoading}
+                                isLoading={isCheetsLoading}
                                 isDisabled={isPageLoading}
-                                setLoading={setFormLoading}
+                                setLoading={setCheetsLoading}
                                 setCheets={setCheets}
                                 setError={setError}
                             />

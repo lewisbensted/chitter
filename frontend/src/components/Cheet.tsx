@@ -9,13 +9,13 @@ import { serverURL } from "../utils/serverURL";
 interface Props {
     userId: number | undefined;
     cheet: ICheet;
-    isDisabled: boolean;
+    isCheetsLoading: boolean;
     setError: (arg: string) => void;
     setLoading: (arg: boolean) => void;
     setCheets: (arg: ICheet[]) => void;
 }
 
-const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setError, setCheets }) => {
+const Cheet: React.FC<Props> = ({ userId, cheet, isCheetsLoading, setLoading, setError, setCheets }) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const { id } = useParams();
 
@@ -29,6 +29,7 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setErro
                     setModalOpen(false);
                 }}
                 setCheets={setCheets}
+                isCheetsLoading = {isCheetsLoading}
             />
             <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
             <span>{cheet.text}</span> &nbsp;
@@ -36,7 +37,7 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isDisabled, setLoading, setErro
             <button onClick={() => setModalOpen(true)}>MORE</button> &nbsp;
             {userId === cheet.userId ? (
                 <button
-                    disabled={isDisabled}
+                    disabled={isCheetsLoading}
                     onClick={async () => {
                         setLoading(true);
                         await axios
