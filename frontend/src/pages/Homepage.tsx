@@ -10,7 +10,7 @@ import { serverURL } from "../utils/serverURL";
 
 const Homepage: React.FC = () => {
     const [isPageLoading, setPageLoading] = useState<boolean>(true);
-    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
+    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(true);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [cheets, setCheets] = useState<ICheet[]>([]);
     const [error, setError] = useState<string>();
@@ -19,19 +19,19 @@ const Homepage: React.FC = () => {
     useEffect(() => {
         axios
             .get(`${serverURL}/validate`, { withCredentials: true })
-            .then((res: { data: IUser }) => {
+            .then(async (res: { data: IUser }) => {
                 setUserId(res.data.id);
-                axios
+                await axios
                     .get(`${serverURL}/cheets`, { withCredentials: true })
                     .then((res: { data: { cheets: ICheet[] } }) => {
                         setCheets(res.data.cheets);
-                        setPageLoading(false);
+                        setCheetsLoading(false);
                     })
                     .catch(() => {
                         setCheetsError("An unexpected error occured while loading cheets.");
-                        setPageLoading(false);
+                        setCheetsLoading(false);
                     });
-  
+                setPageLoading(false);
             })
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
@@ -45,7 +45,7 @@ const Homepage: React.FC = () => {
 
     return (
         <Layout
-            isLoading={isPageLoading || isCheetsLoading}
+            isLoading={isPageLoading}
             setLoading={setPageLoading}
             setCheets={setCheets}
             userId={userId}
@@ -57,7 +57,7 @@ const Homepage: React.FC = () => {
                 <div>
                     {userId ? (
                         <div>
-                            {isPageLoading ? (
+                            {isCheetsLoading ? (
                                 <ClipLoader />
                             ) : (
                                 <div>
@@ -69,19 +69,20 @@ const Homepage: React.FC = () => {
                                                   cheet={cheet}
                                                   userId={userId}
                                                   setCheets={setCheets}
-                                                  setLoading={setPageLoading}
+                                                  setCheetsLoading={setCheetsLoading}
                                                   setError={setError}
                                                   key={key}
+                                                  setPageLoading={setPageLoading}
+                                                  isPageLoading = {isPageLoading}
                                               />
                                           ))}
                                 </div>
                             )}
                             <SubmitCheet
-                                isLoading={isCheetsLoading}
-                                isDisabled={isPageLoading}
-                                setLoading={setCheetsLoading}
+                                isDisabled={isPageLoading || isCheetsLoading}
                                 setCheets={setCheets}
                                 setError={setError}
+                                setPageLoading = {setPageLoading}
                             />
                         </div>
                     ) : null}

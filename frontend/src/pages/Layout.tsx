@@ -28,7 +28,7 @@ const Layout: React.FC<Props> = ({ children, isLoading, setLoading, setCheets, u
 					to={"/"}
 					style={{ pointerEvents: isLoading ? "none" : undefined }}
 					onClick={() => {
-						logout(setLoading, setUserId, setCheets, setError);
+						logout(setLoading, setUserId, setError);
 					}}>
 					LOGOUT
 				</Link>

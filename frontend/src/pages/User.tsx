@@ -77,20 +77,21 @@ const User: React.FC = () => {
                                               cheet={cheet}
                                               userId={userId}
                                               setCheets={setCheets}
-                                              setLoading={setPageLoading}
+                                              setCheetsLoading={setCheetsLoading}
                                               setError={setError}
                                               key={key}
+                                              setPageLoading={setPageLoading}
+                                              isPageLoading={isPageLoading}
                                           />
                                       ))}
                             </div>
                         )}
                         {userId === Number(id) ? (
                             <SubmitCheet
-                                isLoading={isCheetsLoading}
                                 isDisabled={isPageLoading}
-                                setLoading={setCheetsLoading}
                                 setCheets={setCheets}
                                 setError={setError}
+                                setPageLoading={setPageLoading}
                             />
                         ) : null}
                     </div>
