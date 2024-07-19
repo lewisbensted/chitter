@@ -16,28 +16,26 @@ interface Props {
 const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setError, setPageLoading }) => {
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm<{ text: string }>();
-    const [isLoading, setLoading] = useState<boolean>()
+    const [isLoading, setLoading] = useState<boolean>();
 
-    const onSubmit: SubmitHandler<{ text: string }> = (data) => {
+    const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
         setLoading(true);
-        setPageLoading(true)
+        setPageLoading(true);
         reset();
-        axios
+        await axios
             .post(`${serverURL + (id ? `/users/${id}/` : "/")}cheets`, data, {
                 withCredentials: true,
             })
             .then((res) => {
                 setCheets(res.data.cheets);
-                setLoading(false);
-                setPageLoading(false)
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401].includes(error.response?.status!)
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while sending cheet.");
-                setLoading(false);
-                setPageLoading(false)
             });
+        setLoading(false);
+        setPageLoading(false);
     };
     return (
         <div>

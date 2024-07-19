@@ -16,6 +16,8 @@ const Homepage: React.FC = () => {
     const [error, setError] = useState<string>();
     const [cheetsError, setCheetsError] = useState<string>("");
 
+    console.log(isPageLoading)
+
     useEffect(() => {
         axios
             .get(`${serverURL}/validate`, { withCredentials: true })
@@ -79,7 +81,7 @@ const Homepage: React.FC = () => {
                                 </div>
                             )}
                             <SubmitCheet
-                                isDisabled={isPageLoading || isCheetsLoading}
+                                isDisabled={isPageLoading}
                                 setCheets={setCheets}
                                 setError={setError}
                                 setPageLoading = {setPageLoading}

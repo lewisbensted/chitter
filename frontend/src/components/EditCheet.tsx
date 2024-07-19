@@ -7,20 +7,22 @@ import { useParams } from "react-router-dom";
 import { serverURL } from "../utils/serverURL";
 
 interface Props {
-    isLoading: boolean;
+    cheet: ICheet;
     isDisabled: boolean;
-    setLoading: (arg: boolean) => void;
+    setPageLoading: (arg: boolean) => void;
     setCheets: (arg: ICheet[]) => void;
     setError: (arg: string) => void;
-    cheet: ICheet;
 }
 
-const EditCheet: React.FC<Props> = ({ cheet, isLoading, isDisabled, setLoading, setCheets, setError }) => {
-    const [editing, setEditing] = useState<boolean>(false);
+const EditCheet: React.FC<Props> = ({ cheet, isDisabled, setPageLoading, setCheets, setError }) => {
     const { id } = useParams();
     const { register, handleSubmit } = useForm<{ text: string }>();
+    const [isEditing, setEditing] = useState<boolean>(false);
+    const [isLoading, setLoading] = useState<boolean>();
+
     const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
         setLoading(true);
+        setPageLoading(true);
         await axios
             .put(`${serverURL + (id ? `/users/${id}/` : "/")}cheets/${cheet.id}`, data, {
                 withCredentials: true,
@@ -35,10 +37,11 @@ const EditCheet: React.FC<Props> = ({ cheet, isLoading, isDisabled, setLoading, 
             });
         setEditing(false);
         setLoading(false);
+        setPageLoading(false);
     };
     return (
         <div>
-            {editing ? (
+            {isEditing ? (
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input {...register("text")} type="text" defaultValue={cheet.text} />
                     {isLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}

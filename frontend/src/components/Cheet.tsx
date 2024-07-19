@@ -33,7 +33,8 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isCheetsLoading, setCheetsLoadi
                     setModalOpen(false);
                 }}
                 setCheets={setCheets}
-                isCheetsLoading={isCheetsLoading}
+                isPageLoading = {isPageLoading}
+                setPageLoading = {setPageLoading}
             />
             <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
             <span>{cheet.text}</span> &nbsp;

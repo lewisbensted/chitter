@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IReply } from "../utils/interfaces";
 import { format } from "date-fns";
 import axios from "axios";
@@ -12,10 +12,9 @@ interface Props {
     cheetId: number;
     reply: IReply;
     setError: (arg: string) => void;
-    setRepliesLoading: (arg: boolean) => void;
     setReplies: (arg: IReply[]) => void;
-    repliesLoading: boolean;
-    isDisabled: boolean;
+    isPageLoading: boolean;
+    setPageLoading: (arg: boolean) => void;
 }
 
 const Reply: React.FC<Props> = ({
@@ -23,11 +22,11 @@ const Reply: React.FC<Props> = ({
     cheetId,
     reply,
     setReplies,
-    setRepliesLoading,
     setError,
-    repliesLoading,
-    isDisabled,
+    isPageLoading,
+    setPageLoading,
 }) => {
+    const [isLoading, setLoading] = useState<boolean>(false);
     return (
         <div>
             <Link to={`/users/${reply.userId}`}>{reply.username}</Link> &nbsp;
@@ -35,11 +34,10 @@ const Reply: React.FC<Props> = ({
                 <EditReply
                     cheetId={cheetId}
                     reply={reply}
-                    isDisabled={isDisabled}
-                    setRepliesLoading={setRepliesLoading}
+                    isDisabled={isPageLoading}
+                    setPageLoading={setPageLoading}
                     setReplies={setReplies}
                     setError={setError}
-                    repliesLoading={repliesLoading}
                 />
             ) : (
                 <span>{reply.text}&nbsp;</span>
@@ -47,23 +45,24 @@ const Reply: React.FC<Props> = ({
             <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}</span>&nbsp;
             {userId === reply.userId ? (
                 <button
-                    disabled={isDisabled}
-                    onClick={() => {
-                        setRepliesLoading(true);
-                        axios
+                    disabled={isPageLoading}
+                    onClick={async () => {
+                        setLoading(true);
+                        setPageLoading(true);
+                        await axios
                             .delete(`${serverURL}/cheets/${reply.cheetId}/replies/${reply.id}`, {
                                 withCredentials: true,
                             })
                             .then((res) => {
                                 setReplies(res.data);
-                                setRepliesLoading(false);
                             })
                             .catch((error: unknown) => {
                                 axios.isAxiosError(error) && [401, 403, 404].includes(error.response?.status!)
                                     ? setError(error.response?.data)
                                     : setError("An unexpected error occured while deleting reply.");
-                                setRepliesLoading(false);
                             });
+                        setLoading(false);
+                        setPageLoading(false);
                     }}
                 >
                     DELETE

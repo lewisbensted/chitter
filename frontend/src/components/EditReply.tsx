@@ -7,50 +7,45 @@ import { serverURL } from "../utils/serverURL";
 
 interface Props {
     isDisabled: boolean;
-    setRepliesLoading: (arg: boolean) => void;
+    setPageLoading: (arg: boolean) => void;
     setReplies: (arg: IReply[]) => void;
     setError: (arg: string) => void;
     reply: IReply;
-    repliesLoading: boolean;
     cheetId: number;
 }
 
-const EditReply: React.FC<Props> = ({
-    reply,
-    isDisabled,
-    setRepliesLoading,
-    setReplies,
-    setError,
-    repliesLoading,
-    cheetId,
-}) => {
-    const [editing, setEditing] = useState<boolean>(false);
+const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setPageLoading, setReplies, setError }) => {
     const { register, handleSubmit } = useForm<{ text: string }>();
+    const [isEditing, setEditing] = useState<boolean>(false);
+    const [isLoading, setLoading] = useState<boolean>(false);
 
-    const onSubmit: SubmitHandler<{ text: string }> = (data) => {
-        setRepliesLoading(true);
-        axios
+    const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
+        setLoading(true);
+        setPageLoading(true);
+        await axios
             .put(`${serverURL}/cheets/${cheetId}/replies/${reply.id}`, data, {
                 withCredentials: true,
             })
             .then((res) => {
-                setRepliesLoading(false);
                 setReplies(res.data);
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401, 403, 404].includes(error.response?.status!)
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while editing reply.");
-                setRepliesLoading(false);
             });
+
+        setLoading(false);
+        setPageLoading(false);
+        setEditing(false);
     };
 
     return (
         <div>
-            {editing ? (
+            {isEditing ? (
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input {...register("text")} type="text" defaultValue={reply.text} />
-                    {repliesLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
+                    {isLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
                 </form>
             ) : (
                 <div>
