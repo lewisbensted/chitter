@@ -11,17 +11,17 @@ interface Props {
     setCheets: (arg: ICheet[]) => void;
     setCheetsError: (arg: string) => void;
     setError: (arg: string) => void;
-    setPageLoading: (arg: boolean) => void;
+    setLoading: (arg: boolean) => void;
 }
 
-const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setCheetsError, setError, setPageLoading }) => {
+const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setCheetsError, setError, setLoading }) => {
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm<{ text: string }>();
-    const [isLoading, setLoading] = useState<boolean>();
+    const [isSubmitLoading, setSubmitLoading] = useState<boolean>();
 
     const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
+        setSubmitLoading(true);
         setLoading(true);
-        setPageLoading(true);
         reset();
         await axios
             .post(`${serverURL + (id ? `/users/${id}/` : "/")}cheets`, data, {
@@ -36,15 +36,15 @@ const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setCheetsError, s
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while sending cheet.");
             });
+        setSubmitLoading(false);
         setLoading(false);
-        setPageLoading(false);
     };
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 Send a Cheet: &nbsp;
                 <input {...register("text")} type="text" /> &nbsp;
-                {isLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
+                {isSubmitLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
             </form>
         </div>
     );

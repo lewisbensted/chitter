@@ -16,8 +16,8 @@ interface Props {
     isOpen: boolean;
     closeModal: () => void;
     setCheets: (arg: ICheet[]) => void;
-    isPageLoading: boolean;
-    setPageLoading: (arg: boolean) => void;
+    isLoading: boolean;
+    setLoading: (arg: boolean) => void;
 }
 
 const CheetModal: React.FC<Props> = ({
@@ -26,17 +26,17 @@ const CheetModal: React.FC<Props> = ({
     isOpen,
     closeModal,
     setCheets,
-    setPageLoading,
-    isPageLoading,
+    setLoading,
+    isLoading,
 }) => {
-    const [isRepliesLoading, setRepliesLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>();
-    const [repliesError, setRepliesError] = useState<string>("");
     const [replies, setReplies] = useState<IReply[]>([]);
+    const [repliesError, setRepliesError] = useState<string>("");
+    const [isRepliesLoading, setRepliesLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (isOpen) {
-            setPageLoading(true);
+            setLoading(true);
             axios
                 .get(`${serverURL}/cheets/${cheet.id}/replies`, {
                     withCredentials: true,
@@ -44,12 +44,12 @@ const CheetModal: React.FC<Props> = ({
                 .then((res) => {
                     setReplies(res.data);
                     setRepliesLoading(false);
-                    setPageLoading(false);
+                    setLoading(false);
                 })
                 .catch(() => {
                     setRepliesError("An unexpected error occured while loading replies.");
                     setRepliesLoading(false);
-                    setPageLoading(false);
+                    setLoading(false);
                 });
         }
     }, [isOpen]);
@@ -62,8 +62,8 @@ const CheetModal: React.FC<Props> = ({
                 {userId === cheet.userId ? (
                     <EditCheet
                         cheet={cheet}
-                        isDisabled={isPageLoading}
-                        setPageLoading={setPageLoading}
+                        isDisabled={isLoading}
+                        setLoading={setLoading}
                         setCheets={setCheets}
                         setError={setError}
                     />
@@ -79,14 +79,14 @@ const CheetModal: React.FC<Props> = ({
                 ) : (
                     replies.map((reply, key) => (
                         <Reply
-                            isPageLoading={isPageLoading}
+                            isLoading={isLoading}
                             userId={userId}
                             cheetId={cheet.id}
                             reply={reply}
                             key={key}
                             setReplies={setReplies}
                             setError={setError}
-                            setPageLoading={setPageLoading}
+                            setLoading={setLoading}
                         />
                     ))
                 )}
@@ -94,10 +94,10 @@ const CheetModal: React.FC<Props> = ({
 
             <SubmitReply
                 cheetId={cheet.id}
-                isDisabled={isPageLoading}
+                isDisabled={isLoading}
                 setReplies={setReplies}
                 setError={setError}
-                setPageLoading={setPageLoading}
+                setLoading={setLoading}
             />
 
             <div>

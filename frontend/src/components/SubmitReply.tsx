@@ -10,16 +10,16 @@ interface Props {
     isDisabled: boolean;
     setReplies: (arg: IReply[]) => void;
     setError: (arg: string) => void;
-    setPageLoading: (arg: boolean) => void;
+    setLoading: (arg: boolean) => void;
 }
 
-const SubmitReply: React.FC<Props> = ({ cheetId, isDisabled, setReplies, setError, setPageLoading }) => {
+const SubmitReply: React.FC<Props> = ({ cheetId, isDisabled, setReplies, setError, setLoading }) => {
     const { register, handleSubmit, reset } = useForm<{ text: string }>();
-    const [isLoading, setLoading] = useState<boolean>();
+    const [isSubmitLoading, setSubmitLoading] = useState<boolean>();
 
     const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
+        setSubmitLoading(true);
         setLoading(true);
-        setPageLoading(true);
         reset();
         await axios
             .post(`${serverURL}/cheets/${cheetId}/replies`, data, {
@@ -33,15 +33,15 @@ const SubmitReply: React.FC<Props> = ({ cheetId, isDisabled, setReplies, setErro
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while sending reply.");
             });
+        setSubmitLoading(false);
         setLoading(false);
-        setPageLoading(false);
     };
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 Send a Reply: &nbsp;
                 <input {...register("text")} type="text" /> &nbsp;
-                {isLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
+                {isSubmitLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
             </form>
         </div>
     );

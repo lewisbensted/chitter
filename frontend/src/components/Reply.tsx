@@ -13,8 +13,8 @@ interface Props {
     reply: IReply;
     setError: (arg: string) => void;
     setReplies: (arg: IReply[]) => void;
-    isPageLoading: boolean;
-    setPageLoading: (arg: boolean) => void;
+    isLoading: boolean;
+    setLoading: (arg: boolean) => void;
 }
 
 const Reply: React.FC<Props> = ({
@@ -23,10 +23,10 @@ const Reply: React.FC<Props> = ({
     reply,
     setReplies,
     setError,
-    isPageLoading,
-    setPageLoading,
+    isLoading,
+    setLoading,
 }) => {
-    const [isLoading, setLoading] = useState<boolean>(false);
+    const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
     return (
         <div>
             <Link to={`/users/${reply.userId}`}>{reply.username}</Link> &nbsp;
@@ -34,8 +34,8 @@ const Reply: React.FC<Props> = ({
                 <EditReply
                     cheetId={cheetId}
                     reply={reply}
-                    isDisabled={isPageLoading}
-                    setPageLoading={setPageLoading}
+                    isDisabled={isLoading}
+                    setLoading={setLoading}
                     setReplies={setReplies}
                     setError={setError}
                 />
@@ -45,10 +45,10 @@ const Reply: React.FC<Props> = ({
             <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}</span>&nbsp;
             {userId === reply.userId ? (
                 <button
-                    disabled={isPageLoading}
+                    disabled={isLoading}
                     onClick={async () => {
+                        setReplyLoading(true);
                         setLoading(true);
-                        setPageLoading(true);
                         await axios
                             .delete(`${serverURL}/cheets/${reply.cheetId}/replies/${reply.id}`, {
                                 withCredentials: true,
@@ -61,8 +61,8 @@ const Reply: React.FC<Props> = ({
                                     ? setError(error.response?.data)
                                     : setError("An unexpected error occured while deleting reply.");
                             });
+                        setReplyLoading(false);
                         setLoading(false);
-                        setPageLoading(false);
                     }}
                 >
                     DELETE

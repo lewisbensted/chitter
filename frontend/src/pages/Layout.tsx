@@ -12,7 +12,6 @@ interface Props {
 }
 
 const Layout: React.FC<Props> = ({ children, isLoading, setLoading, userId, setUserId }) => {
-
 	const [error, setError] = useState<string>();
 
 	return (

@@ -9,9 +9,9 @@ import ErrorModal from "../components/ErrorModal";
 import { serverURL } from "../utils/serverURL";
 
 const Homepage: React.FC = () => {
-    const [isPageLoading, setPageLoading] = useState<boolean>(true);
-    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(true);
     const [userId, setUserId] = useState<number | undefined>(undefined);
+    const [isLoading, setLoading] = useState<boolean>(true);
+    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(true);
     const [cheets, setCheets] = useState<ICheet[]>([]);
     const [error, setError] = useState<string>();
     const [cheetsError, setCheetsError] = useState<string>("");
@@ -30,7 +30,7 @@ const Homepage: React.FC = () => {
                         setCheetsError("An unexpected error occured while loading cheets.");
                     });
                 setCheetsLoading(false);
-                setPageLoading(false);
+                setLoading(false);
             })
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
@@ -38,17 +38,12 @@ const Homepage: React.FC = () => {
                 } else {
                     setError("An unexpected error occured while authenticating the user.");
                 }
-                setPageLoading(false);
+                setLoading(false);
             });
     }, []);
 
     return (
-        <Layout
-            isLoading={isPageLoading}
-            setLoading={setPageLoading}
-            userId={userId}
-            setUserId={setUserId}
-        >
+        <Layout isLoading={isLoading} setLoading={setLoading} userId={userId} setUserId={setUserId}>
             <div>
                 <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
                 <h1>Welcome to Chitter</h1>
@@ -63,25 +58,23 @@ const Homepage: React.FC = () => {
                                         ? cheetsError
                                         : cheets.map((cheet, key) => (
                                               <Cheet
-                                                  isCheetsLoading={isCheetsLoading}
                                                   cheet={cheet}
                                                   userId={userId}
                                                   setCheets={setCheets}
-                                                  setCheetsLoading={setCheetsLoading}
                                                   setError={setError}
                                                   key={key}
-                                                  setPageLoading={setPageLoading}
-                                                  isPageLoading={isPageLoading}
+                                                  setLoading={setLoading}
+                                                  isLoading={isLoading}
                                               />
                                           ))}
                                 </div>
                             )}
                             <SubmitCheet
-                                isDisabled={isPageLoading}
+                                isDisabled={isLoading}
                                 setCheets={setCheets}
-                                setCheetsError ={setCheetsError}
+                                setCheetsError={setCheetsError}
                                 setError={setError}
-                                setPageLoading={setPageLoading}
+                                setLoading={setLoading}
                             />
                         </div>
                     ) : null}

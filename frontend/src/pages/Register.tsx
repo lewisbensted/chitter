@@ -20,7 +20,7 @@ const Register: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<RegisterFormFields>();
     const navigate = useNavigate();
 
-    const [isPageLoading, setPageLoading] = useState<boolean>(true);
+    const [isLoading, setPageLoading] = useState<boolean>(true);
     const [isFormLoading, setFormLoading] = useState<boolean>(false);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [errors, setErrors] = useState<string[]>([]);
@@ -60,7 +60,7 @@ const Register: React.FC = () => {
 
     return (
         <Layout
-            isLoading={isPageLoading || isFormLoading}
+            isLoading={isLoading || isFormLoading}
             setLoading={setPageLoading}
             userId={userId}
             setUserId={setUserId}
@@ -74,7 +74,7 @@ const Register: React.FC = () => {
                     }}
                 />
                 <h1>Registration Page</h1>
-                {isPageLoading ? (
+                {isLoading ? (
                     <ClipLoader />
                 ) : (
                     <form onSubmit={handleSubmit(onSubmit)}>

@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<LoginFormFields>();
     const navigate = useNavigate();
 
-    const [isPageLoading, setPageLoading] = useState<boolean>(true);
+    const [isLoading, setPageLoading] = useState<boolean>(true);
     const [isFormLoading, setFormLoading] = useState<boolean>(false);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [error, setError] = useState<string>();
@@ -55,7 +55,7 @@ const Login: React.FC = () => {
 
     return (
         <Layout
-            isLoading={isPageLoading || isFormLoading}
+            isLoading={isLoading || isFormLoading}
             setLoading={setPageLoading}
             userId={userId}
             setUserId={setUserId}
@@ -63,7 +63,7 @@ const Login: React.FC = () => {
             <div>
                 <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
                 <h1>Login Page</h1>
-                {isPageLoading ? (
+                {isLoading ? (
                     <ClipLoader />
                 ) : (
                     <div>

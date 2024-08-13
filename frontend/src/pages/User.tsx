@@ -10,13 +10,13 @@ import SubmitCheet from "../components/SubmitCheet";
 import { serverURL } from "../utils/serverURL";
 
 const User: React.FC = () => {
-    const [isPageLoading, setPageLoading] = useState<boolean>(true);
-    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
+    const [isLoading, setLoading] = useState<boolean>(true);
+    const [userId, setUserId] = useState<number | undefined>(undefined);
+    const [error, setError] = useState<string>();
     const [username, setUsername] = useState<string>("");
     const [isUserLoading, setUserLoading] = useState<boolean>(false);
-    const [userId, setUserId] = useState<number | undefined>(undefined);
     const [cheets, setCheets] = useState<ICheet[]>([]);
-    const [error, setError] = useState<string>();
+    const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
     const [cheetsError, setCheetsError] = useState<string>("");
     const { id } = useParams();
     const navigate = useNavigate();
@@ -33,13 +33,13 @@ const User: React.FC = () => {
                 } else {
                     setError("An unexpected error occured while authenticating the user.");
                 }
-                setPageLoading(false);
+                setLoading(false);
             });
     }, []);
 
     useEffect(() => {
-        setPageLoading(true);
-        setUserLoading(true)
+        setLoading(true);
+        setUserLoading(true);
         axios
             .get(`${serverURL}/users/${id}`, { withCredentials: true })
             .then(async (res: { data: { user: IUser } }) => {
@@ -55,16 +55,16 @@ const User: React.FC = () => {
                         setCheetsError("An unexpected error occured while loading cheets.");
                     });
                 setCheetsLoading(false);
-                setPageLoading(false);
+                setLoading(false);
             })
             .catch(() => {
                 setUserLoading(false);
-                setPageLoading(false);
+                setLoading(false);
             });
     }, [userId]);
 
     return (
-        <Layout isLoading={isPageLoading} setLoading={setPageLoading} userId={userId} setUserId={setUserId}>
+        <Layout isLoading={isLoading} setLoading={setLoading} userId={userId} setUserId={setUserId}>
             <div>
                 <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
                 {userId ? (
@@ -82,15 +82,13 @@ const User: React.FC = () => {
                                             ? cheetsError
                                             : cheets.map((cheet, key) => (
                                                   <Cheet
-                                                      isCheetsLoading={isCheetsLoading}
                                                       cheet={cheet}
                                                       userId={userId}
                                                       setCheets={setCheets}
-                                                      setCheetsLoading={setCheetsLoading}
                                                       setError={setError}
                                                       key={key}
-                                                      setPageLoading={setPageLoading}
-                                                      isPageLoading={isPageLoading}
+                                                      setLoading={setLoading}
+                                                      isLoading={isLoading}
                                                   />
                                               ))}
                                     </div>
@@ -98,10 +96,10 @@ const User: React.FC = () => {
                                 {userId === Number(id) ? (
                                     <SubmitCheet
                                         setCheetsError={setCheetsError}
-                                        isDisabled={isPageLoading || !username}
+                                        isDisabled={isLoading || !username}
                                         setCheets={setCheets}
                                         setError={setError}
-                                        setPageLoading={setPageLoading}
+                                        setLoading={setLoading}
                                     />
                                 ) : null}
                             </div>

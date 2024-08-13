@@ -7,21 +7,21 @@ import { serverURL } from "../utils/serverURL";
 
 interface Props {
     isDisabled: boolean;
-    setPageLoading: (arg: boolean) => void;
+    setLoading: (arg: boolean) => void;
     setReplies: (arg: IReply[]) => void;
     setError: (arg: string) => void;
     reply: IReply;
     cheetId: number;
 }
 
-const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setPageLoading, setReplies, setError }) => {
+const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, setReplies, setError }) => {
     const { register, handleSubmit } = useForm<{ text: string }>();
     const [isEditing, setEditing] = useState<boolean>(false);
-    const [isLoading, setLoading] = useState<boolean>(false);
+    const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
 
     const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
+        setReplyLoading(true);
         setLoading(true);
-        setPageLoading(true);
         await axios
             .put(`${serverURL}/cheets/${cheetId}/replies/${reply.id}`, data, {
                 withCredentials: true,
@@ -35,8 +35,8 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setPageLoading
                     : setError("An unexpected error occured while editing reply.");
             });
 
+        setReplyLoading(false);
         setLoading(false);
-        setPageLoading(false);
         setEditing(false);
     };
 
@@ -45,7 +45,7 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setPageLoading
             {isEditing ? (
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input {...register("text")} type="text" defaultValue={reply.text} />
-                    {isLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
+                    {isReplyLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
                 </form>
             ) : (
                 <div>

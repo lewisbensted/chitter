@@ -10,18 +10,23 @@ import { ClipLoader } from "react-spinners";
 interface Props {
     userId: number | undefined;
     cheet: ICheet;
-    isCheetsLoading: boolean;
     setError: (arg: string) => void;
-    setCheetsLoading: (arg: boolean) => void;
     setCheets: (arg: ICheet[]) => void;
-    isPageLoading: boolean
-    setPageLoading: (arg: boolean) => void;
+    isLoading: boolean;
+    setLoading: (arg: boolean) => void;
 }
 
-const Cheet: React.FC<Props> = ({ userId, cheet, isCheetsLoading, setCheetsLoading, setError, setCheets, setPageLoading, isPageLoading }) => {
+const Cheet: React.FC<Props> = ({
+    userId,
+    cheet,
+    setError,
+    setCheets,
+    setLoading,
+    isLoading,
+}) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const { id } = useParams();
-    const [isLoading, setLoading] = useState<boolean>(false);
+    const [isCheetLoading, setCheetLoading] = useState<boolean>(false);
 
     return (
         <div>
@@ -33,8 +38,8 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isCheetsLoading, setCheetsLoadi
                     setModalOpen(false);
                 }}
                 setCheets={setCheets}
-                isPageLoading = {isPageLoading}
-                setPageLoading = {setPageLoading}
+                isLoading={isLoading}
+                setLoading={setLoading}
             />
             <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
             <span>{cheet.text}</span> &nbsp;
@@ -42,14 +47,14 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isCheetsLoading, setCheetsLoadi
             <button onClick={() => setModalOpen(true)}>MORE</button> &nbsp;
             {userId === cheet.userId ? (
                 <div>
-                    {isLoading ? (
+                    {isCheetLoading ? (
                         <ClipLoader />
                     ) : (
                         <button
-                            disabled={isPageLoading}
+                            disabled={isLoading}
                             onClick={async () => {
+                                setCheetLoading(true);
                                 setLoading(true);
-                                setPageLoading(true)
                                 await axios
                                     .delete(`${serverURL + (id ? `/users/${id}/` : "/")}cheets/${cheet.id}`, {
                                         withCredentials: true,
@@ -62,8 +67,8 @@ const Cheet: React.FC<Props> = ({ userId, cheet, isCheetsLoading, setCheetsLoadi
                                             ? setError(error.response?.data)
                                             : setError("An unexpected error occured while deleting cheet.");
                                     });
+                                setCheetLoading(false);
                                 setLoading(false);
-                                setPageLoading(false)
                             }}
                         >
                             DELETE
