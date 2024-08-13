@@ -62,7 +62,6 @@ const Register: React.FC = () => {
         <Layout
             isLoading={isPageLoading || isFormLoading}
             setLoading={setPageLoading}
-            setCheets={() => {}}
             userId={userId}
             setUserId={setUserId}
         >

@@ -9,11 +9,12 @@ import { serverURL } from "../utils/serverURL";
 interface Props {
     isDisabled: boolean;
     setCheets: (arg: ICheet[]) => void;
+    setCheetsError: (arg: string) => void;
     setError: (arg: string) => void;
     setPageLoading: (arg: boolean) => void;
 }
 
-const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setError, setPageLoading }) => {
+const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setCheetsError, setError, setPageLoading }) => {
     const { id } = useParams();
     const { register, handleSubmit, reset } = useForm<{ text: string }>();
     const [isLoading, setLoading] = useState<boolean>();
@@ -28,6 +29,7 @@ const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setError, setPage
             })
             .then((res) => {
                 setCheets(res.data.cheets);
+                setCheetsError("");
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401].includes(error.response?.status!)

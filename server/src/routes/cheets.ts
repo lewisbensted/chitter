@@ -24,14 +24,12 @@ export const cheetExtension = Prisma.defineExtension({
 });
 
 const checkUser = async (userId?: string) => {
-    let user;
     if (userId) {
         if (isNaN(Number(userId))) {
             throw new TypeError("Invalid user ID provided - must be a number.");
         }
-        user = await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
+        await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
     }
-    return user;
 };
 
 export const fetchCheets = async (userId?: number) => {
@@ -48,9 +46,9 @@ export const fetchCheets = async (userId?: number) => {
 
 router.get("/", authMiddleware, async (req: Request, res: Response) => {
     try {
-        const user = await checkUser(req.params.userId);
+        await checkUser(req.params.userId);
         const cheets = await fetchCheets(Number(req.params.userId));
-        res.status(200).send({ user, cheets });
+        res.status(200).send({ cheets: cheets });
     } catch (error) {
         console.error("Error retrieving cheets from the database:\n" + logError(error));
         sendErrorResponse(error, res);

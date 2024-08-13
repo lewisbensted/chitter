@@ -16,8 +16,6 @@ const Homepage: React.FC = () => {
     const [error, setError] = useState<string>();
     const [cheetsError, setCheetsError] = useState<string>("");
 
-    console.log(isPageLoading)
-
     useEffect(() => {
         axios
             .get(`${serverURL}/validate`, { withCredentials: true })
@@ -27,12 +25,11 @@ const Homepage: React.FC = () => {
                     .get(`${serverURL}/cheets`, { withCredentials: true })
                     .then((res: { data: { cheets: ICheet[] } }) => {
                         setCheets(res.data.cheets);
-                        setCheetsLoading(false);
                     })
                     .catch(() => {
                         setCheetsError("An unexpected error occured while loading cheets.");
-                        setCheetsLoading(false);
                     });
+                setCheetsLoading(false);
                 setPageLoading(false);
             })
             .catch((error: unknown) => {
@@ -49,7 +46,6 @@ const Homepage: React.FC = () => {
         <Layout
             isLoading={isPageLoading}
             setLoading={setPageLoading}
-            setCheets={setCheets}
             userId={userId}
             setUserId={setUserId}
         >
@@ -75,7 +71,7 @@ const Homepage: React.FC = () => {
                                                   setError={setError}
                                                   key={key}
                                                   setPageLoading={setPageLoading}
-                                                  isPageLoading = {isPageLoading}
+                                                  isPageLoading={isPageLoading}
                                               />
                                           ))}
                                 </div>
@@ -83,8 +79,9 @@ const Homepage: React.FC = () => {
                             <SubmitCheet
                                 isDisabled={isPageLoading}
                                 setCheets={setCheets}
+                                setCheetsError ={setCheetsError}
                                 setError={setError}
-                                setPageLoading = {setPageLoading}
+                                setPageLoading={setPageLoading}
                             />
                         </div>
                     ) : null}

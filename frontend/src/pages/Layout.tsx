@@ -9,10 +9,9 @@ interface Props {
 	userId: number | undefined;
 	setLoading: (arg: boolean) => void;
 	setUserId: (arg: number | undefined) => void;
-	setCheets: (arg: []) => void;
 }
 
-const Layout: React.FC<Props> = ({ children, isLoading, setLoading, setCheets, userId, setUserId }) => {
+const Layout: React.FC<Props> = ({ children, isLoading, setLoading, userId, setUserId }) => {
 
 	const [error, setError] = useState<string>();
 

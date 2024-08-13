@@ -13,6 +13,7 @@ const User: React.FC = () => {
     const [isPageLoading, setPageLoading] = useState<boolean>(true);
     const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
+    const [isUserLoading, setUserLoading] = useState<boolean>(false);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [cheets, setCheets] = useState<ICheet[]>([]);
     const [error, setError] = useState<string>();
@@ -23,23 +24,8 @@ const User: React.FC = () => {
     useEffect(() => {
         axios
             .get(`${serverURL}/validate`, { withCredentials: true })
-            .then((res: { data: IUser }) => {
+            .then(async (res: { data: IUser }) => {
                 setUserId(res.data.id);
-                axios
-                    .get(`${serverURL}/users/${id}/cheets`, { withCredentials: true })
-                    .then((res: { data: { user: IUser; cheets: ICheet[] } }) => {
-                        setUsername(res.data.user.username);
-                        setCheets(res.data.cheets);
-                        setPageLoading(false);
-                    })
-                    .catch((error: unknown) => {
-                        if (axios.isAxiosError(error) && error.response?.status == 404) {
-                            navigate("/");
-                        } else {
-                            setError("An unexpected error occured while fetching cheets.");
-                        }
-                        setPageLoading(false);
-                    });
             })
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
@@ -51,53 +37,77 @@ const User: React.FC = () => {
             });
     }, []);
 
+    useEffect(() => {
+        setPageLoading(true);
+        setUserLoading(true)
+        axios
+            .get(`${serverURL}/users/${id}`, { withCredentials: true })
+            .then(async (res: { data: { user: IUser } }) => {
+                setCheetsLoading(true);
+                setUsername(res.data.user.username);
+                setUserLoading(false);
+                await axios
+                    .get(`${serverURL}/users/${id}/cheets`, { withCredentials: true })
+                    .then((res: { data: { user: IUser; cheets: ICheet[] } }) => {
+                        setCheets(res.data.cheets);
+                    })
+                    .catch(() => {
+                        setCheetsError("An unexpected error occured while loading cheets.");
+                    });
+                setCheetsLoading(false);
+                setPageLoading(false);
+            })
+            .catch(() => {
+                setUserLoading(false);
+                setPageLoading(false);
+            });
+    }, [userId]);
+
     return (
-        <Layout
-            isLoading={isPageLoading || isCheetsLoading}
-            setLoading={setPageLoading}
-            setCheets={setCheets}
-            userId={userId}
-            setUserId={setUserId}
-        >
+        <Layout isLoading={isPageLoading} setLoading={setPageLoading} userId={userId} setUserId={setUserId}>
             <div>
                 <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
-                {username ? (
+                {userId ? (
                     <div>
-                        <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
-                        <h1>{username}</h1>
-                        {isPageLoading ? (
+                        {isUserLoading ? (
                             <ClipLoader />
                         ) : (
                             <div>
-                                {cheetsError
-                                    ? cheetsError
-                                    : cheets.map((cheet, key) => (
-                                          <Cheet
-                                              isCheetsLoading={isCheetsLoading}
-                                              cheet={cheet}
-                                              userId={userId}
-                                              setCheets={setCheets}
-                                              setCheetsLoading={setCheetsLoading}
-                                              setError={setError}
-                                              key={key}
-                                              setPageLoading={setPageLoading}
-                                              isPageLoading={isPageLoading}
-                                          />
-                                      ))}
+                                <h1>{username ? username : "Error loading user"}</h1>
+                                {isCheetsLoading ? (
+                                    <ClipLoader />
+                                ) : (
+                                    <div>
+                                        {cheetsError
+                                            ? cheetsError
+                                            : cheets.map((cheet, key) => (
+                                                  <Cheet
+                                                      isCheetsLoading={isCheetsLoading}
+                                                      cheet={cheet}
+                                                      userId={userId}
+                                                      setCheets={setCheets}
+                                                      setCheetsLoading={setCheetsLoading}
+                                                      setError={setError}
+                                                      key={key}
+                                                      setPageLoading={setPageLoading}
+                                                      isPageLoading={isPageLoading}
+                                                  />
+                                              ))}
+                                    </div>
+                                )}
+                                {userId === Number(id) ? (
+                                    <SubmitCheet
+                                        setCheetsError={setCheetsError}
+                                        isDisabled={isPageLoading || !username}
+                                        setCheets={setCheets}
+                                        setError={setError}
+                                        setPageLoading={setPageLoading}
+                                    />
+                                ) : null}
                             </div>
                         )}
-                        {userId === Number(id) ? (
-                            <SubmitCheet
-                                isDisabled={isPageLoading}
-                                setCheets={setCheets}
-                                setError={setError}
-                                setPageLoading={setPageLoading}
-                            />
-                        ) : null}
                     </div>
-                ) : (
-                    <ClipLoader />
-                )}
+                ) : null}
             </div>
         </Layout>
     );
