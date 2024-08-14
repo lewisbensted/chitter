@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { Prisma } from "@prisma/client";
-import { CheetSchema } from "../schemas/cheet.schema.js";
+import { CreateCheetSchema, UpdateCheetSchema } from "../schemas/cheet.schema.js";
 import { logError } from "../utils/logError.js";
 import prisma from "../../prisma/prismaClient.js";
 import { sendErrorResponse } from "../utils/sendErrorResponse.js";
@@ -12,11 +12,11 @@ export const cheetExtension = Prisma.defineExtension({
     query: {
         cheet: {
             async create({ args, query }) {
-                args.data = await CheetSchema.parseAsync(args.data);
+                args.data = await CreateCheetSchema.parseAsync(args.data);
                 return query(args);
             },
             async update({ args, query }) {
-                args.data = await CheetSchema.parseAsync(args.data);
+                args.data = await UpdateCheetSchema.parseAsync(args.data);
                 return query(args);
             },
         },
@@ -88,8 +88,6 @@ router.put("/:cheetId", authMiddleware, async (req: Request, res: Response) => {
                     id: Number(req.params.cheetId),
                 },
                 data: {
-                    userId: req.session.user!.id,
-                    username: req.session.user!.username,
                     text: req.body.text,
                 },
             });

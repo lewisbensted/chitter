@@ -6,15 +6,11 @@ import { sendErrorResponse } from "../utils/sendErrorResponse.js";
 
 const router = express.Router({ mergeParams: true });
 
-const fetchUser = async (userId?: string) => {
-    let user;
-    if (userId) {
-        if (isNaN(Number(userId))) {
-            throw new TypeError("Invalid user ID provided - must be a number.");
-        }
-        user = await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
+const fetchUser = async (userId: string) => {
+    if (isNaN(Number(userId))) {
+        throw new TypeError("Invalid user ID provided - must be a number.");
     }
-    return user;
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
 };
 
 router.get("/", authMiddleware, async (req: Request, res: Response) => {

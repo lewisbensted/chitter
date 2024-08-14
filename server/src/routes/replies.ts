@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import express, { Request, Response } from "express";
-import { ReplySchema } from "../schemas/reply.schema.js";
+import { CreateReplySchema, UpdateReplySchema } from "../schemas/reply.schema.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { logError } from "../utils/logError.js";
 import prisma from "../../prisma/prismaClient.js";
@@ -12,11 +12,11 @@ export const replyExtension = Prisma.defineExtension({
     query: {
         reply: {
             async create({ args, query }) {
-                args.data = await ReplySchema.parseAsync(args.data);
+                args.data = await CreateReplySchema.parseAsync(args.data);
                 return query(args);
             },
             async update({ args, query }) {
-                args.data = await ReplySchema.parseAsync(args.data);
+                args.data = await UpdateReplySchema.parseAsync(args.data);
                 return query(args);
             },
         },
@@ -88,10 +88,7 @@ router.put("/:replyId", authMiddleware, async (req: Request, res: Response) => {
                         id: Number(req.params.replyId),
                     },
                     data: {
-                        userId: req.session.user!.id,
-                        username: req.session.user!.username,
                         text: req.body.text,
-                        cheetId: Number(req.params.cheetId),
                     },
                 });
                 const replies = await fetchReplies(Number(req.params.cheetId));
