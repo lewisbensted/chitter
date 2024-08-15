@@ -4,7 +4,6 @@ import { logError } from "../utils/logError.js";
 import prisma from "../../prisma/prismaClient.js";
 import { authenticate } from "../utils/authenticate.js";
 
-
 const router = express.Router();
 
 router.post("/", async (req: Request, res: Response) => {
@@ -12,6 +11,10 @@ router.post("/", async (req: Request, res: Response) => {
     try {
         if (authenticate(req)) {
             res.status(403).send("Already logged in.");
+        } else if (!username) {
+            res.status(400).send("Username not provided.");
+        } else if (!password) {
+            res.status(400).send("Password not provided.");
         } else {
             const user = await prisma.user.findUnique({
                 where: { username: username },
@@ -30,7 +33,7 @@ router.post("/", async (req: Request, res: Response) => {
             }
         }
     } catch (error) {
-        console.error("Error loggin in:\n" + logError(error));
+        console.error("Error logging in:\n" + logError(error));
         res.status(500).send("An unexpected error occured.");
     }
 });

@@ -143,6 +143,65 @@ describe("test message froms routes.", () => {
         });
     });
 
+    describe("Update an existing message at route: [PUT] /messages.", async () => {
+        test("Responds with HTTP status 200 and all relevant messages when an existing message is update.", async () => {
+            const { status, body } = await request(sessionApp)
+                .put("/messages/2/message/1")
+                .send({ text: "test message from testuser1 to testuser2 - updated" });
+            expect(status).toEqual(200);
+            expect(body).length(3);
+            const updatedMessage = body.filter((message: Message) => message.id == 1);
+            expect(updatedMessage).length(1);
+            expect(updatedMessage[0].text).toEqual("test message from testuser1 to testuser2 - updated");
+            expect(updatedMessage[0].updatedAt > updatedMessage[0].createdAt).toBe(true);
+        });
+        test("Responds with HTTP status 400 if message validation fails - message too short.", async () => {
+            const { status, text } = await request(sessionApp).put("/messages/2/message/1").send({ text: "" });
+            expect(status).toEqual(400);
+            expect(text).toEqual("Message cannot be empty!");
+        });
+        test("Responds with HTTP status 400 if message validation fails - text parameter missing.", async () => {
+            const { status, text } = await request(sessionApp).put("/messages/2/message/1").send({});
+            expect(status).toEqual(400);
+            expect(text).toEqual("Message not provided.");
+        });
+        test("Responds with HTTP status 400 when an invalid recipient ID is provided.", async () => {
+            const { status, text } = await request(sessionApp)
+                .put("/messages/2a//message/1")
+                .send({ text: "update invalid recipient" });
+            expect(status).toEqual(400);
+            expect(text).toEqual("Invalid recipient ID provided - must be a number.");
+        });
+        test("Responds with HTTP status 400 when an invalid message ID is provided.", async () => {
+            const { status, text } = await request(sessionApp)
+                .put("/messages/2//message/1a")
+                .send({ text: "update invalid message" });
+            expect(status).toEqual(400);
+            expect(text).toEqual("Invalid message ID provided - must be a number.");
+        });
+        test("Responds with HTTP status 404 if the recipient ID provided does not correspond to a user in the database.", async () => {
+            const { status, text } = await request(sessionApp)
+                .put("/messages/4/message/1")
+                .send({ text: "update nonexistent recipient" });
+            expect(status).toEqual(404);
+            expect(text).toEqual("No User found with ID provided.");
+        });
+        test("Responds with HTTP status 404 if the message ID provided does not correspond to a message in the database.", async () => {
+            const { status, text } = await request(sessionApp)
+                .put("/messages/2/message/12")
+                .send({ text: "update nonexistant message" });
+            expect(status).toEqual(404);
+            expect(text).toEqual("No Message found with ID provided.");
+        });
+        test("Responds with HTTP status 403 if message's sender ID does not match the session's userID (trying to update someone else's message).", async () => {
+            const { status, text } = await request(sessionApp)
+                .put("/messages/2/message/4")
+                .send({ text: "update someone else's message" });
+            expect(status).toEqual(403);
+            expect(text).toEqual("Cannot update someone else's message.");
+        });
+    });
+
     describe("deletes an existing message at route: [DELETE] /messages.", async () => {
         test("Responds with HTTP status 200 and all relevant messages when a message is deleted.", async () => {
             const { status, body } = await request(sessionApp).delete("/messages/2/message/1");

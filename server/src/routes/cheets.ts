@@ -5,6 +5,7 @@ import { CreateCheetSchema, UpdateCheetSchema } from "../schemas/cheet.schema.js
 import { logError } from "../utils/logError.js";
 import prisma from "../../prisma/prismaClient.js";
 import { sendErrorResponse } from "../utils/sendErrorResponse.js";
+import { checkUser } from "../utils/checkUser.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -22,15 +23,6 @@ export const cheetExtension = Prisma.defineExtension({
         },
     },
 });
-
-const checkUser = async (userId?: string) => {
-    if (userId) {
-        if (isNaN(Number(userId))) {
-            throw new TypeError("Invalid user ID provided - must be a number.");
-        }
-        await prisma.user.findUniqueOrThrow({ where: { id: Number(userId) } });
-    }
-};
 
 export const fetchCheets = async (userId?: number) => {
     const cheets = await prisma.cheet.findMany({

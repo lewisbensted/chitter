@@ -70,6 +70,7 @@ describe("authenticates the user by comparing information stored on the request'
             expect(authenticate(req)).toEqual(false);
         });
     });
+    
     describe("Test authenticate middleware.", () => {
         test("Successful authentication.", async () => {
             const req = {

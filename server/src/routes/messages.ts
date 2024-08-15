@@ -6,6 +6,7 @@ import { logError } from "../utils/logError.js";
 import { Prisma } from "@prisma/client";
 import { CreateMessageSchema, UpdateMessageSchema } from "../schemas/message.schema.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import { checkUser } from "../utils/checkUser.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -24,16 +25,6 @@ export const messageExtension = Prisma.defineExtension({
     },
 });
 
-const checkRecipient = async (recipientId: string) => {
-    if (isNaN(Number(recipientId))) {
-        throw new TypeError("Invalid recipient ID provided - must be a number.");
-    }
-    const { username } = await prisma.user.findUniqueOrThrow({
-        where: { id: Number(recipientId) },
-    });
-    return username;
-};
-
 export const fetchMessages = async (senderId: number, recipientId: number) => {
     const messages = await prisma.message.findMany({
         where: {
@@ -51,7 +42,7 @@ export const fetchMessages = async (senderId: number, recipientId: number) => {
 
 router.get("/", authMiddleware, async (req: Request, res: Response) => {
     try {
-        await checkRecipient(req.params.recipientId);
+        await checkUser(req.params.recipientId, "recipient");
         const messages = await fetchMessages(req.session.user!.id, Number(req.params.recipientId));
         res.status(200).send(messages);
     } catch (error) {
@@ -62,13 +53,13 @@ router.get("/", authMiddleware, async (req: Request, res: Response) => {
 
 router.post("/", authMiddleware, async (req: Request, res: Response) => {
     try {
-        const recipientUsername = await checkRecipient(req.params.recipientId);
+        const recipientUser = await checkUser(req.params.recipientId, "recipient");
         await prisma.$extends(messageExtension).message.create({
             data: {
                 senderId: req.session.user!.id,
                 senderUsername: req.session.user!.username,
                 recipientId: Number(req.params.recipientId),
-                recipientUsername: recipientUsername,
+                recipientUsername: recipientUser!.username,
                 text: req.body.text,
             },
         });
@@ -82,7 +73,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
 
 router.put("/message/:messageId", authMiddleware, async (req: Request, res: Response) => {
     try {
-        await checkRecipient(req.params.recipientId);
+        await checkUser(req.params.recipientId, "recipient");
         if (isNaN(Number(req.params.messageId))) {
             throw new TypeError("Invalid message ID provided - must be a number.");
         }
@@ -109,7 +100,7 @@ router.put("/message/:messageId", authMiddleware, async (req: Request, res: Resp
 
 router.delete("/message/:messageId", authMiddleware, async (req: Request, res: Response) => {
     try {
-        await checkRecipient(req.params.recipientId);
+        await checkUser(req.params.recipientId, "recipient");
         if (isNaN(Number(req.params.messageId))) {
             throw new TypeError("Invalid message ID provided - must be a number.");
         }

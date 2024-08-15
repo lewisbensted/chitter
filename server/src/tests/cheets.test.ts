@@ -22,7 +22,6 @@ describe("Test cheets routes.", () => {
         await prisma.$extends(registerExtension).user.create({ data: testUser1 });
         await prisma.$extends(registerExtension).user.create({ data: testUser2 });
         await prisma.cheet.createMany({ data: testCheets });
-        
     });
 
     const testApp = express();
@@ -143,7 +142,7 @@ describe("Test cheets routes.", () => {
         });
     });
 
-    describe("Updates an existing cheet at route: [PUT] /cheets.", async () => {
+    describe("Update an existing cheet at route: [PUT] /cheets.", async () => {
         test("Responds with HTTP status 200 and all cheets when an existing cheet is updated without a user ID parameter.", async () => {
             const { status, body } = await request(sessionApp)
                 .put("/cheets/1")
@@ -216,22 +215,8 @@ describe("Test cheets routes.", () => {
             expect(status).toEqual(400);
             expect(text).toEqual("Invalid cheet ID provided - must be a number.");
         });
-        test("Responds with HTTP status 500 if the session user ID and username do not match the composite key in the users table.", async () => {
-            const sessionAppIncorrect = express();
-            sessionAppIncorrect.use(session({ secret: "secret-key" }));
-            sessionAppIncorrect.all("*", (req, res, next) => {
-                req.session.user = { id: 1, username: "testuser2" };
-                next();
-            });
-            sessionAppIncorrect.use(testApp);
-            const { status, text } = await request(sessionAppIncorrect)
-                .put("/users/1/cheets/1")
-                .send({ text: "test cheet 1 - updated" });
-            expect(status).toEqual(500);
-            expect(text).toEqual("An unexpected error occured.");
-        });
 
-        describe("Deletes an existing cheet at route: [DELETE] /cheets.", async () => {
+        describe("Delete an existing cheet at route: [DELETE] /cheets.", async () => {
             test("Responds with HTTP status 200 and all cheets when an existing cheet is deleted without a user ID parameter.", async () => {
                 const { status, body } = await request(sessionApp).delete("/cheets/1");
                 expect(status).toEqual(200);

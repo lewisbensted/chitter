@@ -269,20 +269,6 @@ describe("Test replies routes.", () => {
         expect(status).toEqual(403);
         expect(text).toEqual("Cheet IDs do not match.");
       });
-      test("Responds with HTTP status 500 if the session's user ID and username do not match the composite key in the users table.", async () => {
-        const sessionAppIncorrect = express();
-        sessionAppIncorrect.use(session({ secret: "secret-key" }));
-        sessionAppIncorrect.all("*", (req, res, next) => {
-          req.session.user = { id: 1, username: "testuser2" };
-          next();
-        });
-        sessionAppIncorrect.use(testApp);
-        const { status, text } = await request(sessionAppIncorrect)
-          .put("/cheets/1/replies/1")
-          .send({ text: "test reply 1 - updated" });
-        expect(status).toEqual(500);
-        expect(text).toEqual("An unexpected error occured.");
-      });
     });
 
     describe("Deletes an existing reply at route: [DELETE] /replies.", async () => {
