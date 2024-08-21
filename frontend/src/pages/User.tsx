@@ -42,14 +42,14 @@ const User: React.FC = () => {
         setUserLoading(true);
         axios
             .get(`${serverURL}/users/${id}`, { withCredentials: true })
-            .then(async (res: { data: { user: IUser } }) => {
+            .then(async (res: { data: IUser }) => {
                 setCheetsLoading(true);
-                setUsername(res.data.user.username);
+                setUsername(res.data.username);
                 setUserLoading(false);
                 await axios
                     .get(`${serverURL}/users/${id}/cheets`, { withCredentials: true })
-                    .then((res: { data: { user: IUser; cheets: ICheet[] } }) => {
-                        setCheets(res.data.cheets);
+                    .then((res: { data: ICheet[] }) => {
+                        setCheets(res.data);
                     })
                     .catch(() => {
                         setCheetsError("An unexpected error occured while loading cheets.");

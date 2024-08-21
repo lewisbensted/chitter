@@ -1,28 +1,28 @@
 {
-	"name": "chitter",
-	"version": "1.0.0",
-	"description": "A mock Twitter app built with Express and React.",
-	"scripts": {
-		"install": "concurrently \"cd frontend && npm install\" \"cd server && npm install\"",
-		"migrate:dev": "cd server && npm run migrate:dev",
-		"start:dev": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\"",
-		"seed:dev": "cd server && npm run seed:dev",
-		"migrate:test": "cd server && npm run migrate:test",
-		"start:test": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:test\"",
-		"seed:test" : "cd server && npm run seed:test",
-		"migrate:prod": "cd server && npm run migrate:prod",
-		"start:prod": "cd frontend && npm run build && cd ../server && npm run start:prod"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/lewisbensted/chitter.git"
-	},
-	"author": "Lewis Bensted",
-	"license": "ISC",
-	"homepage": "https://github.com/lewisbensted/chitter#readme",
-	"dependencies": {
-		"concurrently": "^8.2.2",
-		"dotenv-cli": "^7.4.2",
-		"dotenv-expand": "^11.0.6"
-	}
+    "name": "chitter",
+    "version": "1.0.0",
+    "description": "A mock Twitter app built with Express and React.",
+    "scripts": {
+        "install": "concurrently \"cd frontend && npm install\" \"cd server && npm install\"",
+        "migrate:dev": "cd server && npm run migrate:dev",
+        "start:dev": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\"",
+        "seed:dev": "cd server && npm run seed:dev",
+        "migrate:test": "cd server && npm run migrate:test",
+        "start:test": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:test\"",
+        "seed:test": "cd server && npm run seed:test",
+        "migrate:prod": "cd server && npm run migrate:prod",
+        "start:prod": "cd frontend && npm run build && cd ../server && npm run start:prod"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lewisbensted/chitter.git"
+    },
+    "author": "Lewis Bensted",
+    "license": "ISC",
+    "homepage": "https://github.com/lewisbensted/chitter#readme",
+    "dependencies": {
+        "concurrently": "^8.2.2",
+        "dotenv-cli": "^7.4.2",
+        "dotenv-expand": "^11.0.6"
+    }
 }

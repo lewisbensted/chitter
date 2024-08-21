@@ -15,6 +15,10 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
             .mockImplementationOnce(() => false)
             .mockImplementationOnce(() => false)
             .mockImplementationOnce(() => false)
+            .mockImplementationOnce(() => false)
+            .mockImplementationOnce(() => false)
+            .mockImplementationOnce(() => false)
+            .mockImplementationOnce(() => false)
             .mockImplementationOnce(() => true),
     }));
 
@@ -41,12 +45,27 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
         expect(cookies).toContain("user_id");
         expect(cookies).toContain("session_id");
     });
-    test("Responds with HTTP status 404 if user does not exist in the database.", async () => {
+    test("Responds with HTTP status 400 if username is not provided as a parameter.", async () => {
+        const { status, text } = await request(sessionApp).post("/login").send({ password: "password1!" });
+        expect(status).toEqual(400);
+        expect(text).toEqual("Username not provided.");
+    });
+    test("Responds with HTTP status 400 if username provided is empty string.", async () => {
         const { status, text } = await request(sessionApp)
             .post("/login")
-            .send({ username: "testuser", password: "password1!" });
-        expect(status).toEqual(404);
-        expect(text).toEqual("User does not exist.");
+            .send({ username: "", password: "password1!" });
+        expect(status).toEqual(400);
+        expect(text).toEqual("Username not provided.");
+    });
+    test("Responds with HTTP status 400 if password is not provided as a parameter.", async () => {
+        const { status, text } = await request(sessionApp).post("/login").send({ username: "testuser1" });
+        expect(status).toEqual(400);
+        expect(text).toEqual("Password not provided.");
+    });
+    test("Responds with HTTP status 400 if password provided is empty string.", async () => {
+        const { status, text } = await request(sessionApp).post("/login").send({ username: "testuser1", password: "" });
+        expect(status).toEqual(400);
+        expect(text).toEqual("Password not provided.");
     });
     test("Responds with HTTP status 401 if the password provided in the params does not match the decrypted value from the database.", async () => {
         const { status, text } = await request(sessionApp)
@@ -55,7 +74,13 @@ describe("Login with an existing user at route: [POST] /login.", async () => {
         expect(status).toEqual(401);
         expect(text).toEqual("Incorrect password.");
     });
-
+    test("Responds with HTTP status 404 if user does not exist in the database.", async () => {
+        const { status, text } = await request(sessionApp)
+            .post("/login")
+            .send({ username: "testuser", password: "password1!" });
+        expect(status).toEqual(404);
+        expect(text).toEqual("User does not exist.");
+    });
     test("Responds with HTTP status 403 if the user already exist on the session object (is already logged in).", async () => {
         sessionApp.use(testApp);
         const { status, text } = await request(sessionApp)

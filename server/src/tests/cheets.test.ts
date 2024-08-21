@@ -58,23 +58,21 @@ describe("Test cheets routes.", () => {
         test("Responds with HTTP status 200 and all cheets when a user ID is not provided as a parameter.", async () => {
             const { status, body } = await request(sessionApp).get("/cheets");
             expect(status).toEqual(200);
-            expect(body.cheets).length(5);
+            expect(body).length(5);
         });
         test("Responds with HTTP status 200 and cheets relevant to a particular user when a user ID is provided as a parameter.", async () => {
             const request1 = await request(sessionApp).get("/users/1/cheets");
             expect(request1.status).toEqual(200);
-            expect(request1.body.user.username).toEqual("testuser1");
-            expect(request1.body.cheets).length(3);
-            expect(request1.body.cheets[0].userId).toEqual(1);
-            expect(request1.body.cheets[1].userId).toEqual(1);
-            expect(request1.body.cheets[2].userId).toEqual(1);
+            expect(request1.body).length(3);
+            expect(request1.body[0].userId).toEqual(1);
+            expect(request1.body[1].userId).toEqual(1);
+            expect(request1.body[2].userId).toEqual(1);
 
             const request2 = await request(sessionApp).get("/users/2/cheets");
             expect(request2.status).toEqual(200);
-            expect(request2.body.user.username).toEqual("testuser2");
-            expect(request2.body.cheets).length(2);
-            expect(request2.body.cheets[0].userId).toEqual(2);
-            expect(request2.body.cheets[1].userId).toEqual(2);
+            expect(request2.body).length(2);
+            expect(request2.body[0].userId).toEqual(2);
+            expect(request2.body[1].userId).toEqual(2);
         });
         test("Responds with HTTP status 400 when an invalid user ID is provided.", async () => {
             const { status, text } = await request(sessionApp).get("/users/1a/cheets");
@@ -215,52 +213,52 @@ describe("Test cheets routes.", () => {
             expect(status).toEqual(400);
             expect(text).toEqual("Invalid cheet ID provided - must be a number.");
         });
+    });
 
-        describe("Delete an existing cheet at route: [DELETE] /cheets.", async () => {
-            test("Responds with HTTP status 200 and all cheets when an existing cheet is deleted without a user ID parameter.", async () => {
-                const { status, body } = await request(sessionApp).delete("/cheets/1");
-                expect(status).toEqual(200);
-                expect(body).length(4);
-                expect(body.map((cheet: Cheet) => cheet.id)).not.toContain(1);
-            });
-            test("Responds with HTTP status 200 and relevant cheets when an existing cheet is deleted with a user ID parameter.", async () => {
-                const request1 = await request(sessionApp).delete("/users/1/cheets/1");
-                expect(request1.status).toEqual(200);
-                expect(request1.body).length(2);
-                const deletedCheet1 = request1.body.filter((cheet: Cheet) => cheet.id == 1);
-                expect(deletedCheet1).length(0);
+    describe("Delete an existing cheet at route: [DELETE] /cheets.", async () => {
+        test("Responds with HTTP status 200 and all cheets when an existing cheet is deleted without a user ID parameter.", async () => {
+            const { status, body } = await request(sessionApp).delete("/cheets/1");
+            expect(status).toEqual(200);
+            expect(body).length(4);
+            expect(body.map((cheet: Cheet) => cheet.id)).not.toContain(1);
+        });
+        test("Responds with HTTP status 200 and relevant cheets when an existing cheet is deleted with a user ID parameter.", async () => {
+            const request1 = await request(sessionApp).delete("/users/1/cheets/1");
+            expect(request1.status).toEqual(200);
+            expect(request1.body).length(2);
+            const deletedCheet1 = request1.body.filter((cheet: Cheet) => cheet.id == 1);
+            expect(deletedCheet1).length(0);
 
-                const request2 = await request(sessionApp).delete("/users/2/cheets/3");
-                expect(request2.status).toEqual(200);
-                expect(request2.body).length(2);
-                const deletedCheet2 = request2.body.filter((cheet: Cheet) => cheet.id == 3);
-                expect(deletedCheet2).length(0);
-            });
-            test("Responds with HTTP status 400 when an invalid user ID is provided.", async () => {
-                const { status, text } = await request(sessionApp).delete("/users/1a/cheets/1");
-                expect(status).toEqual(400);
-                expect(text).toEqual("Invalid user ID provided - must be a number.");
-            });
-            test("Responds with HTTP status 400 when an invalid cheet ID is provided.", async () => {
-                const { status, text } = await request(sessionApp).delete("/cheets/1a");
-                expect(status).toEqual(400);
-                expect(text).toEqual("Invalid cheet ID provided - must be a number.");
-            });
-            test("Responds with HTTP status 404 if the user ID provided does not correspond to a user in the database.", async () => {
-                const { status, text } = await request(sessionApp).delete("/users/3/cheets/1");
-                expect(status).toEqual(404);
-                expect(text).toEqual("No User found with ID provided.");
-            });
-            test("Responds with HTTP status 404 if the cheet to be deleted does not exist in the database.", async () => {
-                const { status, text } = await request(sessionApp).delete("/cheets/6");
-                expect(status).toEqual(404);
-                expect(text).toEqual("No Cheet found with ID provided.");
-            });
-            test("Responds with HTTP status 403 if cheet's userID does not match the session's userID (trying to delete someone else's cheet).", async () => {
-                const { status, text } = await request(sessionApp).delete("/cheets/2");
-                expect(status).toEqual(403);
-                expect(text).toEqual("Cannot delete someone else's cheet.");
-            });
+            const request2 = await request(sessionApp).delete("/users/2/cheets/3");
+            expect(request2.status).toEqual(200);
+            expect(request2.body).length(2);
+            const deletedCheet2 = request2.body.filter((cheet: Cheet) => cheet.id == 3);
+            expect(deletedCheet2).length(0);
+        });
+        test("Responds with HTTP status 400 when an invalid user ID is provided.", async () => {
+            const { status, text } = await request(sessionApp).delete("/users/1a/cheets/1");
+            expect(status).toEqual(400);
+            expect(text).toEqual("Invalid user ID provided - must be a number.");
+        });
+        test("Responds with HTTP status 400 when an invalid cheet ID is provided.", async () => {
+            const { status, text } = await request(sessionApp).delete("/cheets/1a");
+            expect(status).toEqual(400);
+            expect(text).toEqual("Invalid cheet ID provided - must be a number.");
+        });
+        test("Responds with HTTP status 404 if the user ID provided does not correspond to a user in the database.", async () => {
+            const { status, text } = await request(sessionApp).delete("/users/3/cheets/1");
+            expect(status).toEqual(404);
+            expect(text).toEqual("No User found with ID provided.");
+        });
+        test("Responds with HTTP status 404 if the cheet to be deleted does not exist in the database.", async () => {
+            const { status, text } = await request(sessionApp).delete("/cheets/6");
+            expect(status).toEqual(404);
+            expect(text).toEqual("No Cheet found with ID provided.");
+        });
+        test("Responds with HTTP status 403 if cheet's userID does not match the session's userID (trying to delete someone else's cheet).", async () => {
+            const { status, text } = await request(sessionApp).delete("/cheets/2");
+            expect(status).toEqual(403);
+            expect(text).toEqual("Cannot delete someone else's cheet.");
         });
     });
 });

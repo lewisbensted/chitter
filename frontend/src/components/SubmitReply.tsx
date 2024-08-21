@@ -25,7 +25,7 @@ const SubmitReply: React.FC<Props> = ({ cheetId, isDisabled, setReplies, setErro
             .post(`${serverURL}/cheets/${cheetId}/replies`, data, {
                 withCredentials: true,
             })
-            .then((res) => {
+            .then((res: { data: IReply[] }) => {
                 setReplies(res.data);
             })
             .catch((error: unknown) => {

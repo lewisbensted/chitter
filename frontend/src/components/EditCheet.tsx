@@ -27,8 +27,8 @@ const EditCheet: React.FC<Props> = ({ cheet, isDisabled, setLoading, setCheets, 
             .put(`${serverURL + (id ? `/users/${id}/` : "/")}cheets/${cheet.id}`, data, {
                 withCredentials: true,
             })
-            .then((res) => {
-                setCheets(res.data.cheets);
+            .then((res: { data: ICheet[] }) => {
+                setCheets(res.data);
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401, 403, 404].includes(error.response?.status!)

@@ -20,15 +20,7 @@ interface Props {
     setLoading: (arg: boolean) => void;
 }
 
-const CheetModal: React.FC<Props> = ({
-    userId,
-    cheet,
-    isOpen,
-    closeModal,
-    setCheets,
-    setLoading,
-    isLoading,
-}) => {
+const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setCheets, setLoading, isLoading }) => {
     const [error, setError] = useState<string>();
     const [replies, setReplies] = useState<IReply[]>([]);
     const [repliesError, setRepliesError] = useState<string>("");
@@ -41,7 +33,7 @@ const CheetModal: React.FC<Props> = ({
                 .get(`${serverURL}/cheets/${cheet.id}/replies`, {
                     withCredentials: true,
                 })
-                .then((res) => {
+                .then((res: { data: IReply[] }) => {
                     setReplies(res.data);
                     setRepliesLoading(false);
                     setLoading(false);

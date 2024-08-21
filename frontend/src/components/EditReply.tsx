@@ -26,7 +26,7 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, se
             .put(`${serverURL}/cheets/${cheetId}/replies/${reply.id}`, data, {
                 withCredentials: true,
             })
-            .then((res) => {
+            .then((res: { data: IReply[] }) => {
                 setReplies(res.data);
             })
             .catch((error: unknown) => {

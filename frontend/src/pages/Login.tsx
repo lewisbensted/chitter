@@ -46,7 +46,7 @@ const Login: React.FC = () => {
                 navigate("/");
             })
             .catch((error: unknown) => {
-                axios.isAxiosError(error) && [401 , 403 , 404].includes(error.response?.status!)
+                axios.isAxiosError(error) && [400, 401 , 403 , 404].includes(error.response?.status!)
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while logging in.");
                 setFormLoading(false);

@@ -16,14 +16,7 @@ interface Props {
     setLoading: (arg: boolean) => void;
 }
 
-const Cheet: React.FC<Props> = ({
-    userId,
-    cheet,
-    setError,
-    setCheets,
-    setLoading,
-    isLoading,
-}) => {
+const Cheet: React.FC<Props> = ({ userId, cheet, setError, setCheets, setLoading, isLoading }) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const { id } = useParams();
     const [isCheetLoading, setCheetLoading] = useState<boolean>(false);
@@ -59,8 +52,8 @@ const Cheet: React.FC<Props> = ({
                                     .delete(`${serverURL + (id ? `/users/${id}/` : "/")}cheets/${cheet.id}`, {
                                         withCredentials: true,
                                     })
-                                    .then((res) => {
-                                        setCheets(res.data.cheets);
+                                    .then((res: { data: ICheet[] }) => {
+                                        setCheets(res.data);
                                     })
                                     .catch((error: unknown) => {
                                         axios.isAxiosError(error) && [401, 403, 404].includes(error.response?.status!)

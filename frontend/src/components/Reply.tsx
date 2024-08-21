@@ -17,15 +17,7 @@ interface Props {
     setLoading: (arg: boolean) => void;
 }
 
-const Reply: React.FC<Props> = ({
-    userId,
-    cheetId,
-    reply,
-    setReplies,
-    setError,
-    isLoading,
-    setLoading,
-}) => {
+const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, isLoading, setLoading }) => {
     const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
     return (
         <div>
@@ -53,7 +45,7 @@ const Reply: React.FC<Props> = ({
                             .delete(`${serverURL}/cheets/${reply.cheetId}/replies/${reply.id}`, {
                                 withCredentials: true,
                             })
-                            .then((res) => {
+                            .then((res: { data: IReply[] }) => {
                                 setReplies(res.data);
                             })
                             .catch((error: unknown) => {

@@ -27,8 +27,8 @@ const SubmitCheet: React.FC<Props> = ({ isDisabled, setCheets, setCheetsError, s
             .post(`${serverURL + (id ? `/users/${id}/` : "/")}cheets`, data, {
                 withCredentials: true,
             })
-            .then((res) => {
-                setCheets(res.data.cheets);
+            .then((res: { data: ICheet[] }) => {
+                setCheets(res.data);
                 setCheetsError("");
             })
             .catch((error: unknown) => {

@@ -40,7 +40,7 @@ router.get("/", authMiddleware, async (req: Request, res: Response) => {
     try {
         await checkUser(req.params.userId);
         const cheets = await fetchCheets(Number(req.params.userId));
-        res.status(200).send({ cheets: cheets });
+        res.status(200).send(cheets);
     } catch (error) {
         console.error("Error retrieving cheets from the database:\n" + logError(error));
         sendErrorResponse(error, res);
@@ -58,7 +58,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
             },
         });
         const cheets = await fetchCheets(Number(req.params.userId));
-        res.status(201).send({ cheets: cheets });
+        res.status(201).send(cheets);
     } catch (error) {
         console.error("Error adding cheet to the database:\n" + logError(error));
         sendErrorResponse(error, res);
@@ -84,7 +84,7 @@ router.put("/:cheetId", authMiddleware, async (req: Request, res: Response) => {
                 },
             });
             const cheets = await fetchCheets(Number(req.params.userId));
-            res.status(200).send({ cheets: cheets });
+            res.status(200).send(cheets);
         } else {
             res.status(403).send("Cannot update someone else's cheet.");
         }
@@ -110,7 +110,7 @@ router.delete("/:cheetId", authMiddleware, async (req: Request, res: Response) =
                 },
             });
             const cheets = await fetchCheets(Number(req.params.userId));
-            res.status(200).send({ cheets: cheets });
+            res.status(200).send(cheets);
         } else {
             res.status(403).send("Cannot delete someone else's cheet.");
         }

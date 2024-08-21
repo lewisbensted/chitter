@@ -10,7 +10,7 @@ const router = express.Router({ mergeParams: true });
 router.get("/", authMiddleware, async (req: Request, res: Response) => {
     try {
         const user = await checkUser(req.params.userId);
-        res.status(200).send({ user: user });
+        res.status(200).send(user);
     } catch (error) {
         console.error("Error retrieving user from the database:\n" + logError(error));
         sendErrorResponse(error, res);
