@@ -96,7 +96,7 @@ const User: React.FC = () => {
                                 {userId === Number(id) ? (
                                     <SubmitCheet
                                         setCheetsError={setCheetsError}
-                                        isDisabled={isLoading || !username}
+                                        isDisabled={isLoading || isCheetsLoading || !username}
                                         setCheets={setCheets}
                                         setError={setError}
                                         setLoading={setLoading}

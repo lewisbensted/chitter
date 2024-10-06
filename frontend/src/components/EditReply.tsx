@@ -41,19 +41,19 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, se
     };
 
     return (
-        <div>
+        <span>
             {isEditing ? (
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input {...register("text")} type="text" defaultValue={reply.text} />
                     {isReplyLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
                 </form>
             ) : (
-                <div>
-                    <span>{reply.text}&nbsp;</span>
-                    <button onClick={() => setEditing(true)}>EDIT</button>
-                </div>
+                <span>
+                    {reply.text} &nbsp;
+                    <button onClick={() => setEditing(true)}>EDIT</button> &nbsp;
+                </span>
             )}
-        </div>
+        </span>
     );
 };
 

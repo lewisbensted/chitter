@@ -47,10 +47,10 @@ const EditCheet: React.FC<Props> = ({ cheet, isDisabled, setLoading, setCheets, 
                     {isCheetLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
                 </form>
             ) : (
-                <div>
-                    <span>{cheet.text}</span>
+                <span>
+                    {cheet.text} &nbsp;
                     <button onClick={() => setEditing(true)}>EDIT</button>
-                </div>
+                </span>
             )}
         </div>
     );

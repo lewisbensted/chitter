@@ -54,7 +54,7 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
                 {userId === cheet.userId ? (
                     <EditCheet
                         cheet={cheet}
-                        isDisabled={isLoading}
+                        isDisabled={isLoading || isRepliesLoading}
                         setLoading={setLoading}
                         setCheets={setCheets}
                         setError={setError}
@@ -67,7 +67,7 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
                 {isRepliesLoading ? (
                     <ClipLoader />
                 ) : repliesError ? (
-                    <div>{repliesError}</div>
+                    repliesError
                 ) : (
                     replies.map((reply, key) => (
                         <Reply
@@ -86,18 +86,19 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
 
             <SubmitReply
                 cheetId={cheet.id}
-                isDisabled={isLoading}
+                isDisabled={isLoading || isRepliesLoading}
                 setReplies={setReplies}
                 setError={setError}
                 setLoading={setLoading}
             />
 
             <div>
-                <button onClick={closeModal} disabled={isRepliesLoading}>
+                <button onClick={closeModal} disabled={isLoading || isRepliesLoading}>
                     Close Modal
                 </button>
             </div>
         </ReactModal>
     );
 };
+
 export default CheetModal;

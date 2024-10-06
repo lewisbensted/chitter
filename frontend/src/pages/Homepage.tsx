@@ -70,7 +70,7 @@ const Homepage: React.FC = () => {
                                 </div>
                             )}
                             <SubmitCheet
-                                isDisabled={isLoading}
+                                isDisabled={isLoading || isCheetsLoading}
                                 setCheets={setCheets}
                                 setCheetsError={setCheetsError}
                                 setError={setError}

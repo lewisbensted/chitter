@@ -3,7 +3,6 @@ import { IReply } from "../utils/interfaces";
 import { format } from "date-fns";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
 import EditReply from "./EditReply";
 import { serverURL } from "../utils/serverURL";
 
@@ -34,7 +33,7 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
             ) : (
                 <span>{reply.text}&nbsp;</span>
             )}
-            <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}</span>&nbsp;
+            <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}&nbsp;</span>
             {userId === reply.userId ? (
                 <button
                     disabled={isLoading}
