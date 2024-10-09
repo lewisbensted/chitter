@@ -1,64 +1,62 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { ICheet } from "../utils/interfaces";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ClipLoader } from "react-spinners";
-import { useParams } from "react-router-dom";
+import { IMessage } from "../utils/interfaces";
 import { serverURL } from "../utils/serverURL";
+import { ClipLoader } from "react-spinners";
 
 interface Props {
-    cheet: ICheet;
+    message: IMessage;
     isDisabled: boolean;
     setLoading: (arg: boolean) => void;
-    setCheets: (arg: ICheet[]) => void;
+    setMessages: (arg: IMessage[]) => void;
     setError: (arg: string) => void;
     userId?: number;
 }
 
-const EditCheet: React.FC<Props> = ({ cheet, isDisabled, setLoading, setCheets, setError, userId }) => {
-    const { id } = useParams();
+const EditMessage: React.FC<Props> = ({ message, isDisabled, setLoading, setMessages, setError, userId }) => {
     const { register, handleSubmit } = useForm<{ text: string }>();
     const [isEditing, setEditing] = useState<boolean>(false);
-    const [isCheetLoading, setCheetLoading] = useState<boolean>();
+    const [isMessageLoading, setMessageLoading] = useState<boolean>();
 
     const onSubmit: SubmitHandler<{ text: string }> = async (data) => {
-        setCheetLoading(true);
+        setMessageLoading(true);
         setLoading(true);
         await axios
-            .put(`${serverURL + (id ? `/users/${id}/` : "/")}cheets/${cheet.id}`, data, {
+            .put(`${serverURL}/messages/${message.recipientId}/message/${message.id}`, data, {
                 withCredentials: true,
             })
-            .then((res: { data: ICheet[] }) => {
-                setCheets(res.data);
+            .then((res: { data: IMessage[] }) => {
+                setMessages(res.data);
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && [400, 401, 403].includes(error.response?.status!)
                     ? setError(error.response?.data)
-                    : setError("An unexpected error occured while editing cheet.");
+                    : setError("An unexpected error occured while editing message.");
             });
         setEditing(false);
-        setCheetLoading(false);
+        setMessageLoading(false);
         setLoading(false);
     };
     return (
-        <span>
-            {userId === cheet.userId ? (
+        <div>
+            {userId === message.senderId ? (
                 isEditing ? (
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <input {...register("text")} type="text" defaultValue={cheet.text} />
-                        {isCheetLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
+                        <input {...register("text")} type="text" defaultValue={message.text} />
+                        {isMessageLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
                     </form>
                 ) : (
                     <span>
-                        {cheet.text} &nbsp;
+                        {message.text} &nbsp;
                         <button onClick={() => setEditing(true)}>EDIT</button>
                     </span>
                 )
             ) : (
-                <span>{cheet.text}</span>
+                <span>{message.text}</span>
             )}
-        </span>
+        </div>
     );
 };
 
-export default EditCheet;
+export default EditMessage;

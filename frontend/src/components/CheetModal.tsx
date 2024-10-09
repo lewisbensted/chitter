@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { serverURL } from "../utils/serverURL";
 
 interface Props {
-    userId: number | undefined;
+    userId?: number;
     cheet: ICheet;
     isOpen: boolean;
     closeModal: () => void;
@@ -51,17 +51,14 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
             <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
             <div>
                 <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
-                {userId === cheet.userId ? (
-                    <EditCheet
-                        cheet={cheet}
-                        isDisabled={isLoading || isRepliesLoading}
-                        setLoading={setLoading}
-                        setCheets={setCheets}
-                        setError={setError}
-                    />
-                ) : (
-                    <span>{cheet.text}</span>
-                )}
+                <EditCheet
+                    cheet={cheet}
+                    isDisabled={isLoading || isRepliesLoading}
+                    setLoading={setLoading}
+                    setCheets={setCheets}
+                    setError={setError}
+                    userId={userId}
+                />
             </div>
             <div>
                 {isRepliesLoading ? (

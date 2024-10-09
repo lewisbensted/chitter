@@ -8,7 +8,7 @@ import { serverURL } from "../utils/serverURL";
 import { ClipLoader } from "react-spinners";
 
 interface Props {
-    userId: number | undefined;
+    userId?: number;
     cheetId: number;
     reply: IReply;
     setError: (arg: string) => void;
@@ -23,18 +23,15 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
     return (
         <div>
             <Link to={`/users/${reply.userId}`}>{reply.username}</Link> &nbsp;
-            {userId === reply.userId ? (
-                <EditReply
-                    cheetId={cheetId}
-                    reply={reply}
-                    isDisabled={isLoading}
-                    setLoading={setLoading}
-                    setReplies={setReplies}
-                    setError={setError}
-                />
-            ) : (
-                <span>{reply.text}&nbsp;</span>
-            )}
+            <EditReply
+                cheetId={cheetId}
+                reply={reply}
+                isDisabled={isLoading}
+                setLoading={setLoading}
+                setReplies={setReplies}
+                setError={setError}
+                userId={userId}
+            />
             <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}&nbsp;</span>
             {userId === reply.userId ? (
                 isReplyLoading ? (
@@ -46,14 +43,14 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
                             setReplyLoading(true);
                             setLoading(true);
                             await axios
-                                .delete(`${serverURL}/chets/${reply.cheetId}/replies/${reply.id}`, {
+                                .delete(`${serverURL}/cheets/${reply.cheetId}/replies/${reply.id}`, {
                                     withCredentials: true,
                                 })
                                 .then((res: { data: IReply[] }) => {
                                     setReplies(res.data);
                                 })
                                 .catch((error: unknown) => {
-                                    console.log(error)
+                                    console.log(error);
                                     axios.isAxiosError(error) && [401, 403].includes(error.response?.status!)
                                         ? setError(error.response?.data)
                                         : setError("An unexpected error occured while deleting reply.");

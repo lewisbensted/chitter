@@ -12,9 +12,10 @@ interface Props {
     setError: (arg: string) => void;
     reply: IReply;
     cheetId: number;
+    userId?: number;
 }
 
-const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, setReplies, setError }) => {
+const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, setReplies, setError, userId }) => {
     const { register, handleSubmit } = useForm<{ text: string }>();
     const [isEditing, setEditing] = useState<boolean>(false);
     const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
@@ -41,17 +42,19 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, se
 
     return (
         <span>
-            {isEditing ? (
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <input {...register("text")} type="text" defaultValue={reply.text} />
-                    {isReplyLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
-                </form>
-            ) : (
-                <span>
-                    {reply.text} &nbsp;
-                    <button onClick={() => setEditing(true)}>EDIT</button> &nbsp;
-                </span>
-            )}
+            {userId === reply.userId ? (
+                isEditing ? (
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <input {...register("text")} type="text" defaultValue={reply.text} />
+                        {isReplyLoading ? <ClipLoader /> : <input disabled={isDisabled} type="submit" />}
+                    </form>
+                ) : (
+                    <span>
+                        {reply.text} &nbsp;
+                        <button onClick={() => setEditing(true)}>EDIT</button> &nbsp;
+                    </span>
+                )
+            ) : null}
         </span>
     );
 };

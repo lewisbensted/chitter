@@ -8,7 +8,7 @@ import { serverURL } from "../utils/serverURL";
 import { ClipLoader } from "react-spinners";
 
 interface Props {
-    userId: number | undefined;
+    userId?: number;
     cheet: ICheet;
     setError: (arg: string) => void;
     setCheets: (arg: ICheet[]) => void;

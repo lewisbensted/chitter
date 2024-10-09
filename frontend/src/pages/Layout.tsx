@@ -6,9 +6,9 @@ import ErrorModal from "../components/ErrorModal";
 interface Props {
 	children: JSX.Element;
 	isLoading: boolean;
-	userId: number | undefined;
+	userId?: number;
 	setLoading: (arg: boolean) => void;
-	setUserId: (arg: number | undefined) => void;
+	setUserId: (arg?: number) => void;
 }
 
 const Layout: React.FC<Props> = ({ children, isLoading, setLoading, userId, setUserId }) => {

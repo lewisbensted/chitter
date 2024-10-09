@@ -4,9 +4,11 @@ import { ClipLoader } from "react-spinners";
 import { useState } from "react";
 import axios from "axios";
 import { serverURL } from "../utils/serverURL";
+import { format } from "date-fns";
+import EditMessage from "./EditMessage";
 
 interface Props {
-    userId: number | undefined;
+    userId?: number;
     message: IMessage;
     setError: (arg: string) => void;
     setMessages: (arg: IMessage[]) => void;
@@ -18,8 +20,16 @@ const Message: React.FC<Props> = ({ userId, message, setError, setMessages, isLo
     const [isMessageLoading, setMessageLoading] = useState<boolean>(false);
 
     return (
-        <div>
-            {message.text}&nbsp;
+        <div style={{ display: "flex", justifyContent: message.senderId === userId ? "left" : "right" }}>
+            <EditMessage
+                message={message}
+                isDisabled={isLoading}
+                setLoading={setLoading}
+                setMessages={setMessages}
+                setError={setError}
+                userId={userId}
+            /> &nbsp;
+            <span>{format(message.createdAt, "hh:mm dd/MM/yy")}&nbsp;</span>
             {userId === message.senderId ? (
                 isMessageLoading ? (
                     <ClipLoader />

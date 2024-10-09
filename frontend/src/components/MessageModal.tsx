@@ -9,7 +9,7 @@ import ErrorModal from "./ErrorModal";
 import SendMessage from "./SendMessage";
 
 interface Props {
-    userId: number | undefined;
+    userId?: number;
     recipientId: number;
     isOpen: boolean;
     isLoading: boolean;

@@ -3,7 +3,7 @@ import { serverURL } from "./serverURL";
 
 const logout = async (
     setLoading: (arg: boolean) => void,
-    setUserId: (arg: number | undefined) => void,
+    setUserId: (arg?: number) => void,
     setError: (arg: string) => void
 ) => {
     setLoading(true);
