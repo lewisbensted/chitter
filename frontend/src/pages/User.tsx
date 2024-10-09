@@ -8,6 +8,7 @@ import ErrorModal from "../components/ErrorModal";
 import Cheet from "../components/Cheet";
 import SubmitCheet from "../components/SubmitCheet";
 import { serverURL } from "../utils/serverURL";
+import MessageModal from "../components/MessageModal";
 
 const User: React.FC = () => {
     const [isLoading, setLoading] = useState<boolean>(true);
@@ -18,6 +19,7 @@ const User: React.FC = () => {
     const [cheets, setCheets] = useState<ICheet[]>([]);
     const [isCheetsLoading, setCheetsLoading] = useState<boolean>(false);
     const [cheetsError, setCheetsError] = useState<string>("");
+    const [messageModalOpen, setMessageModalOpen] = useState<boolean>(false);
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -67,13 +69,26 @@ const User: React.FC = () => {
         <Layout isLoading={isLoading} setLoading={setLoading} userId={userId} setUserId={setUserId}>
             <div>
                 <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
+                <MessageModal
+                    userId={userId}
+                    recipientId={Number(id)}
+                    isOpen={messageModalOpen}
+                    isLoading={isLoading}
+                    setLoading={setLoading}
+                    closeModal={() => setMessageModalOpen(false)}
+                />
                 {userId ? (
                     <div>
                         {isUserLoading ? (
                             <ClipLoader />
                         ) : (
                             <div>
-                                <h1>{username ? username : "Error loading user"}</h1>
+                                <h1>
+                                    {username ? username : "Error loading user"}
+                                    {userId === Number(id) ? null : (
+                                        <button onClick={() => setMessageModalOpen(true)}>Message</button>
+                                    )}
+                                </h1>
                                 {isCheetsLoading ? (
                                     <ClipLoader />
                                 ) : (

@@ -5,6 +5,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import EditReply from "./EditReply";
 import { serverURL } from "../utils/serverURL";
+import { ClipLoader } from "react-spinners";
 
 interface Props {
     userId: number | undefined;
@@ -18,6 +19,7 @@ interface Props {
 
 const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, isLoading, setLoading }) => {
     const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
+
     return (
         <div>
             <Link to={`/users/${reply.userId}`}>{reply.username}</Link> &nbsp;
@@ -35,29 +37,34 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
             )}
             <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}&nbsp;</span>
             {userId === reply.userId ? (
-                <button
-                    disabled={isLoading}
-                    onClick={async () => {
-                        setReplyLoading(true);
-                        setLoading(true);
-                        await axios
-                            .delete(`${serverURL}/cheets/${reply.cheetId}/replies/${reply.id}`, {
-                                withCredentials: true,
-                            })
-                            .then((res: { data: IReply[] }) => {
-                                setReplies(res.data);
-                            })
-                            .catch((error: unknown) => {
-                                axios.isAxiosError(error) && [401, 403, 404].includes(error.response?.status!)
-                                    ? setError(error.response?.data)
-                                    : setError("An unexpected error occured while deleting reply.");
-                            });
-                        setReplyLoading(false);
-                        setLoading(false);
-                    }}
-                >
-                    DELETE
-                </button>
+                isReplyLoading ? (
+                    <ClipLoader />
+                ) : (
+                    <button
+                        disabled={isLoading}
+                        onClick={async () => {
+                            setReplyLoading(true);
+                            setLoading(true);
+                            await axios
+                                .delete(`${serverURL}/chets/${reply.cheetId}/replies/${reply.id}`, {
+                                    withCredentials: true,
+                                })
+                                .then((res: { data: IReply[] }) => {
+                                    setReplies(res.data);
+                                })
+                                .catch((error: unknown) => {
+                                    console.log(error)
+                                    axios.isAxiosError(error) && [401, 403].includes(error.response?.status!)
+                                        ? setError(error.response?.data)
+                                        : setError("An unexpected error occured while deleting reply.");
+                                });
+                            setReplyLoading(false);
+                            setLoading(false);
+                        }}
+                    >
+                        DELETE
+                    </button>
+                )
             ) : null}
         </div>
     );

@@ -31,7 +31,7 @@ const EditCheet: React.FC<Props> = ({ cheet, isDisabled, setLoading, setCheets, 
                 setCheets(res.data);
             })
             .catch((error: unknown) => {
-                axios.isAxiosError(error) && [400, 401, 403, 404].includes(error.response?.status!)
+                axios.isAxiosError(error) && [400, 401, 403].includes(error.response?.status!)
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while editing cheet.");
             });

@@ -30,11 +30,10 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, se
                 setReplies(res.data);
             })
             .catch((error: unknown) => {
-                axios.isAxiosError(error) && [400, 401, 403, 404].includes(error.response?.status!)
+                axios.isAxiosError(error) && [400, 401, 403].includes(error.response?.status!)
                     ? setError(error.response?.data)
                     : setError("An unexpected error occured while editing reply.");
             });
-
         setReplyLoading(false);
         setLoading(false);
         setEditing(false);

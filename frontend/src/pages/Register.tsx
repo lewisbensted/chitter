@@ -20,7 +20,7 @@ const Register: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<RegisterFormFields>();
     const navigate = useNavigate();
 
-    const [isLoading, setPageLoading] = useState<boolean>(true);
+    const [isLoading, setLoading] = useState<boolean>(true);
     const [isFormLoading, setFormLoading] = useState<boolean>(false);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [errors, setErrors] = useState<string[]>([]);
@@ -38,7 +38,7 @@ const Register: React.FC = () => {
                 } else {
                     setErrors(["An unexpected error occured while authenticating the user."]);
                 }
-                setPageLoading(false);
+                setLoading(false);
             });
     }, []);
 
@@ -61,7 +61,7 @@ const Register: React.FC = () => {
     return (
         <Layout
             isLoading={isLoading || isFormLoading}
-            setLoading={setPageLoading}
+            setLoading={setLoading}
             userId={userId}
             setUserId={setUserId}
         >

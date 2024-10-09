@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     const { register, handleSubmit, reset } = useForm<LoginFormFields>();
     const navigate = useNavigate();
 
-    const [isLoading, setPageLoading] = useState<boolean>(true);
+    const [isLoading, setLoading] = useState<boolean>(true);
     const [isFormLoading, setFormLoading] = useState<boolean>(false);
     const [userId, setUserId] = useState<number | undefined>(undefined);
     const [error, setError] = useState<string>();
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
                 } else {
                     setError("An unexpected error occured while authenticating the user.");
                 }
-                setPageLoading(false);
+                setLoading(false);
             });
     }, []);
 
@@ -56,7 +56,7 @@ const Login: React.FC = () => {
     return (
         <Layout
             isLoading={isLoading || isFormLoading}
-            setLoading={setPageLoading}
+            setLoading={setLoading}
             userId={userId}
             setUserId={setUserId}
         >
