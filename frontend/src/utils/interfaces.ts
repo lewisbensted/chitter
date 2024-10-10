@@ -13,7 +13,7 @@ export interface ICheet {
     username: string;
     text: string;
     createdAt: Date;
-    updatedAt?: Date;
+    updatedAt: Date;
 }
 
 export interface IReply {
@@ -23,7 +23,7 @@ export interface IReply {
     cheetId: number;
     text: string;
     createdAt: Date;
-    updatedAt?: Date;
+    updatedAt: Date;
 }
 
 export interface IMessage {
@@ -34,5 +34,5 @@ export interface IMessage {
     recipientUsername: string;
     text: string;
     createdAt: Date;
-    updatedAt?: Date;
+    updatedAt: Date;
 }

@@ -55,7 +55,7 @@ const EditCheet: React.FC<Props> = ({ cheet, isDisabled, setLoading, setCheets, 
                     </span>
                 )
             ) : (
-                <span>{cheet.text}</span>
+                <span>{cheet.text}&nbsp;</span>
             )}
         </span>
     );

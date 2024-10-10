@@ -104,6 +104,7 @@ const User: React.FC = () => {
                                                       key={key}
                                                       setLoading={setLoading}
                                                       isLoading={isLoading}
+                                                      isModalView = {false}
                                                   />
                                               ))}
                                     </div>

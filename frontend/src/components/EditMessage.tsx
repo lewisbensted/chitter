@@ -53,7 +53,7 @@ const EditMessage: React.FC<Props> = ({ message, isDisabled, setLoading, setMess
                     </span>
                 )
             ) : (
-                <span>{message.text}</span>
+                <span>{message.text}&nbsp;</span>
             )}
         </div>
     );

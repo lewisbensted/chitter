@@ -54,7 +54,9 @@ const EditReply: React.FC<Props> = ({ reply, cheetId, isDisabled, setLoading, se
                         <button onClick={() => setEditing(true)}>EDIT</button> &nbsp;
                     </span>
                 )
-            ) : null}
+            ) : (
+                <span>{reply.text}&nbsp;</span>
+            )}
         </span>
     );
 };

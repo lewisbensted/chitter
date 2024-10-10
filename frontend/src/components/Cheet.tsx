@@ -6,6 +6,7 @@ import CheetModal from "./CheetModal";
 import { Link, useParams } from "react-router-dom";
 import { serverURL } from "../utils/serverURL";
 import { ClipLoader } from "react-spinners";
+import EditCheet from "./EditCheet";
 
 interface Props {
     userId?: number;
@@ -14,9 +15,10 @@ interface Props {
     setCheets: (arg: ICheet[]) => void;
     isLoading: boolean;
     setLoading: (arg: boolean) => void;
+    isModalView: boolean;
 }
 
-const Cheet: React.FC<Props> = ({ userId, cheet, setError, setCheets, setLoading, isLoading }) => {
+const Cheet: React.FC<Props> = ({ userId, cheet, setError, setCheets, setLoading, isLoading, isModalView }) => {
     const { id } = useParams();
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [isCheetLoading, setCheetLoading] = useState<boolean>(false);
@@ -35,9 +37,20 @@ const Cheet: React.FC<Props> = ({ userId, cheet, setError, setCheets, setLoading
                 setLoading={setLoading}
             />
             <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
-            <span>{cheet.text}</span> &nbsp;
+            <EditCheet
+                cheet={cheet}
+                isDisabled={isLoading}
+                setLoading={setLoading}
+                setCheets={setCheets}
+                setError={setError}
+                userId={userId}
+            />
+            &nbsp;
             <span>{format(cheet.createdAt, "hh:mm dd/MM/yy")}</span> &nbsp;
-            <button onClick={() => setModalOpen(true)}>MORE</button> &nbsp;
+            {cheet.updatedAt > cheet.createdAt ? (
+                <span>{`Edited at ${format(cheet.updatedAt, "hh:mm dd/MM/yy")}`} &nbsp;</span>
+            ) : null}
+            {isModalView ? null : <button onClick={() => setModalOpen(true)}>MORE</button>} &nbsp;
             {userId === cheet.userId ? (
                 isCheetLoading ? (
                     <ClipLoader />

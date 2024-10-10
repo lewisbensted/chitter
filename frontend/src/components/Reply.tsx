@@ -33,6 +33,9 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
                 userId={userId}
             />
             <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}&nbsp;</span>
+            {reply.updatedAt > reply.createdAt ? (
+                <span>{`Edited at ${format(reply.updatedAt, "hh:mm dd/MM/yy")}`} &nbsp;</span>
+            ) : null}
             {userId === reply.userId ? (
                 isReplyLoading ? (
                     <ClipLoader />

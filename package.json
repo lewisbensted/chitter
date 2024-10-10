@@ -3,12 +3,12 @@
     "version": "1.0.0",
     "description": "A mock Twitter app built with Express and React.",
     "scripts": {
-        "install": "concurrently \"cd frontend && npm install\" \"cd server && npm install\"",
+        "install": "concurrently --names Backend,Frontend \"cd server && npm install\" \"cd frontend && npm install\"",
         "migrate:dev": "cd server && npm run migrate:dev",
-        "start:dev": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:dev\"",
+        "start:dev": "concurrently --names Backend,Frontend \"cd server && npm run start:dev\" \"cd frontend && npm start\"",
         "seed:dev": "cd server && npm run seed:dev",
         "migrate:test": "cd server && npm run migrate:test",
-        "start:test": "concurrently \"cd frontend && npm start\" \"cd server && npm run start:test\"",
+        "start:test": "concurrently --names Backend,Frontend \"cd server && npm run start:test\" \"cd frontend && npm start\"",
         "seed:test": "cd server && npm run seed:test",
         "migrate:prod": "cd server && npm run migrate:prod",
         "start:prod": "cd frontend && npm run build && cd ../server && npm run start:prod"

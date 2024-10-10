@@ -23,7 +23,7 @@ const Homepage: React.FC = () => {
                 setUserId(res.data.id);
                 await axios
                     .get(`${serverURL}/cheets`, { withCredentials: true })
-                    .then((res: { data: ICheet[]  }) => {
+                    .then((res: { data: ICheet[] }) => {
                         setCheets(res.data);
                     })
                     .catch(() => {
@@ -65,6 +65,7 @@ const Homepage: React.FC = () => {
                                                   key={key}
                                                   setLoading={setLoading}
                                                   isLoading={isLoading}
+                                                  isModalView = {false}
                                               />
                                           ))}
                                 </div>

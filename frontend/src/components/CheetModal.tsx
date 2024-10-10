@@ -9,6 +9,8 @@ import SubmitReply from "./SubmitReply";
 import EditCheet from "./EditCheet";
 import { Link } from "react-router-dom";
 import { serverURL } from "../utils/serverURL";
+import { format } from "date-fns";
+import Cheet from "./Cheet";
 
 interface Props {
     userId?: number;
@@ -50,14 +52,14 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
         <ReactModal isOpen={isOpen} ariaHideApp={false}>
             <ErrorModal errors={error ? [error] : []} closeModal={() => setError(undefined)} />
             <div>
-                <Link to={`/users/${cheet.userId}`}>{cheet.username}</Link> &nbsp;
-                <EditCheet
+                <Cheet
                     cheet={cheet}
-                    isDisabled={isLoading || isRepliesLoading}
-                    setLoading={setLoading}
+                    userId={userId}
                     setCheets={setCheets}
                     setError={setError}
-                    userId={userId}
+                    setLoading={setLoading}
+                    isLoading={isLoading}
+                    isModalView = {true}
                 />
             </div>
             <div>
@@ -83,14 +85,13 @@ const CheetModal: React.FC<Props> = ({ userId, cheet, isOpen, closeModal, setChe
 
             <SubmitReply
                 cheetId={cheet.id}
-                isDisabled={isLoading || isRepliesLoading}
+                isDisabled={isLoading}
                 setReplies={setReplies}
                 setError={setError}
                 setLoading={setLoading}
             />
-
             <div>
-                <button onClick={closeModal} disabled={isLoading || isRepliesLoading}>
+                <button onClick={closeModal} disabled={isLoading}>
                     Close Modal
                 </button>
             </div>
