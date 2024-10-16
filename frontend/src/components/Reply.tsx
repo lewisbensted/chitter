@@ -20,6 +20,9 @@ interface Props {
 const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, isLoading, setLoading }) => {
     const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
 
+    const createdAt = new Date(new Date(reply.createdAt).valueOf() + new Date(reply.createdAt).getTimezoneOffset() * 60000)
+    const updatedAt = new Date(new Date(reply.updatedAt).valueOf() + new Date(reply.updatedAt).getTimezoneOffset() * 60000)
+
     return (
         <div>
             <Link to={`/users/${reply.userId}`}>{reply.username}</Link> &nbsp;
@@ -32,9 +35,9 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
                 setError={setError}
                 userId={userId}
             />
-            <span>{format(reply.createdAt, "hh:mm dd/MM/yy")}&nbsp;</span>
-            {reply.updatedAt > reply.createdAt ? (
-                <span>{`Edited at ${format(reply.updatedAt, "hh:mm dd/MM/yy")}`} &nbsp;</span>
+            <span>{format(createdAt, "HH:mm dd/MM/yy")}&nbsp;</span>
+            {updatedAt > createdAt ? (
+                <span>{`Edited at ${format(updatedAt, "HH:mm dd/MM/yy")}`} &nbsp;</span>
             ) : null}
             {userId === reply.userId ? (
                 isReplyLoading ? (

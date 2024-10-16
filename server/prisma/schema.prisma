@@ -35,8 +35,8 @@ model Cheet {
   userId      Int         @map(name: "user_id")
   username    String      @db.VarChar(30)
   text        String      @db.VarChar(50)
-  createdAt   DateTime    @default(dbgenerated("CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "created_at")
-  updatedAt   DateTime    @default(dbgenerated("CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "updated_at")
+  createdAt   DateTime    @default(dbgenerated("now()")) @db.DateTime() @map(name: "created_at")
+  updatedAt   DateTime    @default(dbgenerated("now() ON UPDATE now()")) @db.DateTime() @map(name: "updated_at")
   replies     Reply[]
 
   @@map("Cheets")
@@ -50,8 +50,8 @@ model Reply {
   cheet       Cheet       @relation(fields: [cheetId], references: [id], onDelete: Cascade)
   cheetId     Int         @map(name: "cheet_id")
   text        String      @db.VarChar(50)
-  createdAt   DateTime    @default(dbgenerated("CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "created_at")
-  updatedAt   DateTime    @default(dbgenerated("CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "updated_at")
+  createdAt   DateTime    @default(dbgenerated("now()")) @db.DateTime() @map(name: "created_at")
+  updatedAt   DateTime    @default(dbgenerated("now() ON UPDATE now()")) @db.DateTime() @map(name: "updated_at")
 
   @@map("Replies")
 }
@@ -65,8 +65,8 @@ model Message {
   recipientId         Int         @map(name: "recipient_id")
   recipientUsername   String      @db.VarChar(30) @map(name: "recipient_username")
   text                String      @db.VarChar(50)
-  createdAt           DateTime    @default(dbgenerated("CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "created_at")
-  updatedAt           DateTime    @default(dbgenerated("CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP()")) @db.DateTime() @map(name: "updated_at")
+  createdAt           DateTime    @default(dbgenerated("now()")) @db.DateTime() @map(name: "created_at")
+  updatedAt           DateTime    @default(dbgenerated("now() ON UPDATE now()")) @db.DateTime() @map(name: "updated_at")
 
   @@map("Messages")      
 }

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { ICheet } from "../utils/interfaces";
 import axios from "axios";
-import { format } from "date-fns";
+import { format, formatISO } from "date-fns";
 import CheetModal from "./CheetModal";
 import { Link, useParams } from "react-router-dom";
 import { serverURL } from "../utils/serverURL";
 import { ClipLoader } from "react-spinners";
 import EditCheet from "./EditCheet";
+import { formatInTimeZone } from "date-fns-tz";
 
 interface Props {
     userId?: number;
@@ -22,6 +23,9 @@ const Cheet: React.FC<Props> = ({ userId, cheet, setError, setCheets, setLoading
     const { id } = useParams();
     const [isModalOpen, setModalOpen] = useState<boolean>(false);
     const [isCheetLoading, setCheetLoading] = useState<boolean>(false);
+
+    const createdAt = new Date(new Date(cheet.createdAt).valueOf() + new Date(cheet.createdAt).getTimezoneOffset() * 60000)
+    const updatedAt = new Date(new Date(cheet.updatedAt).valueOf() + new Date(cheet.updatedAt).getTimezoneOffset() * 60000)
 
     return (
         <div>
@@ -46,9 +50,9 @@ const Cheet: React.FC<Props> = ({ userId, cheet, setError, setCheets, setLoading
                 userId={userId}
             />
             &nbsp;
-            <span>{format(cheet.createdAt, "hh:mm dd/MM/yy")}</span> &nbsp;
-            {cheet.updatedAt > cheet.createdAt ? (
-                <span>{`Edited at ${format(cheet.updatedAt, "hh:mm dd/MM/yy")}`} &nbsp;</span>
+            <span>{format(createdAt, "HH:mm dd/MM/yy")}</span> &nbsp;
+            {updatedAt > createdAt ? (
+                <span>{`Edited at ${(format(updatedAt, "HH:mm dd/MM/yy"))}`} &nbsp;</span>
             ) : null}
             {isModalView ? null : <button onClick={() => setModalOpen(true)}>MORE</button>} &nbsp;
             {userId === cheet.userId ? (

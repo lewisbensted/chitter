@@ -12,8 +12,8 @@ export interface ICheet {
     userId: number;
     username: string;
     text: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IReply {
@@ -22,8 +22,8 @@ export interface IReply {
     username: string;
     cheetId: number;
     text: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface IMessage {
@@ -33,6 +33,6 @@ export interface IMessage {
     recipientId: number;
     recipientUsername: string;
     text: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }

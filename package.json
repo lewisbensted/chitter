@@ -22,6 +22,7 @@
     "homepage": "https://github.com/lewisbensted/chitter#readme",
     "dependencies": {
         "concurrently": "^8.2.2",
+        "date-fns-tz": "^3.2.0",
         "dotenv-cli": "^7.4.2",
         "dotenv-expand": "^11.0.6"
     }
