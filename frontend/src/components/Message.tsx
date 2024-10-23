@@ -19,11 +19,6 @@ interface Props {
 const Message: React.FC<Props> = ({ userId, message, setError, setMessages, isLoading, setLoading }) => {
     const [isMessageLoading, setMessageLoading] = useState<boolean>(false);
 
-    const createdAt = new Date(new Date(message.createdAt).valueOf() + new Date(message.createdAt).getTimezoneOffset() * 60000)
-    const updatedAt = new Date(new Date(message.updatedAt).valueOf() + new Date(message.updatedAt).getTimezoneOffset() * 60000)
-
-    console.log(userId, message.senderId)
-
     return (
         <div style={{ display: "flex", justifyContent: message.senderId === userId ? "left" : "right" }}>
             <EditMessage
@@ -33,10 +28,11 @@ const Message: React.FC<Props> = ({ userId, message, setError, setMessages, isLo
                 setMessages={setMessages}
                 setError={setError}
                 userId={userId}
-            /> &nbsp;
-            <span>{format(createdAt, "HH:mm dd/MM/yy")}&nbsp;</span>
-            {updatedAt > createdAt ? (
-                <span>{`Edited at ${format(updatedAt, "HH:mm dd/MM/yy")}`} &nbsp;</span>
+            />{" "}
+            &nbsp;
+            <span>{format(message.createdAt, "HH:mm dd/MM/yy")}&nbsp;</span>
+            {new Date(message.updatedAt) > new Date(message.createdAt) ? (
+                <span>{`Edited at ${format(message.updatedAt, "HH:mm dd/MM/yy")}`} &nbsp;</span>
             ) : null}
             {userId === message.senderId ? (
                 isMessageLoading ? (

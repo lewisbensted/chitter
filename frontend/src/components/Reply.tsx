@@ -20,9 +20,6 @@ interface Props {
 const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, isLoading, setLoading }) => {
     const [isReplyLoading, setReplyLoading] = useState<boolean>(false);
 
-    const createdAt = new Date(new Date(reply.createdAt).valueOf() + new Date(reply.createdAt).getTimezoneOffset() * 60000)
-    const updatedAt = new Date(new Date(reply.updatedAt).valueOf() + new Date(reply.updatedAt).getTimezoneOffset() * 60000)
-
     return (
         <div>
             <Link to={`/users/${reply.userId}`}>{reply.username}</Link> &nbsp;
@@ -35,9 +32,9 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
                 setError={setError}
                 userId={userId}
             />
-            <span>{format(createdAt, "HH:mm dd/MM/yy")}&nbsp;</span>
-            {updatedAt > createdAt ? (
-                <span>{`Edited at ${format(updatedAt, "HH:mm dd/MM/yy")}`} &nbsp;</span>
+            <span>{format(reply.createdAt, "HH:mm dd/MM/yy")}&nbsp;</span>
+            {new Date(reply.updatedAt) > new Date(reply.createdAt) ? (
+                <span>{`Edited at ${format(reply.updatedAt, "HH:mm dd/MM/yy")}`} &nbsp;</span>
             ) : null}
             {userId === reply.userId ? (
                 isReplyLoading ? (
@@ -56,7 +53,6 @@ const Reply: React.FC<Props> = ({ userId, cheetId, reply, setReplies, setError, 
                                     setReplies(res.data);
                                 })
                                 .catch((error: unknown) => {
-                                    console.log(error);
                                     axios.isAxiosError(error) && [401, 403].includes(error.response?.status!)
                                         ? setError(error.response?.data)
                                         : setError("An unexpected error occured while deleting reply.");

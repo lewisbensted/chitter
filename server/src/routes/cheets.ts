@@ -48,6 +48,7 @@ router.get("/", authMiddleware, async (req: Request, res: Response) => {
 });
 
 router.post("/", authMiddleware, async (req: Request, res: Response) => {
+    const date = new Date()
     try {
         await checkUser(req.params.userId);
         await prisma.$extends(cheetExtension).cheet.create({
@@ -55,6 +56,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
                 userId: req.session.user!.id,
                 username: req.session.user!.username,
                 text: req.body.text,
+                createdAt: date,
+                updatedAt: date
             },
         });
         const cheets = await fetchCheets(Number(req.params.userId));
@@ -66,6 +69,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
 });
 
 router.put("/:cheetId", authMiddleware, async (req: Request, res: Response) => {
+    const date = new Date()
     try {
         await checkUser(req.params.userId);
         if (isNaN(Number(req.params.cheetId))) {
@@ -81,6 +85,7 @@ router.put("/:cheetId", authMiddleware, async (req: Request, res: Response) => {
                 },
                 data: {
                     text: req.body.text,
+                    updatedAt: date
                 },
             });
             const cheets = await fetchCheets(Number(req.params.userId));

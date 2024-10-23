@@ -10,7 +10,8 @@ export const CreateMessageSchema = z.object({
         .string({ required_error: "Message not provided." })
         .min(1, "Message cannot be empty!")
         .max(50, "Message can be at most 50 characters."),
-    createdAt: z.date().optional(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
 });
 
 export const UpdateMessageSchema = z.object({
@@ -18,4 +19,5 @@ export const UpdateMessageSchema = z.object({
         .string({ required_error: "Message not provided." })
         .min(1, "Message cannot be empty!")
         .max(50, "Message can be at most 50 characters."),
+    updatedAt: z.date(),
 });

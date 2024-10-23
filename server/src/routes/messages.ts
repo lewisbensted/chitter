@@ -52,6 +52,7 @@ router.get("/", authMiddleware, async (req: Request, res: Response) => {
 });
 
 router.post("/", authMiddleware, async (req: Request, res: Response) => {
+    const date = new Date();
     try {
         const recipientUser = await checkUser(req.params.recipientId, "recipient");
         await prisma.$extends(messageExtension).message.create({
@@ -61,6 +62,8 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
                 recipientId: Number(req.params.recipientId),
                 recipientUsername: recipientUser!.username,
                 text: req.body.text,
+                createdAt: date,
+                updatedAt: date,
             },
         });
         const messages = await fetchMessages(req.session.user!.id, Number(req.params.recipientId));
@@ -72,6 +75,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
 });
 
 router.put("/message/:messageId", authMiddleware, async (req: Request, res: Response) => {
+    const date = new Date();
     try {
         await checkUser(req.params.recipientId, "recipient");
         if (isNaN(Number(req.params.messageId))) {
@@ -85,7 +89,7 @@ router.put("/message/:messageId", authMiddleware, async (req: Request, res: Resp
                 where: {
                     id: Number(req.params.messageId),
                 },
-                data: { text: req.body.text },
+                data: { text: req.body.text, updatedAt: date },
             });
             const messages = await fetchMessages(req.session.user!.id, Number(req.params.recipientId));
             res.status(200).send(messages);
