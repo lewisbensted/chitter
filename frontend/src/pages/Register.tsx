@@ -36,7 +36,7 @@ const Register: React.FC = () => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
                     setUserId(undefined);
                 } else if (axios.isAxiosError(error) && error.code == "ERR_NETWORK") {
-                    setErrors(["Network Error: servers unreachable."]);
+                    setErrors(["Network Error: Servers unreachable."]);
                 } else {
                     setErrors(["An unexpected error occured while authenticating the user."]);
                 }

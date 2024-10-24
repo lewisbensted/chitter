@@ -33,7 +33,7 @@ const User: React.FC = () => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
                     setUserId(undefined);
                 } else if (axios.isAxiosError(error) && error.code == "ERR_NETWORK") {
-                    setError("Network Error: servers unreachable.");
+                    setError("Network Error: Servers unreachable.");
                 } else {
                     setError("An unexpected error occured while authenticating the user.");
                 }

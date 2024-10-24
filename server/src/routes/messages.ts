@@ -85,12 +85,14 @@ router.put("/message/:messageId", authMiddleware, async (req: Request, res: Resp
             where: { id: Number(req.params.messageId) },
         });
         if (targetMessage.senderId === req.session.user!.id) {
-            await prisma.$extends(messageExtension).message.update({
-                where: {
-                    id: Number(req.params.messageId),
-                },
-                data: { text: req.body.text, updatedAt: date },
-            });
+            if (req.body.text !== targetMessage.text) {
+                await prisma.$extends(messageExtension).message.update({
+                    where: {
+                        id: Number(req.params.messageId),
+                    },
+                    data: { text: req.body.text, updatedAt: date },
+                });
+            }
             const messages = await fetchMessages(req.session.user!.id, Number(req.params.recipientId));
             res.status(200).send(messages);
         } else {
