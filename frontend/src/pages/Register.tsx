@@ -35,6 +35,8 @@ const Register: React.FC = () => {
             .catch((error: unknown) => {
                 if (axios.isAxiosError(error) && error.response?.status == 401) {
                     setUserId(undefined);
+                } else if (axios.isAxiosError(error) && error.code == "ERR_NETWORK") {
+                    setErrors(["Network Error: servers unreachable."]);
                 } else {
                     setErrors(["An unexpected error occured while authenticating the user."]);
                 }
@@ -48,7 +50,7 @@ const Register: React.FC = () => {
         await axios
             .post(`${serverURL}/register`, data)
             .then(() => {
-              setSuccess(true);
+                setSuccess(true);
             })
             .catch((error: unknown) => {
                 axios.isAxiosError(error) && error.response?.status == 400
@@ -59,12 +61,7 @@ const Register: React.FC = () => {
     };
 
     return (
-        <Layout
-            isLoading={isLoading || isFormLoading}
-            setLoading={setLoading}
-            userId={userId}
-            setUserId={setUserId}
-        >
+        <Layout isLoading={isLoading || isFormLoading} setLoading={setLoading} userId={userId} setUserId={setUserId}>
             <div>
                 <ErrorModal errors={errors} closeModal={() => setErrors([])} />
                 <SuccessModal
