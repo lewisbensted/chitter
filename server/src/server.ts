@@ -6,7 +6,7 @@ import path from "path";
 import { PrismaClientInitializationError } from "@prisma/client/runtime/library.js";
 import { createApp } from "./app.js";
 
-const envPath = `../.env.${process.env.NODE_ENV || "development"}`
+const envPath = `../.env.${process.env.NODE_ENV ?? "development"}`;
 dotenvExpand.expand(dotenv.config({ path: envPath }));
 
 const __dirname = import.meta.dirname;

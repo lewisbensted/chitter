@@ -3,7 +3,7 @@ import { resetDB } from "../test-utils/resetDB";
 import { createPrismaClient, ExtendedPrismaClient } from "../../prisma/prismaClient";
 import { createApp } from "../../src/app";
 import type { Express } from "express";
-import { ExtendedCheetClient, ExtendedReplyClient, ExtendedUserClient } from "../../types/extendedClients";
+import type { ExtendedCheetClient, ExtendedReplyClient, ExtendedUserClient } from "../../types/extendedClients";
 import request from "supertest";
 import { sessionUserCheet, sessionUserCheetStatus, testCheets } from "../fixtures/cheets.fixtures";
 import { sessionUser, testUsers } from "../fixtures/users.fixtures";
@@ -143,8 +143,9 @@ describe("Integration tests - Reply routes", () => {
 				})
 			);
 			const editedReply = await prisma.reply.findUnique({ where: { uuid: "sessionuserreplyid" } });
-			expect(editedReply?.text).toBe("Edited Reply");
-			expect(editedReply?.updatedAt.getTime()).toBeGreaterThan(editedReply?.createdAt?.getTime()!);
+			expect(editedReply).toBeDefined();
+			expect(editedReply!.text).toBe("Edited Reply");
+			expect(editedReply!.updatedAt.getTime()).toBeGreaterThan(editedReply!.createdAt.getTime());
 		});
 		test("Failure - validation error", async () => {
 			const res = await request(app)

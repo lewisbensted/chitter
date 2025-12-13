@@ -9,9 +9,6 @@ import replies from "./routes/replies.js";
 import logout from "./routes/logout.js";
 import type { ExtendedPrismaClient } from "../prisma/prismaClient.js";
 import messages from "./routes/messages.js";
-import dotenv from "dotenv";
-import dotenvExpand from "dotenv-expand";
-
 import path from "path";
 import cors from "cors";
 import conversations from "./routes/conversations.js";

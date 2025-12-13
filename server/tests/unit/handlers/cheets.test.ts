@@ -10,7 +10,7 @@ import { Response, Request } from "express";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { createMockReq, MockRequest } from "../../test-utils/createMockReq";
 import { EditCheetRequest, SendCheetRequest } from "../../../types/requests";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit test - Cheet handlers", () => {

@@ -5,7 +5,7 @@ vi.mock("../../../src/utils/generateConversationKey", () => ({
 import { prismaMock } from "../../test-utils/prismaMock";
 import { readMessages } from "../../../src/utils/readMessages";
 import { generateConversationKey } from "../../../src/utils/generateConversationKey";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 
 describe("readMessages()", () => {
 	beforeEach(() => {

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { CreateUserSchema } from "../../../src/schemas/user.schema";
 import { prismaMock } from "../../test-utils/prismaMock";
 import * as validation from "../../../src/utils/validation";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 
 describe("User schema", () => {
 	afterEach(() => {

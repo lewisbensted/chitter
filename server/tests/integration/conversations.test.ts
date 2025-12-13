@@ -3,7 +3,7 @@ import { resetDB } from "../test-utils/resetDB";
 import { createPrismaClient, type ExtendedPrismaClient } from "../../prisma/prismaClient";
 import { createApp } from "../../src/app";
 import type { Express } from "express";
-import { ExtendedUserClient } from "../../types/extendedClients";
+import type { ExtendedUserClient } from "../../types/extendedClients";
 import { sessionUser, testUsers } from "../fixtures/users.fixtures";
 import request from "supertest";
 import { testConvos } from "../fixtures/conversation.fixtures";

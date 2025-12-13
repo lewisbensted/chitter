@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { fetchConversations } from "../../../src/utils/fetchConversations";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import type { Prisma } from "@prisma/client";
 
 describe("fetchConversations()", () => {
@@ -20,7 +20,7 @@ describe("fetchConversations()", () => {
 			user2Unread: i % 2 === 0,
 			latestMessage: { text: `Message ${i + 1}` },
 		}));
-		prismaMock.conversation.findMany.mockImplementation(async (args) => {
+		prismaMock.conversation.findMany.mockImplementation((args: Prisma.ConversationFindManyArgs) => {
 			const take = args.take ?? 5;
 			return dbConvos.slice(0, take);
 		});

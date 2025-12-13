@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { fetchMessages } from "../../../src/utils/fetchMessages";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { Prisma } from "@prisma/client";
 
 describe("fetchMessages()", () => {
 	beforeEach(() => {
@@ -10,7 +11,7 @@ describe("fetchMessages()", () => {
 			text: `Test text ${i + 1}`,
 			messageStatus: { isDeleted: i % 2 === 0 },
 		}));
-		prismaMock.message.findMany.mockImplementation(async (args) => {
+		prismaMock.message.findMany.mockImplementation((args: Prisma.MessageFindManyArgs) => {
 			const take = args.take ?? 5;
 			return dbMessages.slice(0, take);
 		});

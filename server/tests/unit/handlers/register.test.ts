@@ -5,7 +5,7 @@ import { createMockReq, MockRequest } from "../../test-utils/createMockReq";
 import { createMockRes, MockResponse } from "../../test-utils/createMockRes";
 import { Response } from "express";
 import { RegisterUserRequest } from "../../../types/requests";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit tests - Registration handler", () => {

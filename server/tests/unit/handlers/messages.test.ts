@@ -24,7 +24,7 @@ import { EditMessageRequest, SendMessageRequest } from "../../../types/requests"
 import { generateConversationKey } from "../../../src/utils/generateConversationKey";
 import { readMessages } from "../../../src/utils/readMessages";
 import { Response, Request } from "express";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 import type { Prisma } from "@prisma/client";
 import { softDeleteMessageStatus } from "../../../prisma/services/messageStatus";

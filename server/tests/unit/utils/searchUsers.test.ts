@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { searchUsers } from "../../../src/utils/searchUsers";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { Prisma } from "@prisma/client";
 
 describe("searchUsers()", () => {
 	beforeEach(() => {
@@ -9,7 +10,7 @@ describe("searchUsers()", () => {
 			uuid: `testuseruuid${i + 1}`,
 			followers: i % 2 === 0 ? [{ uuid: "mocksessionuuid" }] : [],
 		}));
-		prismaMock.user.findMany.mockImplementation(async (args) => {
+		prismaMock.user.findMany.mockImplementation((args: Prisma.UserFindManyArgs) => {
 			const take = args.take ?? 5;
 			return dbUsers.slice(0, take);
 		});

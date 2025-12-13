@@ -10,7 +10,7 @@ import { createMockRes, MockResponse } from "../../test-utils/createMockRes";
 import { createMockReq, MockRequest } from "../../test-utils/createMockReq";
 import { EditReplyRequest, SendReplyRequest } from "../../../types/requests";
 import { Response, Request } from "express";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit tests - Reply handlers", () => {

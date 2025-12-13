@@ -4,7 +4,7 @@ import { createMockRes, MockResponse } from "../../test-utils/createMockRes";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { followHandler, unfollowHandler } from "../../../src/routes/follow";
 import { Response, Request } from "express";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit tests - Follow handlers", () => {

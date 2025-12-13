@@ -1,14 +1,15 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { fetchReplies } from "../../../src/utils/fetchReplies";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { Prisma } from "@prisma/client";
 
 describe("fetchReplies()", () => {
 	beforeEach(() => {
 		const dbReplies = Array.from({ length: 5 }, (_, i) => ({
 			uuid: `testreplyuuid${i + 1}`,
 		}));
-		prismaMock.reply.findMany.mockImplementation(async (args) => {
+		prismaMock.reply.findMany.mockImplementation((args: Prisma.ReplyFindManyArgs) => {
 			const take = args.take ?? 5;
 			return dbReplies.slice(0, take);
 		});

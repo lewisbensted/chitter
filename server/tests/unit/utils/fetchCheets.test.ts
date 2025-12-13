@@ -1,14 +1,15 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { fetchCheets } from "../../../src/utils/fetchCheets";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { Prisma } from "@prisma/client";
 
 describe("fetchCheets()", () => {
 	beforeEach(() => {
 		const dbCheets = Array.from({ length: 5 }, (_, i) => ({
 			uuid: `testcheetuuid${i + 1}`,
 		}));
-		prismaMock.cheet.findMany.mockImplementation(async (args) => {
+		prismaMock.cheet.findMany.mockImplementation((args: Prisma.CheetFindManyArgs) => {
 			const take = args.take ?? 5;
 			return dbCheets.slice(0, take);
 		});

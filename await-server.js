@@ -2,9 +2,8 @@ import dotenv from "dotenv";
 import dotenvExpand from "dotenv-expand";
 import waitOn from "wait-on";
 import { spawn } from "child_process";
-import path from "path";
 
-const envPath = `../.env.${process.env.NODE_ENV || "development"}`
+const envPath = `../.env.${process.env.NODE_ENV || "development"}`;
 dotenvExpand.expand(dotenv.config({ path: envPath }));
 
 const SERVER_PORT = process.env.SERVER_PORT;

@@ -6,7 +6,7 @@ import { createMockRes, MockResponse } from "../../test-utils/createMockRes";
 import { loginHandler } from "../../../src/routes/login";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { Response, Request } from "express";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit tests - Login handler", () => {

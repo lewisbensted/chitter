@@ -5,7 +5,7 @@ import { getUserHandler, searchUsersHandler } from "../../../src/routes/users";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { Response, Request } from "express";
 import { SearchUsersRequest } from "../../../types/requests";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit tests - User handlers", () => {

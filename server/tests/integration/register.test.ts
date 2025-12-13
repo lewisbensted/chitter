@@ -5,7 +5,7 @@ import { createApp } from "../../src/app";
 import { sessionUser } from "../fixtures/users.fixtures";
 import request from "supertest";
 import type { Express } from "express";
-import { ExtendedUserClient } from "../../types/extendedClients";
+import type { ExtendedUserClient } from "../../types/extendedClients";
 import type { IError, IUser } from "../../types/responses";
 import { createTestDatabase } from "../test-utils/createTestDb";
 import { execSync } from "child_process";

@@ -4,7 +4,7 @@ import { createMockRes, MockResponse } from "../../test-utils/createMockRes";
 import { prismaMock } from "../../test-utils/prismaMock";
 import { getConversationsHandler, getUnreadHandler } from "../../../src/routes/conversations";
 import { Request, Response } from "express";
-import { ExtendedPrismaClient } from "../../../prisma/prismaClient";
+import type { ExtendedPrismaClient } from "../../../prisma/prismaClient";
 import { mockNext } from "../../test-utils/mockNext";
 
 describe("Unit test - Conversation handlers", () => {

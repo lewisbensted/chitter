@@ -154,8 +154,9 @@ describe("Integration tests - Message routes", () => {
 				})
 			);
 			const editedMessage = await prisma.message.findUnique({ where: { uuid: "testmessageid9" } });
-			expect(editedMessage?.text).toBe("Edited Message");
-			expect(editedMessage?.updatedAt.getTime()).toBeGreaterThan(editedMessage?.createdAt?.getTime()!);
+			expect(editedMessage).toBeDefined();
+			expect(editedMessage!.text).toBe("Edited Message");
+			expect(editedMessage!.updatedAt.getTime()).toBeGreaterThan(editedMessage!.createdAt.getTime());
 		});
 		test("Failure - Invalid message ID", async () => {
 			const res = await request(app)

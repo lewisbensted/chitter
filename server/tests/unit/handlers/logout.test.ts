@@ -8,6 +8,8 @@ import { mockNext } from "../../test-utils/mockNext";
 describe("Unit tests - Logout handler", () => {
 	let mockReq: MockRequest;
 	let mockRes: MockResponse;
+	type DestroyFn = (err: Error | null) => void;
+
 	beforeEach(() => {
 		vi.spyOn(console, "error").mockImplementation(vi.fn());
 		mockReq = createMockReq();
@@ -18,7 +20,7 @@ describe("Unit tests - Logout handler", () => {
 	});
 	describe("logoutHandler()", () => {
 		test("Success", () => {
-			const destroyMock = vi.fn((callback) => callback(null));
+			const destroyMock = vi.fn((callback: DestroyFn) => { callback(null); });
 			mockReq.session = { user: { id: "mockuserid" }, destroy: destroyMock };
 			mockReq.cookies.token = "mocksession";
 			logoutHandler(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);
@@ -28,7 +30,7 @@ describe("Unit tests - Logout handler", () => {
 			expect(mockRes.json).toHaveBeenCalledWith("Logout successful.");
 		});
 		test("Failure - destroy session error", () => {
-			const destroyMock = vi.fn((callback) => callback(new Error("Destroy Error")));
+			const destroyMock = vi.fn((callback: DestroyFn) => { callback(new Error("Destroy Error")); });
 			mockReq.session = { user: { id: "mockuserid" }, destroy: destroyMock };
 			mockReq.cookies.token = "mocksession";
 			logoutHandler(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);

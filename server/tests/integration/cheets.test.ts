@@ -3,7 +3,7 @@ import { resetDB } from "../test-utils/resetDB";
 import { createPrismaClient, type ExtendedPrismaClient } from "../../prisma/prismaClient";
 import { createApp } from "../../src/app";
 import type { Express } from "express";
-import { ExtendedCheetClient, ExtendedUserClient } from "../../types/extendedClients";
+import type { ExtendedCheetClient, ExtendedUserClient } from "../../types/extendedClients";
 import request from "supertest";
 import { sessionUser, testUsers } from "../fixtures/users.fixtures";
 import { sessionUserCheet, sessionUserCheetStatus, testCheets, testCheetStatuses } from "../fixtures/cheets.fixtures";
@@ -130,8 +130,9 @@ describe("Integration tests - Cheet routes", () => {
 				})
 			);
 			const editedCheet = await prisma.cheet.findUnique({ where: { uuid: "sessionusercheetid" } });
-			expect(editedCheet?.text).toBe("Edited Cheet");
-			expect(editedCheet?.updatedAt.getTime()).toBeGreaterThan(editedCheet?.createdAt?.getTime()!);
+			expect(editedCheet).toBeDefined();
+			expect(editedCheet!.text).toBe("Edited Cheet");
+			expect(editedCheet!.updatedAt.getTime()).toBeGreaterThan(editedCheet!.createdAt.getTime());
 		});
 		test("Failure - invalid cheet ID", async () => {
 			const res = await request(app)
