@@ -8,6 +8,7 @@ import { messageFilters } from "../../prisma/extensions/messageExtension.js";
 import { fetchMessages, type FetchMessagesType } from "../utils/fetchMessages.js";
 import { readMessages } from "../utils/readMessages.js";
 import { softDeleteMessageStatus } from "../../prisma/services/messageStatus.js";
+import { ENVIRONMENT } from "../../../config.js";
 
 export const getMessagesHandler =
 	(prismaClient: ExtendedPrismaClient, fetchFn: FetchMessagesType) =>
@@ -40,7 +41,7 @@ export const postMessageHandler =
 			const result = await prismaClient.$transaction(async (transaction) => {
 				const newMessage = await transaction.message.create({
 					data: {
-						uuid: process.env.NODE_ENV === "test" ? req.body.uuid : undefined,
+						uuid: ENVIRONMENT === "test" ? req.body.uuid : undefined,
 						senderId: sessionUser.uuid,
 						recipientId: req.params.recipientId,
 						text: req.body.text,

@@ -4,6 +4,7 @@ import { type ExtendedPrismaClient } from "../../prisma/prismaClient.js";
 import type { EditCheetRequest, SendCheetRequest } from "../../types/requests.js";
 import type { ExtendedCheetClient } from "../../types/extendedClients.js";
 import { fetchCheets, type FetchCheetsType } from "../utils/fetchCheets.js";
+import { ENVIRONMENT } from "../../../config.js";
 
 export const getCheetsHandler =
 	(prismaClient: ExtendedPrismaClient, fetchFn: FetchCheetsType) =>
@@ -37,7 +38,7 @@ export const createCheetHandler =
 			const result = await prismaClient.$transaction(async (transaction) => {
 				const newCheet = await transaction.cheet.create({
 					data: {
-						uuid: process.env.NODE_ENV === "test" ? req.body.uuid : undefined,
+						uuid: ENVIRONMENT === "test" ? req.body.uuid : undefined,
 						userId: sessionUser.uuid,
 						text: req.body.text,
 					},

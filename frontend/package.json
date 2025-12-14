@@ -4,8 +4,8 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "dotenv -e ../.env.dev -r dotenv-expand/config -- vite",
-		"build": "dotenv -e ../.env.prod -r dotenv-expand/config -- vite build"
+		"dev": "dotenv -e ../.env.development -r dotenv-expand/config -- vite",
+		"build": "dotenv -e ../.env.production -r dotenv-expand/config -- vite build"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.13.3",

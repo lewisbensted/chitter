@@ -45,7 +45,7 @@ A full-stack Twitter-style web application where users can post **cheets** (shor
 
 ```sh
   FRONTEND_PORT =       # Defaults to 5173
-  SERVER_PORT =
+  SERVER_PORT =         # Defaults to 3000
 
   VITE_SERVER_URL = http://localhost:${SERVER_PORT}
 

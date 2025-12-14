@@ -17,22 +17,37 @@ import { rateLimiter } from "./middleware/rateLimiting.js";
 import follow from "./routes/follow.js";
 import MySQLStoreImport from "express-mysql-session";
 import { errorHandler } from "./middleware/errorHandling.js";
+import dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand";
+import {
+	DB_HOST,
+	DB_NAME,
+	DB_PASSWORD,
+	DB_PORT,
+	DB_USER,
+	ENVIRONMENT,
+	FRONTEND_PORT,
+	PROJECT_ROOT,
+} from "../../config.js";
+
+const envPath = `../.env.${ENVIRONMENT ?? "development"}`;
+dotenvExpand.expand(dotenv.config({ path: envPath }));
 
 const MySQLStore = MySQLStoreImport(session);
 
 const storeOptions = {
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_NAME,
-	port: Number(process.env.DB_PORT),
-	host: process.env.DB_HOST,
+	user: DB_USER,
+	password: DB_PASSWORD,
+	database: DB_NAME,
+	port: DB_PORT,
+	host: DB_HOST,
 	expiration: 86400,
 	schema: { tableName: "session_store" },
 };
 
 const sessionStore = new MySQLStore(storeOptions);
 
-export const createApp = (prisma: ExtendedPrismaClient, frontendPort?: number, projectRoot?: string) => {
+export const createApp = (prisma: ExtendedPrismaClient) => {
 	const app = express();
 
 	app.use(cookieParser());
@@ -46,16 +61,16 @@ export const createApp = (prisma: ExtendedPrismaClient, frontendPort?: number, p
 		})
 	);
 
-	if (process.env.NODE_ENV === "development") {
+	if (ENVIRONMENT === "development") {
 		app.use(
 			cors({
-				origin: `http://localhost:${frontendPort}`,
+				origin: `http://localhost:${FRONTEND_PORT}`,
 				credentials: true,
 			})
 		);
 	}
 
-	if (process.env.NODE_ENV === "test") {
+	if (ENVIRONMENT === "test") {
 		app.use((req, _res, next) => {
 			if (!req.session.user && req.headers["session-required"]) {
 				req.session.user = { uuid: "sessionuserid" };
@@ -87,8 +102,8 @@ export const createApp = (prisma: ExtendedPrismaClient, frontendPort?: number, p
 		res.status(404).json({ errors: ["Route not found."], code: "ROUTE_NOT_FOUND" });
 	});
 
-	if (process.env.NODE_ENV === "production" && projectRoot) {
-		const buildPath = path.join(projectRoot, "frontend", "dist");
+	if (ENVIRONMENT === "production") {
+		const buildPath = path.join(PROJECT_ROOT, "frontend", "dist");
 		app.use(express.static(buildPath));
 		app.get("*", (_req, res) => {
 			res.sendFile(path.join(buildPath, "index.html"));

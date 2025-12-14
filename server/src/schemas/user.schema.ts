@@ -1,8 +1,9 @@
 import { z } from "zod";
 import type { ExtendedPrismaClient } from "../../prisma/prismaClient.js";
 import { isValidName, nameExp1, passwordExp1, passwordExp2 } from "../utils/validation.js";
+import { ENVIRONMENT } from "../../../config.js";
 
-const isTestEnv = process.env.NODE_ENV === "test";
+const isTestEnv = ENVIRONMENT === "test";
 
 export const CreateUserSchema = (prismaClient: ExtendedPrismaClient) =>
 	z

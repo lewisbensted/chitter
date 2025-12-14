@@ -4,7 +4,7 @@ import { type ExtendedPrismaClient } from "../../prisma/prismaClient.js";
 import type { EditReplyRequest, SendReplyRequest } from "../../types/requests.js";
 import type { ExtendedReplyClient } from "../../types/extendedClients.js";
 import { fetchReplies, type FetchRepliesType } from "../utils/fetchReplies.js";
-
+import { ENVIRONMENT } from "../../../config.js";
 
 export const getRepliesHandler =
 	(prismaClient: ExtendedPrismaClient, fetchReplies: FetchRepliesType) =>
@@ -34,7 +34,7 @@ export const createReplyHandler =
 			const result = await prismaClient.$transaction(async (transaction) => {
 				const newReply = await transaction.reply.create({
 					data: {
-						uuid: process.env.NODE_ENV === "test" ? req.body.uuid : undefined,
+						uuid: ENVIRONMENT === "test" ? req.body.uuid : undefined,
 						userId: sessionUser.uuid,
 						text: req.body.text,
 						cheetId: req.params.cheetId,
@@ -113,6 +113,6 @@ export default (prismaClient: ExtendedPrismaClient) => {
 	router.post("/", authenticator, createReplyHandler(prismaClient));
 	router.put("/:replyId", authenticator, updateReplyHandler(prismaClient));
 	router.delete("/:replyId", authenticator, deleteReplyHandler(prismaClient));
-	
+
 	return router;
 };

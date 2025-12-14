@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { ENVIRONMENT } from "../../../config.js";
 
-const isTestEnv = process.env.NODE_ENV === "test";
+const isTestEnv = ENVIRONMENT === "test";
 
 export const CreateReplySchema = z
 	.object({

@@ -1,2 +1,2 @@
 export const serverURL =
-	import.meta.env.MODE === "production" ? "" : `http://localhost:${import.meta.env.VITE_SERVER_PORT ?? ""}`;
+	import.meta.env.MODE === "production" ? "" : `http://localhost:${import.meta.env.VITE_SERVER_PORT ?? "3000"}`;

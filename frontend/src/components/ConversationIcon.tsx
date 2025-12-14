@@ -6,18 +6,17 @@ import MarkUnreadChatAlt from "@mui/icons-material/MarkUnreadChatAlt";
 
 interface Props {
 	conversation: IConversation | null;
-	user: IUser
+	user: IUser;
 	setSelectedConversation: React.Dispatch<React.SetStateAction<IConversation | null>>;
 }
 
-const ConversationIcon: React.FC<Props> = ({ conversation, user,setSelectedConversation }) => (
-	
+const ConversationIcon: React.FC<Props> = ({ conversation, user, setSelectedConversation }) => (
 	<IconButton
 		onClick={() => {
 			if (conversation) setSelectedConversation(conversation);
 			else
 				setSelectedConversation({
-					key:"placeholder",
+					key: "placeholder",
 					interlocutorId: user.uuid,
 					interlocutorUsername: user.username,
 					unread: false,

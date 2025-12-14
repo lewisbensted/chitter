@@ -1,18 +1,19 @@
 import { execSync } from "child_process";
 import { logError } from "../../src/utils/logError";
+import { DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from "../../../config.js";
 
 export function createTestDatabase(dbName: string) {
-	const dbUrl = `mysql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${dbName}`;
+	const dbUrl = `mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
 
 	try {
 		execSync(
-			`mysql -u ${process.env.DB_USER} -p${process.env.DB_PASSWORD} -h ${process.env.DB_HOST} -P ${process.env.DB_PORT} -e "DROP DATABASE IF EXISTS \`${dbName}\`;"`,
+			`mysql -u ${DB_USER} -p${DB_PASSWORD} -h ${DB_HOST} -P ${DB_PORT} -e "DROP DATABASE IF EXISTS \`${dbName}\`;"`,
 			{
 				stdio: "inherit",
 			}
 		);
 		execSync(
-			`mysql -u ${process.env.DB_USER} -p${process.env.DB_PASSWORD} -h ${process.env.DB_HOST} -P ${process.env.DB_PORT} -e "CREATE DATABASE \`${dbName}\`;"`,
+			`mysql -u ${DB_USER} -p${DB_PASSWORD} -h ${DB_HOST} -P ${DB_PORT} -e "CREATE DATABASE \`${dbName}\`;"`,
 			{
 				stdio: "inherit",
 			}
