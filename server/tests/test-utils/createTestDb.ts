@@ -1,19 +1,22 @@
 import { execSync } from "child_process";
 import { logError } from "../../src/utils/logError";
-import { DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from "../../../config.js";
+import { DATABASE_URL } from "../../../config";
+
 
 export function createTestDatabase(dbName: string) {
-	const dbUrl = `mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${dbName}`;
+	const dbUrl = new URL(DATABASE_URL!);
+
+	const testDbUrl = `mysql://${dbUrl.username}:${dbUrl.password}@${dbUrl.hostname}:${dbUrl.port}/${dbName}`;
 
 	try {
 		execSync(
-			`mysql -u ${DB_USER} -p${DB_PASSWORD} -h ${DB_HOST} -P ${DB_PORT} -e "DROP DATABASE IF EXISTS \`${dbName}\`;"`,
+			`mysql -u ${dbUrl.username} -p${dbUrl.password} -h ${dbUrl.hostname} -P ${dbUrl.port} -e "DROP DATABASE IF EXISTS \`${dbName}\`;"`,
 			{
 				stdio: "inherit",
 			}
 		);
 		execSync(
-			`mysql -u ${DB_USER} -p${DB_PASSWORD} -h ${DB_HOST} -P ${DB_PORT} -e "CREATE DATABASE \`${dbName}\`;"`,
+			`mysql -u ${dbUrl.username} -p${dbUrl.password} -h ${dbUrl.hostname} -P ${dbUrl.port} -e "CREATE DATABASE \`${dbName}\`;"`,
 			{
 				stdio: "inherit",
 			}
@@ -23,5 +26,5 @@ export function createTestDatabase(dbName: string) {
 		logError(error);
 	}
 
-	return dbUrl;
+	return testDbUrl;
 }

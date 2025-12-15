@@ -277,15 +277,19 @@ describe("Unit tests - Message handlers", () => {
 				mockNext
 			);
 			expect(generateConversationKey).toHaveBeenCalledWith("a-mocksenderid", "b-mockrecipientid");
-			expect(prismaMock.conversation.upsert).toHaveBeenCalledWith(
+			const callArgs = prismaMock.conversation.upsert.mock.calls[0][0] as {
+				update: Record<string, unknown>;
+				create: Record<string, unknown>;
+			};
+			expect(callArgs.update).toEqual(
+				expect.objectContaining({ user2Unread: true, latestMessageId: "mockmessageid" })
+			);
+			expect(callArgs.create).toEqual(
 				expect.objectContaining({
-					update: expect.objectContaining({ user2Unread: true, latestMessageId: "mockmessageid" }),
-					create: expect.objectContaining({
-						user1Id: "a-mocksenderid",
-						user2Id: "b-mockrecipientid",
-						latestMessageId: "mockmessageid",
-						user2Unread: true,
-					}),
+					user1Id: "a-mocksenderid",
+					user2Id: "b-mockrecipientid",
+					latestMessageId: "mockmessageid",
+					user2Unread: true,
 				})
 			);
 			expect(mockRes.status).toHaveBeenCalledWith(201);
@@ -322,15 +326,19 @@ describe("Unit tests - Message handlers", () => {
 				mockNext
 			);
 			expect(generateConversationKey).toHaveBeenCalledWith("a-mockrecipientid", "b-mocksenderid");
-			expect(prismaMock.conversation.upsert).toHaveBeenCalledWith(
+			const callArgs = prismaMock.conversation.upsert.mock.calls[0][0] as {
+				update: Record<string, unknown>;
+				create: Record<string, unknown>;
+			};
+			expect(callArgs.update).toEqual(
+				expect.objectContaining({ user1Unread: true, latestMessageId: "mockmessageid" })
+			);
+			expect(callArgs.create).toEqual(
 				expect.objectContaining({
-					update: expect.objectContaining({ user1Unread: true, latestMessageId: "mockmessageid" }),
-					create: expect.objectContaining({
-						user1Id: "a-mockrecipientid",
-						user2Id: "b-mocksenderid",
-						latestMessageId: "mockmessageid",
-						user1Unread: true,
-					}),
+					user1Id: "a-mockrecipientid",
+					user2Id: "b-mocksenderid",
+					latestMessageId: "mockmessageid",
+					user1Unread: true,
 				})
 			);
 			expect(mockRes.status).toHaveBeenCalledWith(201);
@@ -563,7 +571,7 @@ describe("Unit tests - Message handlers", () => {
 				uuid: "mockmessageid",
 				sender: { uuid: "mockuserid" },
 				messageStatus: {
-					isDeleted: true
+					isDeleted: true,
 				},
 			});
 			await deleteMessageHandler(prismaMock as unknown as ExtendedPrismaClient)(
