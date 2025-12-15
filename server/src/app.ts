@@ -17,30 +17,24 @@ import { rateLimiter } from "./middleware/rateLimiting.js";
 import follow from "./routes/follow.js";
 import MySQLStoreImport from "express-mysql-session";
 import { errorHandler } from "./middleware/errorHandling.js";
-import dotenv from "dotenv";
-import dotenvExpand from "dotenv-expand";
 import { DATABASE_URL, ENVIRONMENT, FRONTEND_PORT, PROJECT_ROOT } from "../../config.js";
 
-const envPath = `../.env.${ENVIRONMENT ?? "development"}`;
-dotenvExpand.expand(dotenv.config({ path: envPath }));
-
-const MySQLStore = MySQLStoreImport(session);
-
-const dbUrl = new URL(DATABASE_URL!);
-
-const storeOptions = {
-	user: dbUrl.username,
-	password: dbUrl.password,
-	database: dbUrl.pathname.slice(1),
-	host: dbUrl.hostname,
-	port: Number(dbUrl.port) || 3306,
-	expiration: 86400,
-	schema: { tableName: "session_store" },
-};
-
-const sessionStore = new MySQLStore(storeOptions);
-
 export const createApp = (prisma: ExtendedPrismaClient) => {
+	const MySQLStore = MySQLStoreImport(session);
+
+	const dbUrl = new URL(DATABASE_URL!);
+
+	const storeOptions = {
+		user: dbUrl.username,
+		password: dbUrl.password,
+		database: dbUrl.pathname.slice(1),
+		host: dbUrl.hostname,
+		port: Number(dbUrl.port) || 3306,
+		expiration: 86400,
+		schema: { tableName: "session_store" },
+	};
+
+	const sessionStore = new MySQLStore(storeOptions);
 	const app = express();
 
 	app.use(cookieParser());

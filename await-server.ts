@@ -1,16 +1,6 @@
-import dotenv from "dotenv";
-import dotenvExpand from "dotenv-expand";
 import waitOn from "wait-on";
 import { spawn } from "child_process";
-
-const envPath = `.env.${process.env.NODE_ENV || "development"}`;
-dotenvExpand.expand(dotenv.config({ path: envPath }));
-
-const SERVER_PORT = process.env.SERVER_PORT;
-if (!SERVER_PORT) {
-	console.error("\nError: SERVER_PORT is not defined in your .env file\n");
-	process.exit(1);
-}
+import {SERVER_PORT} from './config.js'
 
 console.log("Waiting for server to start...\n");
 

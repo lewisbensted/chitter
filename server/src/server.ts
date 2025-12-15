@@ -15,7 +15,7 @@ try {
 		console.log(`\nServer running on port ${SERVER_PORT}.\n`);
 	}).on("error", (error) => {
 		logError(error);
-		process.exit(1)
+		process.exit(1);
 	});
 	process.on("SIGINT", async () => {
 		console.log("Caught SIGINT, shutting down...");
@@ -23,9 +23,7 @@ try {
 		process.exit(0);
 	});
 } catch (error) {
-	console.error(
-		error instanceof PrismaClientInitializationError ? "\nError initialising database connection:\n" : ""
-	);
+	console.error(error instanceof PrismaClientInitializationError ? "\nError initialising database connection:" : "");
 	logError(error);
 	process.exit(1);
 }
