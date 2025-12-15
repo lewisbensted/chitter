@@ -2,9 +2,10 @@ import { logError } from "./utils/logError.js";
 import { createPrismaClient } from "../prisma/prismaClient.js";
 import { PrismaClientInitializationError } from "@prisma/client/runtime/library.js";
 import { createApp } from "./app.js";
-import { SERVER_PORT } from "../../config.js";
+import { SERVER_PORT, validateConfig } from "../../config.js";
 
 try {
+	validateConfig();
 	const prisma = createPrismaClient();
 	await prisma.$connect();
 
@@ -14,10 +15,17 @@ try {
 		console.log(`\nServer running on port ${SERVER_PORT}.\n`);
 	}).on("error", (error) => {
 		logError(error);
+		process.exit(1)
+	});
+	process.on("SIGINT", async () => {
+		console.log("Caught SIGINT, shutting down...");
+		await prisma.$disconnect();
+		process.exit(0);
 	});
 } catch (error) {
 	console.error(
 		error instanceof PrismaClientInitializationError ? "\nError initialising database connection:\n" : ""
 	);
 	logError(error);
+	process.exit(1);
 }
