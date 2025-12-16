@@ -71,6 +71,7 @@ const User: React.FC<Props> = ({
 		</Card>
 	);
 };
+
 User.displayName = "User";
 
-export default User;
+export default React.memo(User);

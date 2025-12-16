@@ -77,4 +77,4 @@ const Conversation = forwardRef<HTMLDivElement, Props>(({ conversation, setSelec
 
 Conversation.displayName = "Conversation";
 
-export default Conversation;
+export default React.memo(Conversation);

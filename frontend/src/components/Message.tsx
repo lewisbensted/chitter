@@ -274,4 +274,4 @@ const Message = forwardRef<HTMLDivElement, Props>(
 
 Message.displayName = "Message";
 
-export default Message;
+export default React.memo(Message);

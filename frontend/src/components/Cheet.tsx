@@ -239,4 +239,4 @@ const Cheet = forwardRef<HTMLDivElement, Props>(
 
 Cheet.displayName = "Cheet";
 
-export default Cheet;
+export default React.memo(Cheet);

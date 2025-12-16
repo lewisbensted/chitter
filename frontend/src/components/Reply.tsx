@@ -209,4 +209,4 @@ const Reply = forwardRef<HTMLDivElement, Props>(({ reply, cheetId, setReplies, i
 
 Reply.displayName = "Reply";
 
-export default Reply;
+export default React.memo(Reply);

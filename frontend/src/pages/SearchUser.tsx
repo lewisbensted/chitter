@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Box, Button, CircularProgress, Grid2, IconButton, TextField, Typography } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import FlexBox from "../styles/FlexBox";
@@ -88,6 +88,13 @@ const SearchUser: React.FC = () => {
 		});
 	}, [displayedUsers.length]);
 
+	const handleToggleFollow = useCallback(
+		(updatedUser: IUserEnhanced) => {
+			setUsers((users) => users.map((user) => (user.user.uuid === updatedUser.user.uuid ? updatedUser : user)));
+		},
+		[setUsers]
+	);
+
 	return (
 		<Box>
 			<Typography variant="h4">Search Users</Typography>
@@ -122,11 +129,7 @@ const SearchUser: React.FC = () => {
 										sessionUserId={userId}
 										userEnhanced={user}
 										setSelectedConversation={setSelectedConversation}
-										onToggleFollow={(arg: IUserEnhanced) => {
-											setUsers((users) =>
-												users.map((user) => (user.user.uuid === arg.user.uuid ? arg : user))
-											);
-										}}
+										onToggleFollow={handleToggleFollow}
 										userPage={false}
 									/>
 								))}
@@ -140,7 +143,7 @@ const SearchUser: React.FC = () => {
 							</FlexBox>
 						)}
 					</ScrollGrid>
-					{hasNextPage && !(isLoading && page===0) && (
+					{hasNextPage && !(isLoading && page === 0) && (
 						<FlexBox>
 							<Button
 								onClick={() => {
