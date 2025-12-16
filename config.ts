@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+//This is required to trigger await-server correctly
 const envPath = path.resolve(__dirname, `./.env.${process.env.NODE_ENV ?? "development"}`);
 const dotEnvResult = dotenv.config({ path: envPath });
 dotenvExpand.expand(dotEnvResult);

@@ -12,7 +12,6 @@ A full-stack Twitter-style web application where users can post **cheets** (shor
 - &#x1F426; **Cheets:** Post new cheets and reply to others
 - &#x1F4AC; **Messages:** Send and receive private messages, view conversations
 
-
 ## Requirements
 
 - [Node.js](https://nodejs.org/en)
@@ -88,19 +87,26 @@ npm run start:prod
 ```
 
 ## Testing
+
 Backend features are covered by unit and integration tests. Run them with:
+
 ```sh
 npm run test:server
 ```
 
 ## To-do
-&#x2B1C; Handle prisma client Error  
+
+&#x2B1C; Handle prisma client Error
 
 &#x2B1C; Add API documentation
 
 &#x2B1C; Add Frontend testing
 
 &#x2B1C; Add E2E Testing
+
+&#x2B1C; Tag users in cheets and receive an email when tagged
+
+&#x2B1C; Add change password functionality
 
 ## Tech Stack
 

@@ -23,7 +23,13 @@ try {
 		process.exit(0);
 	});
 } catch (error) {
-	console.error(error instanceof PrismaClientInitializationError ? "\nError initialising database connection:" : "");
+	if (error instanceof PrismaClientInitializationError) {
+		console.error("\nError initialising database connection:");
+	} else if (error instanceof TypeError) {
+		console.error("\nError initialising config variables:");
+	} else {
+		console.error("\nError starting server:");
+	}
 	logError(error);
 	process.exit(1);
 }

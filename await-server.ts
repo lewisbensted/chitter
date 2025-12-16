@@ -1,8 +1,8 @@
 import waitOn from "wait-on";
 import { spawn } from "child_process";
-import {SERVER_PORT} from './config.js'
+import { SERVER_PORT } from "./config.js";
 
-console.log("Waiting for server to start...\n");
+console.log("\nWaiting for server to start...\n");
 
 waitOn({ resources: [`tcp:${SERVER_PORT}`] }, (err) => {
 	if (err) {

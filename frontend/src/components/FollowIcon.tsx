@@ -45,7 +45,7 @@ const FollowIcon: React.FC<Props> = ({ userEnhanced, onSuccess }) => {
 	return (
 		<Box>
 			<LoadingSpinner isLoading={isLoading} onFinished={applyPending} isLarge={false}>
-				<IconButton onClick={handleToggle}>
+				<IconButton onClick={handleToggle} sx={{ pointerEvents: isLoading ? "none" : undefined }}>
 					{userEnhanced.isFollowing ? <PersonRemove /> : <PersonAddAlt1 />}
 				</IconButton>
 			</LoadingSpinner>

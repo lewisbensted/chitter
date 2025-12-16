@@ -140,7 +140,7 @@ const SearchUser: React.FC = () => {
 							</FlexBox>
 						)}
 					</ScrollGrid>
-					{hasNextPage && (
+					{hasNextPage && !(isLoading && page===0) && (
 						<FlexBox>
 							<Button
 								onClick={() => {

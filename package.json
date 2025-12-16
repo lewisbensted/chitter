@@ -8,13 +8,12 @@
 		"lint": "npx eslint .",
 		"reset:dev": "npm --prefix server run reset:dev",
 		"migrate:dev": "npm --prefix server run migrate:dev",
-		"start:dev": "cross-env NODE_ENV=development concurrently --names Backend,Frontend \"npm --prefix server run start:dev\" \"npx tsx await-server.ts\"",
+		"start:dev": "concurrently --names Backend,Frontend \"npm --prefix server run start:dev\" \"npx tsx await-server.ts\"",
 		"build:prod": "concurrently --names Backend,Frontend \"npm --prefix server run build:prod\" \"npm --prefix frontend run build\"",
 		"migrate:prod": "npm --prefix server run migrate:prod",
 		"start:prod": "npm --prefix server run start:prod",
 		"reset:test": "npm --prefix server run reset:test",
 		"migrate:test": "npm --prefix server run migrate:test",
-		"start:test": "cross-env NODE_ENV=test concurrently --names Backend,Frontend \"npm --prefix server run start:dev\" \"node await-server.js\"",
 		"test:server": "npm --prefix server run test"
 	},
 	"repository": {

@@ -10,7 +10,6 @@ import { sessionUserCheet, sessionUserCheetStatus, testCheets, testCheetStatuses
 import { createTestDatabase } from "../test-utils/createTestDb";
 import { execSync } from "child_process";
 import type { ICheet } from "../../types/responses";
-import { DATABASE_URL } from "../../../config";
 
 describe("Integration tests - Cheet routes", () => {
 	let prisma: ExtendedPrismaClient;
