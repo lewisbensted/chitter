@@ -25,7 +25,7 @@ export const getCheetsHandler =
 				const { cheets, hasNext } = await fetchFn(prismaClient, take, req.session.user?.uuid, user?.uuid, cursor);
 				res.status(200).json({ cheets, hasNext });
 			} catch (error) {
-				console.error("Error retrieving cheets from the database:\n");
+				console.error("Error retrieving cheets from the database:");
 				next(error);
 			}
 		};
@@ -53,7 +53,7 @@ export const createCheetHandler =
 			});
 			res.status(201).json(result);
 		} catch (error) {
-			console.error("Error adding cheet to the database:\n");
+			console.error("Error adding cheet to the database:");
 			next(error);
 		}
 	};
@@ -90,7 +90,7 @@ export const updateCheetHandler =
 			});
 			return res.status(200).json(updatedCheet);
 		} catch (error) {
-			console.error("Error updating cheet in the database:\n");
+			console.error("Error updating cheet in the database:");
 			next(error);
 		}
 	};
@@ -112,7 +112,7 @@ export const deleteCheetHandler =
 			});
 			res.sendStatus(204);
 		} catch (error) {
-			console.error("Error deleting cheet from the database:\n");
+			console.error("Error deleting cheet from the database:");
 			next(error);
 		}
 	};

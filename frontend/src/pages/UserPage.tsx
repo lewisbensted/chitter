@@ -90,6 +90,8 @@ const UserPage: React.FC = () => {
 		}
 	};
 
+	const [cheetLoadingMap, setCheetsLoadingRecord] = useState<Record<string, { edit?: boolean; delete?: boolean }>>({});
+
 	return (
 		<Box>
 			{isUserLoading || isConversationsLoading || (isCheetsLoading && !hasFetchedOnce) ? (
@@ -129,6 +131,8 @@ const UserPage: React.FC = () => {
 											isModalView={false}
 											setSelectedCheet={setSelectedCheet}
 											isPageMounted={isMounted}
+											setCheetLoadingRecord={setCheetsLoadingRecord}
+											loadingState={cheetLoadingMap[cheet.uuid]}
 										/>
 									))}
 								{!isCheetsLoading && (
@@ -174,6 +178,8 @@ const UserPage: React.FC = () => {
 					isOpen={!!selectedCheet}
 					setCheets={setCheets}
 					setSelectedCheet={setSelectedCheet}
+					setCheetsLoadingRecord={setCheetsLoadingRecord}
+					loadingState={cheetLoadingMap[selectedCheet.uuid]}
 				/>
 			)}
 			{selectedConversation && (

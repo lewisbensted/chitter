@@ -4,7 +4,7 @@ export const logoutHandler = (req: Request, res: Response, next: NextFunction) =
 	if (req.session.user) {
 		req.session.destroy((error: unknown) => {
 			if (error) {
-				console.error("Error logging out:\n");
+				console.error("Error logging out:");
 				next(error);
 			} else {
 				Object.keys(req.cookies).forEach((key) => {

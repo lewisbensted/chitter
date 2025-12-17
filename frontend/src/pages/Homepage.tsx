@@ -65,6 +65,8 @@ const Homepage: React.FC = () => {
 		}
 	};
 
+	const [cheetLoadingMap, setCheetsLoadingRecord] = useState<Record<string, { edit?: boolean; delete?: boolean }>>({});
+
 	return (
 		<Box>
 			<Typography variant="h4">Welcome to Chitter</Typography>
@@ -83,6 +85,8 @@ const Homepage: React.FC = () => {
 									isModalView={false}
 									setSelectedCheet={setSelectedCheet}
 									isPageMounted={isMounted}
+									setCheetLoadingRecord={setCheetsLoadingRecord}
+									loadingState={cheetLoadingMap[cheet.uuid]}
 								/>
 							))}
 						{!isCheetsLoading && (
@@ -127,6 +131,8 @@ const Homepage: React.FC = () => {
 					isOpen={!!selectedCheet}
 					setCheets={setCheets}
 					setSelectedCheet={setSelectedCheet}
+					setCheetsLoadingRecord={setCheetsLoadingRecord}
+					loadingState={cheetLoadingMap[selectedCheet.uuid]}
 				/>
 			)}
 		</Box>

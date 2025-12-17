@@ -12,7 +12,7 @@ export const registerHandler =
 			});
 			res.status(201).json(newUser);
 		} catch (error) {
-			console.error("Error saving user to the database:\n");
+			console.error("Error saving user to the database:");
 			next(error);
 		}
 	};

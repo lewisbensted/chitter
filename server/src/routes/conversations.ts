@@ -18,7 +18,7 @@ export const getUnreadHandler =
 			});
 			res.status(200).json(!!unreadMessages);
 		} catch (error) {
-			console.error("Error retrieving unread messages from the database:\n");
+			console.error("Error retrieving unread messages from the database:");
 			next(error);
 		}
 	};
@@ -48,7 +48,7 @@ export const getConversationsHandler =
 				const conversations = await fetchFn(prismaClient, take, sessionUser.uuid, userIds, cursor);
 				res.status(200).json(conversations);
 			} catch (error) {
-				console.error("Error retrieving messages from the database:\n");
+				console.error("Error retrieving messages from the database:");
 				next(error);
 			}
 		};

@@ -31,7 +31,7 @@ export const loginHandler = (prismaClient: ExtendedPrismaClient) => async (req: 
 			res.status(401).json({ errors: ["Invalid username or password."] });
 		}
 	} catch (error) {
-		console.error("Error logging in:\n");
+		console.error("Error logging in:");
 		next(error);
 	}
 };

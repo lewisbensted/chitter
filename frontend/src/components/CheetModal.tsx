@@ -19,9 +19,11 @@ interface Props {
 	isOpen: boolean;
 	setCheets: React.Dispatch<React.SetStateAction<ICheet[]>>;
 	setSelectedCheet: React.Dispatch<React.SetStateAction<ICheet | null | undefined>>;
+	setCheetsLoadingRecord: React.Dispatch<React.SetStateAction<Record<string, { edit?: boolean; delete?: boolean }>>>;
+	loadingState: { edit?: boolean; delete?: boolean } | undefined;
 }
 
-const CheetModal: React.FC<Props> = ({ cheet, isOpen, setCheets, setSelectedCheet }) => {
+const CheetModal: React.FC<Props> = ({ cheet, isOpen, setCheets, setSelectedCheet, setCheetsLoadingRecord, loadingState }) => {
 	const { userId } = useAuth();
 
 	const {
@@ -36,9 +38,7 @@ const CheetModal: React.FC<Props> = ({ cheet, isOpen, setCheets, setSelectedChee
 		fetchReplies,
 		page,
 	} = useFetchReplies(cheet.uuid);
-
-	const [isCheetLoading, setCheetLoading] = useState<boolean>(false);
-
+	
 	useEffect(() => {
 		if (isOpen) {
 			void fetchReplies();
@@ -100,12 +100,13 @@ const CheetModal: React.FC<Props> = ({ cheet, isOpen, setCheets, setSelectedChee
 				</Grid2>
 				<Grid2 marginInline={3} size={12}>
 					<Cheet
-						cheet={cheet}				
+						cheet={cheet}
 						setCheets={setCheets}
 						isModalView={true}
 						setSelectedCheet={setSelectedCheet}
-						setCheetLoading={setCheetLoading}
 						isPageMounted={isMounted}
+						setCheetLoadingRecord={setCheetsLoadingRecord}
+						loadingState={loadingState}
 					/>
 					<Divider />
 
@@ -122,6 +123,7 @@ const CheetModal: React.FC<Props> = ({ cheet, isOpen, setCheets, setSelectedChee
 											reply={reply}
 											setReplies={setReplies}
 											isModalMounted={isMounted}
+											isCheetLoading={!!(loadingState?.edit || loadingState?.delete)}
 										/>
 									))}
 								{!isRepliesLoading && (
@@ -148,14 +150,14 @@ const CheetModal: React.FC<Props> = ({ cheet, isOpen, setCheets, setSelectedChee
 					{userId && !repliesError && (
 						<SendReply
 							selectedCheet={cheet}
-							isDisabled={isCheetLoading}
+							isCheetLoading={!!(loadingState?.edit || loadingState?.delete)}
 							setReplies={setReplies}
 							triggerScroll={toggleScrollTrigger}
 							repliesLengthRef={repliesLengthRef}
 							setRepliesError={setRepliesError}
 							setSelectedCheet={setSelectedCheet}
 							setCheets={setCheets}
-							isModalMounted = { isMounted}
+							isModalMounted={isMounted}
 						/>
 					)}
 				</Grid2>

@@ -28,7 +28,7 @@ export const getMessagesHandler =
 				const { messages, hasNext } = await fetchFn(prismaClient, take, sessionUser.uuid, recipient.uuid, cursor);
 				res.status(200).json({ messages, hasNext });
 			} catch (error) {
-				console.error("Error retrieving messages from the database:\n");
+				console.error("Error retrieving messages from the database:");
 				next(error);
 			}
 		};
@@ -85,7 +85,7 @@ export const postMessageHandler =
 			});
 			res.status(201).json(result);
 		} catch (error) {
-			console.error("Error adding message to the database:\n");
+			console.error("Error adding message to the database:");
 			next(error);
 		}
 	};
@@ -116,7 +116,7 @@ export const updateMessageHandler =
 
 			return res.status(200).json(updatedMessage);
 		} catch (error) {
-			console.error("Error updating message in the database:\n");
+			console.error("Error updating message in the database:");
 			next(error);
 		}
 	};
@@ -138,7 +138,7 @@ export const deleteMessageHandler =
 			const deletedMessage = await softDeleteMessageStatus(prismaClient, targetMessage.uuid);
 			res.status(200).json({ ...deletedMessage, text: null });
 		} catch (error) {
-			console.error("Error deleting message from the database:\n");
+			console.error("Error deleting message from the database:");
 			next(error);
 		}
 	};
@@ -152,7 +152,7 @@ export const readMessagesHandler =
 			if (updatedCount === 0) console.warn("No messages marked as read");
 			res.sendStatus(200);
 		} catch (error) {
-			console.error("Error marking messages as read:\n");
+			console.error("Error marking messages as read:");
 			next(error);
 		}
 	};

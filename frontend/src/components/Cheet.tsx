@@ -17,16 +17,17 @@ interface Props {
 	setCheets: React.Dispatch<React.SetStateAction<ICheet[]>>;
 	isModalView: boolean;
 	setSelectedCheet: React.Dispatch<React.SetStateAction<ICheet | null | undefined>>;
-	setCheetLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 	isPageMounted: React.MutableRefObject<boolean>;
+	setCheetLoadingRecord: React.Dispatch<React.SetStateAction<Record<string, { edit?: boolean; delete?: boolean }>>>;
+	loadingState: { edit?: boolean; delete?: boolean } | undefined;
 }
 
 const Cheet = forwardRef<HTMLDivElement, Props>(
-	({ cheet, setCheets, isModalView, setSelectedCheet, setCheetLoading, isPageMounted }, ref) => {
+	({ cheet, setCheets, isModalView, setSelectedCheet, isPageMounted, setCheetLoadingRecord, loadingState }, ref) => {
 		const { register, handleSubmit, setValue } = useForm<{ text: string }>();
 		const [isEditing, setEditing] = useState<boolean>(false);
-		const [isEditLoading, setEditLoading] = useState<boolean>(false);
-		const [isDeleteLoading, setDeleteLoading] = useState<boolean>(false);
+		const isEditLoading = loadingState?.edit ?? false;
+		const isDeleteLoading = loadingState?.delete ?? false;
 		const { handleErrors } = useError();
 		const { userId } = useAuth();
 
@@ -43,8 +44,10 @@ const Cheet = forwardRef<HTMLDivElement, Props>(
 		const [pendingErrorDeleted, setPendingErrorDeleted] = useState<unknown>(null);
 
 		const editCheet: SubmitHandler<{ text: string }> = async (data) => {
-			setEditLoading(true);
-			if (setCheetLoading) setCheetLoading(true);
+			setCheetLoadingRecord((prev) => ({
+				...prev,
+				[cheet.uuid]: { ...prev[cheet.uuid], edit: true },
+			}));
 			try {
 				const res = await axios.put<ICheet>(`${serverURL}/api/cheets/${cheet.uuid}`, data, {
 					withCredentials: true,
@@ -58,15 +61,20 @@ const Cheet = forwardRef<HTMLDivElement, Props>(
 			} finally {
 				if (isPageMounted.current) {
 					setEditing(false);
-					setEditLoading(false);
-					if (setCheetLoading) setCheetLoading(false);
+					setCheetLoadingRecord((prev) => ({
+						...prev,
+						[cheet.uuid]: { ...prev[cheet.uuid], edit: false },
+					}));
 				}
 			}
 		};
 
 		const deleteCheet = async () => {
-			setDeleteLoading(true);
-			if (setCheetLoading) setCheetLoading(true);
+			setCheetLoadingRecord((prev) => ({
+				...prev,
+				[cheet.uuid]: { ...prev[cheet.uuid], delete: true },
+			}));
+
 			try {
 				await axios.delete(`${serverURL}/api/cheets/${cheet.uuid}`, {
 					withCredentials: true,
@@ -77,8 +85,10 @@ const Cheet = forwardRef<HTMLDivElement, Props>(
 				else handleErrors(error, "delete cheet", false);
 			} finally {
 				if (isPageMounted.current) {
-					setDeleteLoading(false);
-					if (setCheetLoading) setCheetLoading(false);
+					setCheetLoadingRecord((prev) => ({
+						...prev,
+						[cheet.uuid]: { ...prev[cheet.uuid], delete: false },
+					}));
 				}
 			}
 		};
@@ -98,7 +108,15 @@ const Cheet = forwardRef<HTMLDivElement, Props>(
 				handleErrors(pendingErrorEdited, "edit cheet", isPageMounted.current);
 				if (!isPageMounted.current) setPendingErrorEdited(null);
 			}
-		}, [pendingCheetEdited, pendingErrorEdited, isPageMounted, isModalView, handleErrors, setCheets, setSelectedCheet]);
+		}, [
+			pendingCheetEdited,
+			pendingErrorEdited,
+			isPageMounted,
+			isModalView,
+			handleErrors,
+			setCheets,
+			setSelectedCheet,
+		]);
 
 		const applyPendingDelete = useCallback(() => {
 			if (pendingCheetDeleted) {
@@ -188,7 +206,7 @@ const Cheet = forwardRef<HTMLDivElement, Props>(
 											onFinished={applyPendingEdit}
 											isLarge={false}
 										>
-											{isEditing ? (
+											{isEditing || isEditLoading ? (
 												<IconButton
 													type="submit"
 													disabled={isEditDisabled}

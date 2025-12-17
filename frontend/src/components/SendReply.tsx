@@ -13,7 +13,7 @@ import { throwApiError } from "../utils/apiResponseError";
 
 interface Props {
 	selectedCheet: ICheet;
-	isDisabled: boolean;
+	isCheetLoading: boolean;
 	setReplies: React.Dispatch<React.SetStateAction<IReply[]>>;
 	triggerScroll: React.Dispatch<React.SetStateAction<boolean>>;
 	repliesLengthRef: React.MutableRefObject<number>;
@@ -25,7 +25,7 @@ interface Props {
 
 const SendReply: React.FC<Props> = ({
 	selectedCheet,
-	isDisabled,
+	isCheetLoading,
 	setReplies,
 	triggerScroll,
 	repliesLengthRef,
@@ -110,7 +110,10 @@ const SendReply: React.FC<Props> = ({
 				</Grid2>
 				<Grid2 size={1} container justifyContent="center">
 					<LoadingSpinner isLoading={isLoading} onFinished={applyPending}>
-						<IconButton type="submit" sx={{ pointerEvents: isDisabled || isLoading ? "none" : undefined }}>
+						<IconButton
+							type="submit"
+							sx={{ pointerEvents: isCheetLoading || isLoading ? "none" : undefined }}
+						>
 							<Reply fontSize="large" />
 						</IconButton>
 					</LoadingSpinner>

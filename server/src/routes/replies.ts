@@ -20,7 +20,7 @@ export const getRepliesHandler =
 				const { replies, hasNext } = await fetchReplies(prismaClient, take, cheet.uuid, cursor);
 				res.status(200).json({ replies, hasNext });
 			} catch (error) {
-				console.error("Error retrieving replies from the database:\n");
+				console.error("Error retrieving replies from the database:");
 				next(error);
 			}
 		};
@@ -53,7 +53,7 @@ export const createReplyHandler =
 			});
 			res.status(201).json(result);
 		} catch (error) {
-			console.error("Error adding reply to the database:\n");
+			console.error("Error adding reply to the database:");
 			next(error);
 		}
 	};
@@ -79,7 +79,7 @@ export const updateReplyHandler =
 			});
 			return res.status(200).json(updatedReply);
 		} catch (error) {
-			console.error("Error updating reply in the database:\n");
+			console.error("Error updating reply in the database:");
 			next(error);
 		}
 	};
@@ -101,7 +101,7 @@ export const deleteReplyHandler =
 			});
 			res.sendStatus(204);
 		} catch (error) {
-			console.error("Error deleting reply from database:\n");
+			console.error("Error deleting reply from database:");
 			next(error);
 		}
 	};

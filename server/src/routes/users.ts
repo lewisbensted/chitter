@@ -26,7 +26,7 @@ export const searchUsersHandler =
 
 				res.status(200).json({ users, hasNext });
 			} catch (error) {
-				console.error("Error retrieving users from the database:\n");
+				console.error("Error retrieving users from the database:");
 				next(error);
 			}
 		};
@@ -45,7 +45,7 @@ export const getUserHandler =
 				isFollowing: req.session.user?.uuid ? !!user.followers?.length : null,
 			});
 		} catch (error) {
-			console.error("Error retrieving user from the database:\n");
+			console.error("Error retrieving user from the database:");
 			next(error);
 		}
 	};

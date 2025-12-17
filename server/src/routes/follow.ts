@@ -22,7 +22,7 @@ export const followHandler =
 			});
 			res.sendStatus(201);
 		} catch (error) {
-			console.error("Error following user:\n");
+			console.error("Error following user:");
 			next(error);
 		}
 	};
@@ -44,7 +44,7 @@ export const unfollowHandler =
 				console.warn("Attempted to unfollow a user that was not followed.");
 				return res.sendStatus(204);
 			}
-			console.error("Error unfollowing user:\n");
+			console.error("Error unfollowing user:");
 			next(error);
 		}
 	};
